@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GTV Insight MVP</title>
+    <meta name="description" content="UK Global Talent Visa (Arts & Culture) readiness check MVP" />
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f5f7fb;
+        color: #162033;
+      }
+      button, input, select, textarea {
+        font: inherit;
+      }
+      .app {
+        min-height: 100vh;
+      }
+      .container {
+        width: min(1080px, calc(100vw - 32px));
+        margin: 0 auto;
+      }
+      .hero {
+        padding: 72px 0 48px;
+        background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+        border-bottom: 1px solid #e5ebf5;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .eyebrow {
+        display: inline-flex;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #e6efff;
+        color: #2756c5;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      h1 {
+        margin: 20px 0 16px;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+      }
+      .hero p {
+        margin: 0 0 20px;
+        font-size: 18px;
+        line-height: 1.7;
+        color: #44506a;
+      }
+      .cta-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .btn {
+        border: 0;
+        border-radius: 14px;
+        padding: 14px 20px;
+        cursor: pointer;
+        transition: .18s ease;
+      }
+      .btn-primary {
+        background: #1c4ed8;
+        color: white;
+        font-weight: 700;
+        box-shadow: 0 10px 24px rgba(28,78,216,.18);
+      }
+      .btn-primary:hover { background: #1743bb; }
+      .btn-secondary {
+        background: white;
+        color: #1c4ed8;
+        border: 1px solid #cfdaf1;
+      }
+      .hero-note {
+        margin-top: 16px;
+        font-size: 14px;
+        color: #66728a;
+      }
+      .panel {
+        background: white;
+        border: 1px solid #e4eaf4;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 12px 28px rgba(15, 32, 63, 0.06);
+      }
+      .score-preview {
+        display: grid;
+        gap: 14px;
+      }
+      .mini-card {
+        background: #f8fbff;
+        border: 1px solid #e2ebfb;
+        border-radius: 18px;
+        padding: 16px;
+      }
+      .mini-card strong {
+        display: block;
+        font-size: 24px;
+        margin-top: 4px;
+      }
+      .section {
+        padding: 56px 0;
+      }
+      .section h2 {
+        margin: 0 0 10px;
+        font-size: 30px;
+      }
+      .section-sub {
+        margin: 0 0 28px;
+        color: #55627d;
+        line-height: 1.7;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+      .card {
+        background: white;
+        border: 1px solid #e5ebf5;
+        border-radius: 20px;
+        padding: 22px;
+      }
+      .card h3 { margin-top: 0; font-size: 20px; }
+      .card p { margin-bottom: 0; color: #57637c; line-height: 1.7; }
+      .quiz-wrap {
+        padding: 24px 0 72px;
+      }
+      .progress {
+        height: 10px;
+        background: #e8eef8;
+        border-radius: 999px;
+        overflow: hidden;
+        margin-bottom: 18px;
+      }
+      .progress > div {
+        height: 100%;
+        background: linear-gradient(90deg, #1d4ed8, #4f7df0);
+      }
+      .question-meta {
+        color: #62708b;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      .question-title {
+        font-size: 30px;
+        line-height: 1.25;
+        margin: 0 0 10px;
+      }
+      .question-desc {
+        margin: 0 0 22px;
+        color: #59657d;
+        line-height: 1.7;
+      }
+      .options {
+        display: grid;
+        gap: 12px;
+      }
+      .option {
+        padding: 16px 18px;
+        border-radius: 16px;
+        border: 1px solid #dbe4f3;
+        background: white;
+        cursor: pointer;
+      }
+      .option.selected {
+        border-color: #1d4ed8;
+        background: #eef4ff;
+        box-shadow: inset 0 0 0 1px #1d4ed8;
+      }
+      .option small {
+        display: block;
+        margin-top: 6px;
+        color: #6a7690;
+      }
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .result-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .result-score {
+        font-size: 62px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .badge {
+        display: inline-flex;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .badge-low { background: #feeceb; color: #b6362a; }
+      .badge-mid { background: #fff7e8; color: #b36b00; }
+      .badge-high { background: #e9f8ee; color: #1f7a3e; }
+      .metric-list, .hint-list, .next-list {
+        display: grid;
+        gap: 12px;
+      }
+      .metric {
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: #f8fbff;
+        border: 1px solid #e2ebfb;
+      }
+      .metric-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .lead-form {
+        display: grid;
+        gap: 12px;
+      }
+      .lead-form input {
+        width: 100%;
+        border: 1px solid #d6e0ef;
+        border-radius: 14px;
+        padding: 14px 16px;
+        background: white;
+      }
+      .muted {
+        color: #6b7790;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      @media (max-width: 860px) {
+        .hero-grid, .grid-3, .result-grid { grid-template-columns: 1fr; }
+        .question-title { font-size: 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const QUESTIONS = [
+        {
+          id: 'fields',
+          type: 'multi',
+          title: '你目前主要从事哪些领域？',
+          desc: '如果你的实践跨多个领域，请选择最能代表你近几年主要工作的 1 至 3 个方向。',
+          maxSelect: 3,
+          options: ['视觉艺术', '设计', '时装', '影视', '建筑', '表演艺术', '其他 Arts & Culture 相关领域']
+        },
+        {
+          id: 'years',
+          type: 'single',
+          title: '你在这些领域持续工作了多久？',
+          options: ['少于 3 年', '3–5 年', '5–8 年', '8–12 年', '12 年以上']
+        },
+        {
+          id: 'stage',
+          type: 'single',
+          title: '你目前考虑申请 UK Global Talent Visa (Arts & Culture) 的状态更接近哪一种？',
+          options: ['我只是刚开始了解', '我已经认真看过官方要求', '我已经开始整理材料', '我已经有比较明确的申请计划', '我原本准备申请，但现在卡住了']
+        },
+        {
+          id: 'evidenceTypes',
+          type: 'multi',
+          title: '你目前已经具备哪些较明确、且更接近 Arts & Culture 路径的证明材料类型？',
+          options: ['展览', '演出 / 放映', '出版', '媒体报道', '奖项 / 提名 / 荣誉', '其他可公开验证的艺术成果', '我还不确定哪些算有效证明材料']
+        },
+        {
+          id: 'recency',
+          type: 'single',
+          title: '你目前最重要的证明材料，主要集中在哪个时间范围内？',
+          options: ['大多发生在最近 1–2 年', '大多发生在最近 3–5 年', '分布在 5 年内外，但 5 年内仍有一部分', '大多早于 5 年前', '我不确定']
+        },
+        {
+          id: 'sourceNature',
+          type: 'single',
+          title: '你目前最重要的证明材料，主要来自哪一类实践？',
+          options: ['主要来自毕业后的艺术 / 文化专业实践', '大多来自毕业后的艺术 / 文化专业实践，但夹杂少量学生或商业项目', '艺术 / 文化专业实践、学生项目、商业项目都有', '大多来自商业项目', '大多来自学生时期项目']
+        },
+        {
+          id: 'evidenceStrength',
+          type: 'single',
+          title: '这些证明材料的整体情况更接近哪一种？',
+          options: ['有一些经历，但大多较弱、零散，或者难以支持申请', '有少量较强证明材料，但整体还不够稳', '已经有几项相对明确、可验证的证明材料', '证明材料基础较完整，类型和质量都还不错', '我不确定']
+        },
+        {
+          id: 'verifiability',
+          type: 'single',
+          title: '这些证明材料中，有多少可以被外部验证？',
+          options: ['很少可以验证', '有一部分可以验证', '大部分可以验证', '几乎都可以验证']
+        },
+        {
+          id: 'recommenderCount',
+          type: 'single',
+          title: '你现在大概能想到几位可能愿意为你写 recommendation letters 的人？',
+          options: ['0 位', '1 位', '2 位', '3 位', '4 位或以上']
+        },
+        {
+          id: 'recommenderQuality',
+          type: 'multi',
+          title: '这些潜在推荐人目前更接近哪种情况？',
+          options: ['和我有真实合作经历', '来自不同机构', '在行业内有一定分量或认可度', '我有把握他们能写出具体内容', '我不确定他们是否符合要求']
+        },
+        {
+          id: 'lettersConfidence',
+          type: 'single',
+          title: '如果现在就开始联系，你觉得自己拿到 3 封有实质内容的 recommendation letters 的把握有多大？',
+          options: ['很低', '比较低', '一般', '比较高', '很高']
+        },
+        {
+          id: 'narrative',
+          type: 'single',
+          title: '你现在是否能比较清楚地说明：你的实践是什么，以及你为什么适合在英国继续发展？',
+          options: ['现在还说不清', '有一些想法，但比较模糊', '大致能说清', '说得比较清楚', '说得很清楚']
+        },
+        {
+          id: 'selfReadiness',
+          type: 'single',
+          title: '如果现在要做整体判断，你觉得自己离正式提交申请更接近哪一种状态？',
+          options: ['还差很远', '有一些基础，但差距明显', '可以开始认真准备', '已经接近可申请', '我不确定']
+        }
+      ];
+
+      const SCORE_MAPS = {
+        years: { '少于 3 年': 1, '3–5 年': 2, '5–8 年': 3, '8–12 年': 4, '12 年以上': 5 },
+        stage: { '我只是刚开始了解': 1, '我已经认真看过官方要求': 2, '我已经开始整理材料': 3, '我已经有比较明确的申请计划': 4, '我原本准备申请，但现在卡住了': 4 },
+        recency: { '大多发生在最近 1–2 年': 10, '大多发生在最近 3–5 年': 9, '分布在 5 年内外，但 5 年内仍有一部分': 5, '大多早于 5 年前': 1, '我不确定': 2 },
+        sourceNature: { '主要来自毕业后的艺术 / 文化专业实践': 15, '大多来自毕业后的艺术 / 文化专业实践，但夹杂少量学生或商业项目': 11, '艺术 / 文化专业实践、学生项目、商业项目都有': 6, '大多来自商业项目': 1, '大多来自学生时期项目': 0 },
+        evidenceStrength: { '有一些经历，但大多较弱、零散，或者难以支持申请': 2, '有少量较强证明材料，但整体还不够稳': 5, '已经有几项相对明确、可验证的证明材料': 8, '证明材料基础较完整，类型和质量都还不错': 10, '我不确定': 3 },
+        verifiability: { '很少可以验证': 1, '有一部分可以验证': 2, '大部分可以验证': 4, '几乎都可以验证': 5 },
+        recommenderCount: { '0 位': 0, '1 位': 2, '2 位': 5, '3 位': 8, '4 位或以上': 10 },
+        lettersConfidence: { '很低': 1, '比较低': 2, '一般': 3, '比较高': 4, '很高': 5 },
+        narrative: { '现在还说不清': 1, '有一些想法，但比较模糊': 3, '大致能说清': 6, '说得比较清楚': 8, '说得很清楚': 10 },
+        selfReadiness: { '还差很远': 1, '有一些基础，但差距明显': 2, '可以开始认真准备': 4, '已经接近可申请': 5, '我不确定': 2 },
+      };
+
+      function evidenceTypeScore(selected) {
+        const clean = (selected || []).filter(v => v !== '我还不确定哪些算有效证明材料');
+        const n = clean.length;
+        if (n <= 0) return 0;
+        if (n === 1) return 3;
+        if (n === 2) return 7;
+        if (n === 3) return 9;
+        return 10;
+      }
+
+      function recommenderQualityScore(selected) {
+        const set = new Set(selected || []);
+        let score = 0;
+        if (set.has('和我有真实合作经历')) score += 3;
+        if (set.has('来自不同机构')) score += 3;
+        if (set.has('在行业内有一定分量或认可度')) score += 2;
+        if (set.has('我有把握他们能写出具体内容')) score += 2;
+        return Math.min(score, 10);
+      }
+
+      function calculateResult(answers) {
+        let evidence = 0;
+        evidence += evidenceTypeScore(answers.evidenceTypes);
+        evidence += SCORE_MAPS.recency[answers.recency] || 0;
+        evidence += SCORE_MAPS.sourceNature[answers.sourceNature] || 0;
+        evidence += SCORE_MAPS.evidenceStrength[answers.evidenceStrength] || 0;
+        evidence += SCORE_MAPS.verifiability[answers.verifiability] || 0;
+
+        let recommenders = 0;
+        recommenders += SCORE_MAPS.recommenderCount[answers.recommenderCount] || 0;
+        recommenders += recommenderQualityScore(answers.recommenderQuality);
+        recommenders += SCORE_MAPS.lettersConfidence[answers.lettersConfidence] || 0;
+
+        let readiness = 0;
+        readiness += SCORE_MAPS.years[answers.years] || 0;
+        readiness += SCORE_MAPS.stage[answers.stage] || 0;
+        readiness += SCORE_MAPS.narrative[answers.narrative] || 0;
+        readiness += SCORE_MAPS.selfReadiness[answers.selfReadiness] || 0;
+
+        let total = evidence + recommenders + readiness;
+        const hints = [];
+
+        const evidenceTypes = (answers.evidenceTypes || []).filter(v => v !== '我还不确定哪些算有效证明材料');
+        if (evidenceTypes.length < 2) {
+          evidence = Math.min(evidence, 28);
+          hints.push('你当前可识别的证明材料类型还不足两种，这通常意味着申请基础还不够稳。');
+        }
+        if (answers.recency === '大多早于 5 年前') {
+          total -= 5;
+          hints.push('你当前最重要的证明材料，主要早于近五年，这会明显影响当前申请支撑力。');
+        }
+        if (answers.sourceNature === '大多来自学生时期项目') {
+          evidence = Math.min(evidence, 22);
+          total -= 8;
+          hints.push('你目前的核心证明材料更偏向学生时期项目，这通常不足以支撑成熟的专业申请。');
+        }
+        if (answers.sourceNature === '大多来自商业项目') {
+          evidence = Math.min(evidence, 22);
+          total -= 8;
+          hints.push('你目前的核心证明材料更偏向商业项目。对于 Arts & Culture 路径，这类材料通常不能直接作为核心支撑。');
+        }
+        if (answers.recommenderCount === '0 位' || answers.recommenderCount === '1 位') {
+          hints.push('你当前的 recommendation letters 网络明显偏弱，这会成为实际申请中的关键障碍。');
+        }
+        if (answers.narrative === '现在还说不清' || answers.narrative === '有一些想法，但比较模糊') {
+          hints.push('你目前对自身实践和为什么适合在英国继续发展的表达还不够清楚。');
+        }
+
+        total = Math.max(0, Math.min(100, evidence + recommenders + readiness + (total - (evidence + recommenders + readiness))));
+
+        let band = 'low';
+        let summary = '你目前还不适合进入正式申请准备。';
+        let nextSteps = [
+          '先确认哪些经历真正能算有效证明材料。',
+          '优先建立毕业后、近五年内、可验证的专业成果基础。',
+          '先看清 recommendation letters 网络是否有现实空间。'
+        ];
+        if (total >= 40 && total <= 69) {
+          band = 'mid';
+          summary = '你已经有一定基础，但距离稳定申请还差一段。';
+          nextSteps = [
+            '判断现有证明材料里哪些是核心，哪些只是补充。',
+            '优先补最影响准备度的缺口。',
+            '开始把零散经历整理成更清晰的申请逻辑。'
+          ];
+        }
+        if (total >= 70) {
+          band = 'high';
+          summary = '你已经具备一定申请基础。';
+          nextSteps = [
+            '判断哪些证明材料应成为核心支撑。',
+            '优化 recommendation letters 的组合与顺序。',
+            '把申请叙事、证明材料和整体结构对齐。'
+          ];
+        }
+
+        return {
+          total,
+          band,
+          summary,
+          metrics: {
+            '证明材料强度': evidence,
+            '推荐信网络': recommenders,
+            '整体准备状态': readiness,
+          },
+          hints: hints.slice(0, 3),
+          nextSteps,
+        };
+      }
+
+      function App() {
+        const [screen, setScreen] = React.useState('home');
+        const [step, setStep] = React.useState(0);
+        const [answers, setAnswers] = React.useState({});
+        const [email, setEmail] = React.useState('');
+        const [leadSaved, setLeadSaved] = React.useState(false);
+
+        const question = QUESTIONS[step];
+        const progress = ((step + 1) / QUESTIONS.length) * 100;
+        const result = React.useMemo(() => calculateResult(answers), [answers]);
+
+        function toggleMulti(id, option, maxSelect) {
+          const current = answers[id] || [];
+          const exists = current.includes(option);
+          let next = exists ? current.filter(v => v !== option) : [...current, option];
+          if (!exists && maxSelect && next.length > maxSelect) return;
+          setAnswers({ ...answers, [id]: next });
+        }
+
+        function setSingle(id, option) {
+          setAnswers({ ...answers, [id]: option });
+        }
+
+        function isAnswered(q) {
+          const value = answers[q.id];
+          if (q.type === 'multi') return Array.isArray(value) && value.length > 0;
+          return Boolean(value);
+        }
+
+        function saveLeadPlaceholder() {
+          if (!email.trim()) return;
+          try {
+            const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
+            existing.push({ email, answers, result, createdAt: new Date().toISOString() });
+            localStorage.setItem('gtv_leads', JSON.stringify(existing));
+          } catch (e) {}
+          setLeadSaved(true);
+        }
+
+        if (screen === 'home') {
+          return (
+            <div className="app">
+              <section className="hero">
+                <div className="container hero-grid">
+                  <div>
+                    <div className="eyebrow">GTV Insight · MVP</div>
+                    <h1>看清你现在离 UK Global Talent Visa (Arts & Culture) endorsement 还有多远。</h1>
+                    <p>用 5 分钟做一份 GTV Readiness Check，快速判断你当前的证明材料、recommendation letters 和整体准备状态。</p>
+                    <div className="cta-row">
+                      <button className="btn btn-primary" onClick={() => setScreen('quiz')}>开始免费诊断</button>
+                      <button className="btn btn-secondary" onClick={() => document.getElementById('pain-points').scrollIntoView({behavior:'smooth'})}>先看这是什么</button>
+                    </div>
+                    <div className="hero-note">不需要预约，不需要先咨询。完成问卷后，可输入邮箱保存结果。</div>
+                  </div>
+                  <div className="panel">
+                    <div className="score-preview">
+                      <div className="mini-card">
+                        <div>你会拿到</div>
+                        <strong>0–100 分准备度评分</strong>
+                      </div>
+                      <div className="mini-card">
+                        <div>系统会判断</div>
+                        <strong>证明材料 / 推荐信 / 整体准备状态</strong>
+                      </div>
+                      <div className="mini-card">
+                        <div>结果里会提示</div>
+                        <strong>当前优势、明显缺口、下一步动作</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section id="pain-points" className="section">
+                <div className="container">
+                  <h2>为什么很多人查了很多资料，还是不敢开始申请？</h2>
+                  <p className="section-sub">不是因为他们不努力，而是因为他们始终无法形成一个稳定判断。</p>
+                  <div className="grid-3">
+                    <div className="card">
+                      <h3>不知道手上的材料算不算数</h3>
+                      <p>展览、出版、媒体报道、奖项，看起来都像加分项，但真正评审时哪些有分量、哪些不够，外部几乎没有提前确认的渠道。</p>
+                    </div>
+                    <div className="card">
+                      <h3>不确定推荐信能不能撑起申请</h3>
+                      <p>不是随便找几个人写信就够了。你需要合适的人、真实的合作关系，以及能写出具体内容的 recommendation letters。</p>
+                    </div>
+                    <div className="card">
+                      <h3>信息很多，但拼不出明确判断</h3>
+                      <p>官方要求分散，论坛经验互相冲突，规则也会变化。你越查越焦虑，却还是不知道自己现在该不该申请。</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          );
+        }
+
+        if (screen === 'quiz') {
+          return (
+            <div className="app quiz-wrap">
+              <div className="container">
+                <div className="panel">
+                  <div className="question-meta">第 {step + 1} 题 / 共 {QUESTIONS.length} 题</div>
+                  <div className="progress"><div style={{ width: `${progress}%` }} /></div>
+                  <h2 className="question-title">{question.title}</h2>
+                  {question.desc && <p className="question-desc">{question.desc}</p>}
+
+                  <div className="options">
+                    {question.options.map((option) => {
+                      const selected = question.type === 'multi'
+                        ? (answers[question.id] || []).includes(option)
+                        : answers[question.id] === option;
+                      return (
+                        <button
+                          key={option}
+                          className={`option ${selected ? 'selected' : ''}`}
+                          onClick={() => question.type === 'multi' ? toggleMulti(question.id, option, question.maxSelect) : setSingle(question.id, option)}
+                        >
+                          {option}
+                          {question.type === 'multi' && question.maxSelect ? <small>可多选，最多 {question.maxSelect} 项</small> : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="nav-row">
+                    <button className="btn btn-secondary" onClick={() => step === 0 ? setScreen('home') : setStep(step - 1)}>
+                      {step === 0 ? '返回首页' : '上一题'}
+                    </button>
+                    <button
+                      className="btn btn-primary"
+                      disabled={!isAnswered(question)}
+                      style={{ opacity: isAnswered(question) ? 1 : 0.5 }}
+                      onClick={() => {
+                        if (step < QUESTIONS.length - 1) setStep(step + 1);
+                        else setScreen('result');
+                      }}
+                    >
+                      {step < QUESTIONS.length - 1 ? '下一题' : '查看结果'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="app section">
+            <div className="container result-grid">
+              <div className="panel">
+                <div className={`badge ${result.band === 'low' ? 'badge-low' : result.band === 'mid' ? 'badge-mid' : 'badge-high'}`}>
+                  {result.band === 'low' ? '当前偏早期' : result.band === 'mid' ? '当前有基础但不稳' : '当前已具备一定基础'}
+                </div>
+                <h2 style={{marginBottom: 8}}>你的当前准备度评分</h2>
+                <div className="result-score">{result.total}</div>
+                <p className="section-sub" style={{marginBottom: 18}}>{result.summary}</p>
+                <div className="metric-list">
+                  {Object.entries(result.metrics).map(([label, value]) => (
+                    <div className="metric" key={label}>
+                      <div className="metric-head"><span>{label}</span><span>{value}</span></div>
+                      <div className="muted">{label === '证明材料强度' ? '看的是你是否已经积累了足够明确、足够近期、足够可验证、且类型结构合理的证明材料。' : label === '推荐信网络' ? '看的是你是否已经具备能实际转化为 recommendation letters 的关系网络。' : '看的是你是否能清楚说明自己的实践，以及为什么适合在英国继续发展。'}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{display:'grid', gap:20}}>
+                <div className="panel">
+                  <h3 style={{marginTop:0}}>当前最需要注意的点</h3>
+                  <div className="hint-list">
+                    {(result.hints.length ? result.hints : ['你当前没有触发明显的结构性红旗，下一步重点是把现有基础组织得更清楚。']).map((hint, idx) => (
+                      <div className="metric" key={idx}>{hint}</div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="panel">
+                  <h3 style={{marginTop:0}}>你现在更应该做什么</h3>
+                  <div className="next-list">
+                    {result.nextSteps.map((item, idx) => <div className="metric" key={idx}>{item}</div>)}
+                  </div>
+                </div>
+
+                <div className="panel">
+                  <h3 style={{marginTop:0}}>保存你的结果</h3>
+                  <p className="section-sub" style={{marginBottom:14}}>邮箱收集先做占位版。你可以输入邮箱，把这次结果存到本地，方便后续演示流程。</p>
+                  <div className="lead-form">
+                    <input type="email" placeholder="输入你的邮箱" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <button className="btn btn-primary" onClick={saveLeadPlaceholder}>保存结果并了解后续支持</button>
+                    {leadSaved && <div className="muted">已保存到本地占位数据，可用于演示下一步流程。</div>}
+                    <div className="muted">说明：当前 MVP 为纯前端静态版本，邮箱仅作为演示占位，不连接正式后台。</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
