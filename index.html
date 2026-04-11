@@ -488,8 +488,11 @@
           return Boolean(value);
         }
 
-        function saveLeadPlaceholder() {
-          if (!email.trim()) return;
+        function saveLeadPlaceholder(e) {
+          if (!email.trim()) {
+            e.preventDefault();
+            return;
+          }
           try {
             const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
             existing.push({ email, answers, result, createdAt: new Date().toISOString() });
@@ -646,12 +649,24 @@
                 <div className="panel">
                   <h3 style={{marginTop:0}}>保存你的结果</h3>
                   <p className="section-sub" style={{marginBottom:14}}>邮箱收集先做占位版。你可以输入邮箱，把这次结果存到本地，方便后续演示流程。</p>
-                  <div className="lead-form">
-                    <input type="email" placeholder="输入你的邮箱" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <button className="btn btn-primary" onClick={saveLeadPlaceholder}>保存结果并了解后续支持</button>
-                    {leadSaved && <div className="muted">已保存到本地占位数据，可用于演示下一步流程。</div>}
-                    <div className="muted">说明：当前 MVP 为纯前端静态版本，邮箱仅作为演示占位，不连接正式后台。</div>
-                  </div>
+                  <form className="lead-form" name="gtv-leads" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={saveLeadPlaceholder}>
+                    <input type="hidden" name="form-name" value="gtv-leads" />
+                    <input type="hidden" name="bot-field" />
+                    <input type="hidden" name="submitted_at" value={new Date().toISOString()} />
+                    <input type="hidden" name="score_total" value={result.total} />
+                    <input type="hidden" name="score_evidence" value={result.metrics['证明材料强度']} />
+                    <input type="hidden" name="score_recommenders" value={result.metrics['推荐信网络']} />
+                    <input type="hidden" name="score_readiness" value={result.metrics['整体准备状态']} />
+                    <input type="hidden" name="band" value={result.band} />
+                    <input type="hidden" name="summary" value={result.summary} />
+                    <input type="hidden" name="hints" value={(result.hints || []).join(' | ')} />
+                    <input type="hidden" name="next_steps" value={(result.nextSteps || []).join(' | ')} />
+                    <input type="hidden" name="answers_json" value={JSON.stringify(answers)} />
+                    <input type="email" name="email" required placeholder="输入你的邮箱" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <button type="submit" className="btn btn-primary">保存结果并了解后续支持</button>
+                    {leadSaved && <div className="muted">已提交成功。邮箱和本次评估结果都会被保存，方便后续跟进和产品优化。</div>}
+                    <div className="muted">说明：当前版本会把邮箱、答题结果、评分和关键提示一起提交并保留。</div>
+                  </form>
                 </div>
               </div>
             </div>
