@@ -138,6 +138,25 @@
       .quiz-wrap {
         padding: 24px 0 72px;
       }
+      .sticky-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(245, 247, 251, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid #e5ebf5;
+        margin-bottom: 18px;
+      }
+      .sticky-topbar-inner {
+        width: min(1080px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 12px 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
       .progress {
         height: 10px;
         background: #e8eef8;
@@ -196,6 +215,12 @@
         grid-template-columns: 1fr 1fr;
         gap: 20px;
       }
+      .result-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 18px 0 22px;
+      }
       .result-score {
         font-size: 62px;
         font-weight: 800;
@@ -244,6 +269,16 @@
         font-size: 14px;
         line-height: 1.6;
       }
+      .status-ok {
+        color: #1f7a3e;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .status-error {
+        color: #b6362a;
+        font-size: 14px;
+        line-height: 1.6;
+      }
       @media (max-width: 860px) {
         .hero-grid, .grid-3, .result-grid { grid-template-columns: 1fr; }
         .question-title { font-size: 24px; }
@@ -253,6 +288,26 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
+      const FIELD_EVIDENCE_OPTIONS = {
+        '视觉艺术': ['个展 / 群展', '美术馆 / 机构展出', '驻留项目', '委约创作', '作品被收藏 / 收录', '媒体评论 / 专访', '艺术奖项 / 提名', '公开发表作品 / 画册 / 专题收录'],
+        '设计': ['设计展 / 设计周展出', '品牌 / 机构委约项目', '已落地的设计作品', '专业媒体报道 / 专访', '设计奖项 / 入围', '出版 / 专题收录', '机构合作项目'],
+        '时装': ['时装发布 / runway presentation', '品牌系列 / 联名 / 委约', 'showroom / 展陈 / trade presentation', '时尚媒体报道 / 专访', '时装奖项 / 入围', '机构合作项目 / 委约项目', '公开发表作品 / lookbook / 专题收录'],
+        '影视': ['影片入围 / 放映', '电影节 / 官方单元 / 策展放映', '导演 / 编剧 / 制片 / 主创署名作品', '平台播出 / 发行', '专业媒体报道 / 评论', '影视奖项 / 提名', '机构支持 / 委约项目'],
+        '建筑': ['建成项目 / 落地项目', '建筑展 / 双年展 / 机构展出', '竞赛获奖 / 入围', '专业出版 / 专题收录', '媒体报道 / 评论', '机构委约 / 合作项目', '研究 / 策展 / 公共项目成果'],
+        '表演艺术': ['正式演出 / 巡演', '音乐节 / 戏剧节 / 艺术节呈现', '主创 / 表演 / 编导署名作品', '机构委约 / 驻留 / 合作项目', '专业媒体报道 / 评论', '表演艺术奖项 / 提名', '录音 / 影像 / 出版成果'],
+        '其他 Arts & Culture 相关领域': ['机构合作项目', '公开发表成果', '专业媒体报道 / 评论', '奖项 / 提名 / 荣誉', '驻留 / 委约 / 公共项目', '出版 / 专题收录']
+      };
+
+      function getEvidenceOptionsByFields(selectedFields) {
+        const fields = Array.isArray(selectedFields) ? selectedFields : [];
+        const merged = fields.flatMap((field) => FIELD_EVIDENCE_OPTIONS[field] || []);
+        const deduped = [...new Set(merged)];
+        if (!deduped.length) {
+          return ['展览 / 群展 / 个展', '演出 / 放映 / 节目呈现', '出版 / 发表 / 专题收录', '媒体报道 / 评论 / 专访', '奖项 / 提名 / 荣誉', '驻留 / 委约 / 机构合作项目', '公开发表的作品 / 项目 / 策展 / 创作成果', '我还不确定哪些算有效证明材料'];
+        }
+        return [...deduped, '我还不确定哪些算有效证明材料'];
+      }
+
       const QUESTIONS = [
         {
           id: 'fields',
@@ -277,8 +332,8 @@
         {
           id: 'evidenceTypes',
           type: 'multi',
-          title: '你目前已经具备哪些较明确、且更接近 Arts & Culture 路径的证明材料类型？',
-          options: ['展览', '演出 / 放映', '出版', '媒体报道', '奖项 / 提名 / 荣誉', '其他可公开验证的艺术成果', '我还不确定哪些算有效证明材料']
+          title: '你目前已经具备哪些较明确、且更接近你所选方向的证明材料类型？',
+          getOptions: (answers) => getEvidenceOptionsByFields(answers.fields)
         },
         {
           id: 'recency',
@@ -290,7 +345,7 @@
           id: 'sourceNature',
           type: 'single',
           title: '你目前最重要的证明材料，主要来自哪一类实践？',
-          options: ['主要来自毕业后的艺术 / 文化专业实践', '大多来自毕业后的艺术 / 文化专业实践，但夹杂少量学生或商业项目', '艺术 / 文化专业实践、学生项目、商业项目都有', '大多来自商业项目', '大多来自学生时期项目']
+          options: ['主要来自毕业后的 Arts & Culture 专业实践', '大多来自毕业后的 Arts & Culture 专业实践，但夹杂少量学生或商业项目', 'Arts & Culture 专业实践、学生项目、商业项目都有', '大多来自商业项目', '大多来自学生时期项目']
         },
         {
           id: 'evidenceStrength',
@@ -325,7 +380,7 @@
         {
           id: 'narrative',
           type: 'single',
-          title: '你现在是否能比较清楚地说明：你的实践是什么，以及你为什么适合在英国继续发展？',
+          title: '你现在是否能比较清楚地说明：你的 Arts & Culture 实践是什么，以及你为什么适合在英国继续发展？',
           options: ['现在还说不清', '有一些想法，但比较模糊', '大致能说清', '说得比较清楚', '说得很清楚']
         },
         {
@@ -369,7 +424,115 @@
         return Math.min(score, 10);
       }
 
+      function getPrimaryField(selectedFields) {
+        const fields = Array.isArray(selectedFields) ? selectedFields : [];
+        return fields[0] || 'Arts & Culture';
+      }
+
+      function getFieldSpecificHint(field, kind) {
+        const hintMap = {
+          weakEvidence: {
+            '视觉艺术': '你当前可识别的视觉艺术证据还不够稳，尤其要看展览、驻留、委约、收藏或公开发表记录能不能撑起申请。',
+            '设计': '你当前可识别的设计证据还不够稳，尤其要看落地项目、机构合作、专业发布或奖项能不能形成支撑。',
+            '时装': '你当前可识别的时装证据还不够稳，尤其要看发布、系列、机构合作、媒体或奖项能不能形成支撑。',
+            '影视': '你当前可识别的影视证据还不够稳，尤其要看作品署名、节展、放映、发行或媒体记录能不能形成支撑。',
+            '建筑': '你当前可识别的建筑证据还不够稳，尤其要看建成项目、竞赛、展出、出版或机构合作能不能形成支撑。',
+            '表演艺术': '你当前可识别的表演艺术证据还不够稳，尤其要看正式演出、节展、机构合作、署名作品或评论能不能形成支撑。',
+            '其他 Arts & Culture 相关领域': '你当前可识别的专业证据还不够稳，尤其要看公开成果、机构合作、媒体或奖项能不能形成支撑。'
+          },
+          oldEvidence: {
+            '视觉艺术': '你当前最重要的视觉艺术证据主要早于近五年，这会明显削弱当前申请支撑力。',
+            '设计': '你当前最重要的设计证据主要早于近五年，这会明显削弱当前申请支撑力。',
+            '时装': '你当前最重要的时装证据主要早于近五年，这会明显削弱当前申请支撑力。',
+            '影视': '你当前最重要的影视证据主要早于近五年，这会明显削弱当前申请支撑力。',
+            '建筑': '你当前最重要的建筑证据主要早于近五年，这会明显削弱当前申请支撑力。',
+            '表演艺术': '你当前最重要的表演艺术证据主要早于近五年，这会明显削弱当前申请支撑力。',
+            '其他 Arts & Culture 相关领域': '你当前最重要的专业证据主要早于近五年，这会明显削弱当前申请支撑力。'
+          },
+          studentProject: {
+            '视觉艺术': '你目前的核心视觉艺术证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
+            '设计': '你目前的核心设计证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
+            '时装': '你目前的核心时装证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
+            '影视': '你目前的核心影视证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
+            '建筑': '你目前的核心建筑证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
+            '表演艺术': '你目前的核心表演艺术证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
+            '其他 Arts & Culture 相关领域': '你目前的核心专业证据更偏向学生时期项目，这通常不足以支撑成熟申请。'
+          },
+          commercialProject: {
+            '视觉艺术': '你目前的核心证据更偏向商业项目。对视觉艺术路线来说，这类材料通常不能直接作为核心支撑。',
+            '设计': '你目前的核心证据更偏向商业项目。对设计路线来说，要进一步判断其中哪些项目具备专业影响力与公开可验证性。',
+            '时装': '你目前的核心证据更偏向商业项目。对时装路线来说，要进一步判断其中哪些能转化为专业支撑材料。',
+            '影视': '你目前的核心证据更偏向商业项目。对影视路线来说，要进一步判断其中哪些作品具备署名、放映或行业认可价值。',
+            '建筑': '你目前的核心证据更偏向商业项目。对建筑路线来说，要进一步判断其中哪些项目具备专业影响力与公开验证性。',
+            '表演艺术': '你目前的核心证据更偏向商业项目。对表演艺术路线来说，要进一步判断其中哪些演出或合作具备专业支撑价值。',
+            '其他 Arts & Culture 相关领域': '你目前的核心证据更偏向商业项目，这类材料未必能直接转化为申请核心支撑。'
+          },
+          weakLetters: {
+            '视觉艺术': '你当前的 recommendation letters 网络偏弱，这会直接影响视觉艺术申请能否真正推进。',
+            '设计': '你当前的 recommendation letters 网络偏弱，这会直接影响设计申请能否真正推进。',
+            '时装': '你当前的 recommendation letters 网络偏弱，这会直接影响时装申请能否真正推进。',
+            '影视': '你当前的 recommendation letters 网络偏弱，这会直接影响影视申请能否真正推进。',
+            '建筑': '你当前的 recommendation letters 网络偏弱，这会直接影响建筑申请能否真正推进。',
+            '表演艺术': '你当前的 recommendation letters 网络偏弱，这会直接影响表演艺术申请能否真正推进。',
+            '其他 Arts & Culture 相关领域': '你当前的 recommendation letters 网络偏弱，这会直接影响申请能否真正推进。'
+          },
+          weakNarrative: {
+            '视觉艺术': '你目前还不能清楚说明自己的视觉艺术实践是什么，以及为什么适合在英国继续发展。',
+            '设计': '你目前还不能清楚说明自己的设计实践是什么，以及为什么适合在英国继续发展。',
+            '时装': '你目前还不能清楚说明自己的时装实践是什么，以及为什么适合在英国继续发展。',
+            '影视': '你目前还不能清楚说明自己的影视实践是什么，以及为什么适合在英国继续发展。',
+            '建筑': '你目前还不能清楚说明自己的建筑实践是什么，以及为什么适合在英国继续发展。',
+            '表演艺术': '你目前还不能清楚说明自己的表演艺术实践是什么，以及为什么适合在英国继续发展。',
+            '其他 Arts & Culture 相关领域': '你目前还不能清楚说明自己的专业实践是什么，以及为什么适合在英国继续发展。'
+          }
+        };
+        return (hintMap[kind] && hintMap[kind][field]) || hintMap[kind]?.['其他 Arts & Culture 相关领域'] || '';
+      }
+
+      function getFieldSpecificNextSteps(selectedFields, band) {
+        const primary = getPrimaryField(selectedFields);
+        const map = {
+          '视觉艺术': {
+            low: ['先确认哪些展览、驻留、委约或收藏记录真正能作为核心证明材料。', '优先补足近五年内、可外部验证的展出或机构合作经历。', '把零散作品经历整理成清晰的创作与展示路径。'],
+            mid: ['判断哪些展览、驻留或委约项目可以成为申请主轴。', '补强媒体评论、机构背书或收藏记录等外部验证材料。', '把作品脉络、展出记录和申请叙事对齐。'],
+            high: ['筛出最能支撑申请的展览、驻留、委约与收藏证据。', '优化推荐信与作品脉络之间的对应关系。', '把展示记录、媒体评论与个人叙事收成一版完整申请结构。']
+          },
+          '设计': {
+            low: ['先确认哪些已落地设计项目、展出或奖项能算核心材料。', '补足可验证的机构合作、品牌委约或专业发布记录。', '把设计实践从商业执行梳理成专业影响力叙事。'],
+            mid: ['筛出最能代表你专业影响力的设计项目与机构合作。', '补强专业媒体、出版收录或奖项等外部验证材料。', '把项目成果、行业定位和英国发展叙事连起来。'],
+            high: ['集中保留最强的落地项目、展出、奖项和机构合作证据。', '优化推荐信与代表项目的对应关系。', '把作品、影响力与申请叙事整合成完整申请结构。']
+          },
+          '时装': {
+            low: ['先确认哪些发布、系列、媒体或机构合作能算核心材料。', '补足近五年内可外部验证的时装呈现和行业记录。', '把零散品牌经历整理成连续的专业路径。'],
+            mid: ['筛出最能支撑申请的发布、委约、媒体与机构合作项目。', '补强外部报道、奖项或行业认可材料。', '把系列作品、行业定位和申请叙事连起来。'],
+            high: ['保留最强的发布、媒体、机构合作和奖项证据。', '优化推荐信与代表性系列或项目的对应关系。', '把时装实践路径和英国发展方向整合成申请主线。']
+          },
+          '影视': {
+            low: ['先确认哪些影片、放映、署名作品或节展经历真正有申请价值。', '补足近五年内可验证的入围、放映、发行或媒体记录。', '把零散项目经历整理成清晰的主创路径。'],
+            mid: ['筛出最能支撑申请的作品、节展、放映与署名 credits。', '补强媒体评论、行业背书或奖项材料。', '把作品路径、作者定位和英国发展叙事连起来。'],
+            high: ['集中保留最强的影片、署名作品、节展和媒体证据。', '优化推荐信与代表作之间的对应关系。', '把作品成绩、作者身份和申请结构整合成一版主线。']
+          },
+          '建筑': {
+            low: ['先确认哪些建成项目、竞赛、展出或出版记录能算核心材料。', '补足可验证的落地项目、机构合作或专业发表。', '把项目经历从零散案例整理成连续的专业实践路径。'],
+            mid: ['筛出最能代表你专业影响力的项目、竞赛和机构合作。', '补强专业媒体、出版或展出等外部验证材料。', '把项目成果、方法论和申请叙事连起来。'],
+            high: ['集中保留最强的建成项目、竞赛、展出和出版证据。', '优化推荐信与代表项目之间的对应关系。', '把专业实践、公共影响和申请结构整合成一版主线。']
+          },
+          '表演艺术': {
+            low: ['先确认哪些演出、巡演、节展或署名作品能算核心材料。', '补足近五年内可验证的正式演出和机构合作记录。', '把零散演出经历整理成连续的专业实践路径。'],
+            mid: ['筛出最能支撑申请的演出、节展、机构合作和媒体记录。', '补强奖项、评论或行业背书材料。', '把作品路径、专业定位和英国发展叙事连起来。'],
+            high: ['集中保留最强的演出、节展、机构合作和媒体证据。', '优化推荐信与代表性作品或演出之间的对应关系。', '把表演实践、影响力和申请结构整合成一版主线。']
+          },
+          '其他 Arts & Culture 相关领域': {
+            low: ['先确认哪些公开成果、机构合作或媒体记录能算核心材料。', '补足近五年内可验证的专业成果。', '把零散经历整理成清晰的专业实践路径。'],
+            mid: ['筛出最能支撑申请的机构合作、公开成果与外部验证材料。', '补强媒体、奖项或出版等第三方证明。', '把专业路径和英国发展叙事连起来。'],
+            high: ['集中保留最强的机构合作、公开成果和第三方背书材料。', '优化推荐信与代表性成果之间的对应关系。', '把专业路径、影响力和申请结构整合成一版主线。']
+          }
+        };
+        return (map[primary] && map[primary][band]) || ['判断现有证明材料里哪些是核心，哪些只是补充。', '优先补最影响准备度的缺口。', '开始把零散经历整理成更清晰的申请逻辑。'];
+      }
+
       function calculateResult(answers) {
+        const primaryField = getPrimaryField(answers.fields);
         let evidence = 0;
         evidence += evidenceTypeScore(answers.evidenceTypes);
         evidence += SCORE_MAPS.recency[answers.recency] || 0;
@@ -394,55 +557,43 @@
         const evidenceTypes = (answers.evidenceTypes || []).filter(v => v !== '我还不确定哪些算有效证明材料');
         if (evidenceTypes.length < 2) {
           evidence = Math.min(evidence, 28);
-          hints.push('你当前可识别的证明材料类型还不足两种，这通常意味着申请基础还不够稳。');
+          hints.push(getFieldSpecificHint(primaryField, 'weakEvidence'));
         }
         if (answers.recency === '大多早于 5 年前') {
           total -= 5;
-          hints.push('你当前最重要的证明材料，主要早于近五年，这会明显影响当前申请支撑力。');
+          hints.push(getFieldSpecificHint(primaryField, 'oldEvidence'));
         }
         if (answers.sourceNature === '大多来自学生时期项目') {
           evidence = Math.min(evidence, 22);
           total -= 8;
-          hints.push('你目前的核心证明材料更偏向学生时期项目，这通常不足以支撑成熟的专业申请。');
+          hints.push(getFieldSpecificHint(primaryField, 'studentProject'));
         }
         if (answers.sourceNature === '大多来自商业项目') {
           evidence = Math.min(evidence, 22);
           total -= 8;
-          hints.push('你目前的核心证明材料更偏向商业项目。对于 Arts & Culture 路径，这类材料通常不能直接作为核心支撑。');
+          hints.push(getFieldSpecificHint(primaryField, 'commercialProject'));
         }
         if (answers.recommenderCount === '0 位' || answers.recommenderCount === '1 位') {
-          hints.push('你当前的 recommendation letters 网络明显偏弱，这会成为实际申请中的关键障碍。');
+          hints.push(getFieldSpecificHint(primaryField, 'weakLetters'));
         }
         if (answers.narrative === '现在还说不清' || answers.narrative === '有一些想法，但比较模糊') {
-          hints.push('你目前对自身实践和为什么适合在英国继续发展的表达还不够清楚。');
+          hints.push(getFieldSpecificHint(primaryField, 'weakNarrative'));
         }
 
         total = Math.max(0, Math.min(100, evidence + recommenders + readiness + (total - (evidence + recommenders + readiness))));
 
         let band = 'low';
         let summary = '你目前还不适合进入正式申请准备。';
-        let nextSteps = [
-          '先确认哪些经历真正能算有效证明材料。',
-          '优先建立毕业后、近五年内、可验证的专业成果基础。',
-          '先看清 recommendation letters 网络是否有现实空间。'
-        ];
+        let nextSteps = getFieldSpecificNextSteps(answers.fields, 'low');
         if (total >= 40 && total <= 69) {
           band = 'mid';
           summary = '你已经有一定基础，但距离稳定申请还差一段。';
-          nextSteps = [
-            '判断现有证明材料里哪些是核心，哪些只是补充。',
-            '优先补最影响准备度的缺口。',
-            '开始把零散经历整理成更清晰的申请逻辑。'
-          ];
+          nextSteps = getFieldSpecificNextSteps(answers.fields, 'mid');
         }
         if (total >= 70) {
           band = 'high';
           summary = '你已经具备一定申请基础。';
-          nextSteps = [
-            '判断哪些证明材料应成为核心支撑。',
-            '优化 recommendation letters 的组合与顺序。',
-            '把申请叙事、证明材料和整体结构对齐。'
-          ];
+          nextSteps = getFieldSpecificNextSteps(answers.fields, 'high');
         }
 
         return {
@@ -465,10 +616,13 @@
         const [answers, setAnswers] = React.useState({});
         const [email, setEmail] = React.useState('');
         const [leadSaved, setLeadSaved] = React.useState(false);
+        const [leadSaving, setLeadSaving] = React.useState(false);
+        const [leadError, setLeadError] = React.useState('');
 
         const question = QUESTIONS[step];
         const progress = ((step + 1) / QUESTIONS.length) * 100;
         const result = React.useMemo(() => calculateResult(answers), [answers]);
+        const questionOptions = question.getOptions ? question.getOptions(answers) : question.options;
 
         function toggleMulti(id, option, maxSelect) {
           const current = answers[id] || [];
@@ -488,17 +642,40 @@
           return Boolean(value);
         }
 
-        function saveLeadPlaceholder(e) {
+        async function saveLeadPlaceholder(e) {
+          e.preventDefault();
+          setLeadSaved(false);
+          setLeadError('');
+
           if (!email.trim()) {
-            e.preventDefault();
+            setLeadError('请先输入邮箱。');
             return;
           }
+
+          setLeadSaving(true);
           try {
             const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
             existing.push({ email, answers, result, createdAt: new Date().toISOString() });
             localStorage.setItem('gtv_leads', JSON.stringify(existing));
           } catch (e) {}
-          setLeadSaved(true);
+
+          try {
+            const res = await fetch('/api/send-result', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, answers, result }),
+            });
+
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+              throw new Error(data.error || '发送失败');
+            }
+            setLeadSaved(true);
+          } catch (err) {
+            setLeadError(err.message || '发送失败，请稍后再试。');
+          } finally {
+            setLeadSaving(false);
+          }
         }
 
         if (screen === 'home') {
@@ -562,15 +739,28 @@
         if (screen === 'quiz') {
           return (
             <div className="app quiz-wrap">
+              <div className="sticky-topbar">
+                <div className="sticky-topbar-inner">
+                  <div className="muted">UK Global Talent Visa · Arts & Culture route</div>
+                  <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
+                    返回首頁
+                  </button>
+                </div>
+              </div>
               <div className="container">
                 <div className="panel">
                   <div className="question-meta">第 {step + 1} 题 / 共 {QUESTIONS.length} 题</div>
                   <div className="progress"><div style={{ width: `${progress}%` }} /></div>
                   <h2 className="question-title">{question.title}</h2>
                   {question.desc && <p className="question-desc">{question.desc}</p>}
+                  {question.id === 'evidenceTypes' && (
+                    <div className="muted" style={{marginBottom: 14}}>
+                      当前选择方向：{Array.isArray(answers.fields) && answers.fields.length ? answers.fields.join(' / ') : '未选择'}
+                    </div>
+                  )}
 
                   <div className="options">
-                    {question.options.map((option) => {
+                    {questionOptions.map((option) => {
                       const selected = question.type === 'multi'
                         ? (answers[question.id] || []).includes(option)
                         : answers[question.id] === option;
@@ -611,6 +801,19 @@
 
         return (
           <div className="app section">
+            <div className="sticky-topbar">
+              <div className="sticky-topbar-inner">
+                <div className="muted">UK Global Talent Visa · Arts & Culture route</div>
+                <div style={{display:'flex', gap:'12px', flexWrap:'wrap'}}>
+                  <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
+                    返回首頁
+                  </button>
+                  <button className="btn btn-secondary" onClick={() => { setScreen('quiz'); setStep(0); setAnswers({}); setEmail(''); setLeadSaved(false); setLeadError(''); }}>
+                    重新測一次
+                  </button>
+                </div>
+              </div>
+            </div>
             <div className="container result-grid">
               <div className="panel">
                 <div className={`badge ${result.band === 'low' ? 'badge-low' : result.band === 'mid' ? 'badge-mid' : 'badge-high'}`}>
@@ -619,6 +822,14 @@
                 <h2 style={{marginBottom: 8}}>你的当前准备度评分</h2>
                 <div className="result-score">{result.total}</div>
                 <p className="section-sub" style={{marginBottom: 18}}>{result.summary}</p>
+                <div className="result-actions">
+                  <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
+                    返回首頁
+                  </button>
+                  <button className="btn btn-secondary" onClick={() => { setScreen('quiz'); setStep(0); setAnswers({}); setEmail(''); setLeadSaved(false); setLeadError(''); }}>
+                    重新測一次
+                  </button>
+                </div>
                 <div className="metric-list">
                   {Object.entries(result.metrics).map(([label, value]) => (
                     <div className="metric" key={label}>
@@ -649,23 +860,12 @@
                 <div className="panel">
                   <h3 style={{marginTop:0}}>保存你的结果</h3>
                   <p className="section-sub" style={{marginBottom:14}}>邮箱收集先做占位版。你可以输入邮箱，把这次结果存到本地，方便后续演示流程。</p>
-                  <form className="lead-form" name="gtv-leads" method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={saveLeadPlaceholder}>
-                    <input type="hidden" name="form-name" value="gtv-leads" />
-                    <input type="hidden" name="bot-field" />
-                    <input type="hidden" name="submitted_at" value={new Date().toISOString()} />
-                    <input type="hidden" name="score_total" value={result.total} />
-                    <input type="hidden" name="score_evidence" value={result.metrics['证明材料强度']} />
-                    <input type="hidden" name="score_recommenders" value={result.metrics['推荐信网络']} />
-                    <input type="hidden" name="score_readiness" value={result.metrics['整体准备状态']} />
-                    <input type="hidden" name="band" value={result.band} />
-                    <input type="hidden" name="summary" value={result.summary} />
-                    <input type="hidden" name="hints" value={(result.hints || []).join(' | ')} />
-                    <input type="hidden" name="next_steps" value={(result.nextSteps || []).join(' | ')} />
-                    <input type="hidden" name="answers_json" value={JSON.stringify(answers)} />
+                  <form className="lead-form" onSubmit={saveLeadPlaceholder}>
                     <input type="email" name="email" required placeholder="输入你的邮箱" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <button type="submit" className="btn btn-primary">保存结果并了解后续支持</button>
-                    {leadSaved && <div className="muted">已提交成功。邮箱和本次评估结果都会被保存，方便后续跟进和产品优化。</div>}
-                    <div className="muted">说明：当前版本会把邮箱、答题结果、评分和关键提示一起提交并保留。</div>
+                    <button type="submit" className="btn btn-primary" disabled={leadSaving} style={{opacity: leadSaving ? 0.7 : 1}}>{leadSaving ? '发送中...' : '保存结果并发送到邮箱'}</button>
+                    {leadSaved && <div className="status-ok">邮件已发送。你会收到本次评估结果，同时我们也会保留这条线索用于后续跟进。</div>}
+                    {leadError && <div className="status-error">{leadError}</div>}
+                    <div className="muted">说明：当前版本会把邮箱、答题结果、评分和关键提示一起提交并发送到你的邮箱。</div>
                   </form>
                 </div>
               </div>
