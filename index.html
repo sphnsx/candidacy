@@ -23,11 +23,11 @@
         min-height: 100vh;
       }
       .container {
-        width: min(1080px, calc(100vw - 32px));
+        width: min(1040px, calc(100vw - 32px));
         margin: 0 auto;
       }
       .hero {
-        padding: 72px 0 48px;
+        padding: 80px 0 56px;
         background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
         border-bottom: 1px solid #e5ebf5;
       }
@@ -48,9 +48,9 @@
       }
       h1 {
         margin: 20px 0 16px;
-        font-size: clamp(34px, 5vw, 56px);
-        line-height: 1.08;
-        letter-spacing: -0.03em;
+        font-size: clamp(30px, 4.8vw, 48px);
+        line-height: 1.22;
+        letter-spacing: -0.02em;
       }
       .hero p {
         margin: 0 0 20px;
@@ -69,31 +69,123 @@
         border-radius: 14px;
         padding: 14px 20px;
         cursor: pointer;
-        transition: .18s ease;
+        transition: background-color .15s ease, border-color .15s ease, color .15s ease;
       }
       .btn-primary {
         background: #1c4ed8;
         color: white;
         font-weight: 700;
-        box-shadow: 0 10px 24px rgba(28,78,216,.18);
       }
-      .btn-primary:hover { background: #1743bb; }
+      .btn-primary:hover { background: #1e40af; }
       .btn-secondary {
-        background: white;
-        color: #1c4ed8;
+        background: transparent;
+        color: #162033;
         border: 1px solid #cfdaf1;
+      }
+      .btn-secondary:hover {
+        border-color: #2756c5;
+        color: #2756c5;
       }
       .hero-note {
         margin-top: 16px;
         font-size: 14px;
         color: #66728a;
       }
+      .trust-points {
+        display: grid;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .trust-point {
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.72);
+        border: 1px solid #e2ebfb;
+        color: #44506a;
+        line-height: 1.6;
+      }
+      .entry-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin-top: 24px;
+      }
+      .entry-card {
+        padding: 24px;
+        border-radius: 16px;
+        background: white;
+        border: 1px solid #e4eaf4;
+        cursor: pointer;
+      }
+      .entry-card:hover {
+        border-color: #bfd0ef;
+      }
+      .entry-card h3 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+      .entry-card p {
+        margin: 0;
+        color: #55627d;
+        line-height: 1.7;
+      }
+      .field-stack {
+        display: grid;
+        gap: 12px;
+      }
+      .field-stack input, .field-stack select, .field-stack textarea {
+        width: 100%;
+        border: 1px solid #d6e0ef;
+        border-radius: 12px;
+        padding: 14px 16px;
+        background: white;
+      }
+      .field-stack textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .field-stack input:focus, .field-stack select:focus, .field-stack textarea:focus {
+        outline: none;
+        border-color: #1c4ed8;
+        box-shadow: 0 0 0 3px rgba(28, 78, 216, 0.08);
+      }
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #e6efff;
+        border: 1px solid #cfe0ff;
+        font-size: 12px;
+        color: #2756c5;
+      }
+      .tracker-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0;
+        border-bottom: 1px solid #e9edf5;
+      }
+      .tracker-row-title {
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .lead-panel-note {
+        margin-top: 12px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: #f8fbff;
+        border: 1px solid #e2ebfb;
+      }
       .panel {
         background: white;
         border: 1px solid #e4eaf4;
-        border-radius: 24px;
+        border-radius: 16px;
         padding: 24px;
-        box-shadow: 0 12px 28px rgba(15, 32, 63, 0.06);
+        box-shadow: 0 6px 18px rgba(15, 32, 63, 0.05);
       }
       .score-preview {
         display: grid;
@@ -102,8 +194,8 @@
       .mini-card {
         background: #f8fbff;
         border: 1px solid #e2ebfb;
-        border-radius: 18px;
-        padding: 16px;
+        border-radius: 12px;
+        padding: 18px;
       }
       .mini-card strong {
         display: block;
@@ -111,11 +203,12 @@
         margin-top: 4px;
       }
       .section {
-        padding: 56px 0;
+        padding: 72px 0;
       }
       .section h2 {
         margin: 0 0 10px;
-        font-size: 30px;
+        font-size: 28px;
+        line-height: 1.35;
       }
       .section-sub {
         margin: 0 0 28px;
@@ -130,8 +223,8 @@
       .card {
         background: white;
         border: 1px solid #e5ebf5;
-        border-radius: 20px;
-        padding: 22px;
+        border-radius: 12px;
+        padding: 24px;
       }
       .card h3 { margin-top: 0; font-size: 20px; }
       .card p { margin-bottom: 0; color: #57637c; line-height: 1.7; }
@@ -166,7 +259,8 @@
       }
       .progress > div {
         height: 100%;
-        background: linear-gradient(90deg, #1d4ed8, #4f7df0);
+        background: #1c4ed8;
+        transition: width .3s ease;
       }
       .question-meta {
         color: #62708b;
@@ -189,15 +283,21 @@
       }
       .option {
         padding: 16px 18px;
-        border-radius: 16px;
+        border-radius: 12px;
         border: 1px solid #dbe4f3;
         background: white;
         cursor: pointer;
+        min-height: 52px;
+        text-align: left;
+        color: #162033;
+      }
+      .option:hover {
+        border-color: #bfd0ef;
       }
       .option.selected {
-        border-color: #1d4ed8;
-        background: #eef4ff;
-        box-shadow: inset 0 0 0 1px #1d4ed8;
+        border-color: #1c4ed8;
+        background: #e6efff;
+        box-shadow: inset 0 0 0 1px #1c4ed8;
       }
       .option small {
         display: block;
@@ -222,7 +322,7 @@
         margin: 18px 0 22px;
       }
       .result-score {
-        font-size: 62px;
+        font-size: 68px;
         font-weight: 800;
         line-height: 1;
       }
@@ -233,16 +333,16 @@
         font-size: 13px;
         font-weight: 700;
       }
-      .badge-low { background: #feeceb; color: #b6362a; }
-      .badge-mid { background: #fff7e8; color: #b36b00; }
-      .badge-high { background: #e9f8ee; color: #1f7a3e; }
+      .badge-low { background: #feeceb; color: #d92d2d; }
+      .badge-mid { background: #fff3e0; color: #e8853d; }
+      .badge-high { background: #e6f9ee; color: #22a06b; }
       .metric-list, .hint-list, .next-list {
         display: grid;
         gap: 12px;
       }
       .metric {
-        padding: 14px 16px;
-        border-radius: 16px;
+        padding: 16px 18px;
+        border-radius: 12px;
         background: #f8fbff;
         border: 1px solid #e2ebfb;
       }
@@ -257,12 +357,38 @@
         display: grid;
         gap: 12px;
       }
+      .lead-toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .lead-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .lead-item {
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: #f8fbff;
+        border: 1px solid #e2ebfb;
+      }
+      .lead-item strong {
+        display: block;
+        margin-bottom: 4px;
+      }
       .lead-form input {
         width: 100%;
         border: 1px solid #d6e0ef;
-        border-radius: 14px;
+        border-radius: 12px;
         padding: 14px 16px;
         background: white;
+      }
+      .lead-form input:focus {
+        outline: none;
+        border-color: #1c4ed8;
+        box-shadow: 0 0 0 3px rgba(28, 78, 216, 0.08);
       }
       .muted {
         color: #6b7790;
@@ -270,18 +396,47 @@
         line-height: 1.6;
       }
       .status-ok {
-        color: #1f7a3e;
+        color: #22a06b;
         font-size: 14px;
         line-height: 1.6;
       }
       .status-error {
-        color: #b6362a;
+        color: #d92d2d;
         font-size: 14px;
         line-height: 1.6;
       }
       @media (max-width: 860px) {
-        .hero-grid, .grid-3, .result-grid { grid-template-columns: 1fr; }
-        .question-title { font-size: 24px; }
+        .hero {
+          padding: 56px 0 40px;
+        }
+        .hero-grid, .grid-3, .result-grid, .entry-grid { grid-template-columns: 1fr; }
+        .sticky-topbar-inner {
+          width: min(1040px, calc(100vw - 24px));
+        }
+        .container {
+          width: min(1040px, calc(100vw - 24px));
+        }
+        .question-title {
+          font-size: 24px;
+          line-height: 1.4;
+        }
+        .panel {
+          padding: 20px;
+        }
+        .result-score {
+          font-size: 56px;
+        }
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .cta-row {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+        .nav-row {
+          flex-direction: column;
+        }
       }
     </style>
   </head>
@@ -369,6 +524,8 @@
           id: 'recommenderQuality',
           type: 'multi',
           title: '这些潜在推荐人目前更接近哪种情况？',
+          desc: '可多选。可选数量会根据上一题你填写的推荐人数自动变化。若你目前还拿不准，请只选“我不确定他们是否符合要求”。',
+          exclusiveOption: '我不确定他们是否符合要求',
           options: ['和我有真实合作经历', '来自不同机构', '在行业内有一定分量或认可度', '我有把握他们能写出具体内容', '我不确定他们是否符合要求']
         },
         {
@@ -414,19 +571,34 @@
         return 10;
       }
 
-      function recommenderQualityScore(selected) {
+      function recommenderQualityScore(count, selected) {
         const set = new Set(selected || []);
-        let score = 0;
-        if (set.has('和我有真实合作经历')) score += 3;
-        if (set.has('来自不同机构')) score += 3;
-        if (set.has('在行业内有一定分量或认可度')) score += 2;
-        if (set.has('我有把握他们能写出具体内容')) score += 2;
-        return Math.min(score, 10);
+        if (!count || count === '0 位') return 0;
+        if (set.has('我不确定他们是否符合要求')) return count === '1 位' ? 1 : 0;
+
+        let raw = 0;
+        if (set.has('和我有真实合作经历')) raw += 3;
+        if (set.has('来自不同机构')) raw += 2;
+        if (set.has('在行业内有一定分量或认可度')) raw += 3;
+        if (set.has('我有把握他们能写出具体内容')) raw += 2;
+
+        const capMap = {
+          '1 位': 3,
+          '2 位': 6,
+          '3 位': 8,
+          '4 位或以上': 10,
+        };
+        const cap = capMap[count] || 0;
+        return Math.min(raw, cap);
       }
 
       function getPrimaryField(selectedFields) {
         const fields = Array.isArray(selectedFields) ? selectedFields : [];
         return fields[0] || 'Arts & Culture';
+      }
+
+      function getRouteLabel(field) {
+        return field === 'Arts & Culture' ? 'Arts & Culture' : field;
       }
 
       function getFieldSpecificHint(field, kind) {
@@ -532,82 +704,134 @@
       }
 
       function calculateResult(answers) {
-        const primaryField = getPrimaryField(answers.fields);
-        let evidence = 0;
-        evidence += evidenceTypeScore(answers.evidenceTypes);
-        evidence += SCORE_MAPS.recency[answers.recency] || 0;
-        evidence += SCORE_MAPS.sourceNature[answers.sourceNature] || 0;
-        evidence += SCORE_MAPS.evidenceStrength[answers.evidenceStrength] || 0;
-        evidence += SCORE_MAPS.verifiability[answers.verifiability] || 0;
+        const selectedFields = Array.isArray(answers.fields) && answers.fields.length ? answers.fields : ['其他 Arts & Culture 相关领域'];
 
-        let recommenders = 0;
-        recommenders += SCORE_MAPS.recommenderCount[answers.recommenderCount] || 0;
-        recommenders += recommenderQualityScore(answers.recommenderQuality);
-        recommenders += SCORE_MAPS.lettersConfidence[answers.lettersConfidence] || 0;
+        function calculateRouteResult(field) {
+          let evidence = 0;
+          evidence += evidenceTypeScore(answers.evidenceTypes);
+          evidence += SCORE_MAPS.recency[answers.recency] || 0;
+          evidence += SCORE_MAPS.sourceNature[answers.sourceNature] || 0;
+          evidence += SCORE_MAPS.evidenceStrength[answers.evidenceStrength] || 0;
+          evidence += SCORE_MAPS.verifiability[answers.verifiability] || 0;
 
-        let readiness = 0;
-        readiness += SCORE_MAPS.years[answers.years] || 0;
-        readiness += SCORE_MAPS.stage[answers.stage] || 0;
-        readiness += SCORE_MAPS.narrative[answers.narrative] || 0;
-        readiness += SCORE_MAPS.selfReadiness[answers.selfReadiness] || 0;
+          let recommenders = 0;
+          recommenders += SCORE_MAPS.recommenderCount[answers.recommenderCount] || 0;
+          recommenders += recommenderQualityScore(answers.recommenderCount, answers.recommenderQuality);
+          recommenders += SCORE_MAPS.lettersConfidence[answers.lettersConfidence] || 0;
 
-        let total = evidence + recommenders + readiness;
-        const hints = [];
+          let readiness = 0;
+          readiness += SCORE_MAPS.years[answers.years] || 0;
+          readiness += SCORE_MAPS.stage[answers.stage] || 0;
+          readiness += SCORE_MAPS.narrative[answers.narrative] || 0;
+          readiness += SCORE_MAPS.selfReadiness[answers.selfReadiness] || 0;
 
-        const evidenceTypes = (answers.evidenceTypes || []).filter(v => v !== '我还不确定哪些算有效证明材料');
-        if (evidenceTypes.length < 2) {
-          evidence = Math.min(evidence, 28);
-          hints.push(getFieldSpecificHint(primaryField, 'weakEvidence'));
-        }
-        if (answers.recency === '大多早于 5 年前') {
-          total -= 5;
-          hints.push(getFieldSpecificHint(primaryField, 'oldEvidence'));
-        }
-        if (answers.sourceNature === '大多来自学生时期项目') {
-          evidence = Math.min(evidence, 22);
-          total -= 8;
-          hints.push(getFieldSpecificHint(primaryField, 'studentProject'));
-        }
-        if (answers.sourceNature === '大多来自商业项目') {
-          evidence = Math.min(evidence, 22);
-          total -= 8;
-          hints.push(getFieldSpecificHint(primaryField, 'commercialProject'));
-        }
-        if (answers.recommenderCount === '0 位' || answers.recommenderCount === '1 位') {
-          hints.push(getFieldSpecificHint(primaryField, 'weakLetters'));
-        }
-        if (answers.narrative === '现在还说不清' || answers.narrative === '有一些想法，但比较模糊') {
-          hints.push(getFieldSpecificHint(primaryField, 'weakNarrative'));
+          let total = evidence + recommenders + readiness;
+          const hints = [];
+
+          const evidenceTypes = (answers.evidenceTypes || []).filter(v => v !== '我还不确定哪些算有效证明材料');
+          if (evidenceTypes.length < 2) {
+            evidence = Math.min(evidence, 28);
+            hints.push(getFieldSpecificHint(field, 'weakEvidence'));
+          }
+          if (answers.recency === '大多早于 5 年前') {
+            total -= 5;
+            hints.push(getFieldSpecificHint(field, 'oldEvidence'));
+          }
+          if (answers.sourceNature === '大多来自学生时期项目') {
+            evidence = Math.min(evidence, 22);
+            total -= 8;
+            hints.push(getFieldSpecificHint(field, 'studentProject'));
+          }
+          if (answers.sourceNature === '大多来自商业项目') {
+            evidence = Math.min(evidence, 22);
+            total -= 8;
+            hints.push(getFieldSpecificHint(field, 'commercialProject'));
+          }
+          if (answers.recommenderCount === '0 位' || answers.recommenderCount === '1 位') {
+            const uncertainOnly = Array.isArray(answers.recommenderQuality)
+              && answers.recommenderQuality.length === 1
+              && answers.recommenderQuality[0] === '我不确定他们是否符合要求';
+            recommenders = Math.min(recommenders, answers.recommenderCount === '0 位' ? 2 : (uncertainOnly ? 3 : 5));
+            hints.push(getFieldSpecificHint(field, 'weakLetters'));
+          }
+          if (answers.recommenderCount === '2 位') {
+            recommenders = Math.min(recommenders, 9);
+          }
+          if (answers.narrative === '现在还说不清' || answers.narrative === '有一些想法，但比较模糊') {
+            hints.push(getFieldSpecificHint(field, 'weakNarrative'));
+          }
+
+          total = Math.max(0, Math.min(100, evidence + recommenders + readiness + (total - (evidence + recommenders + readiness))));
+
+          let band = 'low';
+          let summary = '你目前还不适合按这个 route 进入正式申请准备。';
+          let nextSteps = getFieldSpecificNextSteps([field], 'low');
+          if (total >= 40 && total <= 69) {
+            band = 'mid';
+            summary = '按这个 route 看，你已经有一定基础，但距离稳定申请还差一段。';
+            nextSteps = getFieldSpecificNextSteps([field], 'mid');
+          }
+          if (total >= 70) {
+            band = 'high';
+            summary = '按这个 route 看，你已经具备一定申请基础。';
+            nextSteps = getFieldSpecificNextSteps([field], 'high');
+          }
+
+          return {
+            field,
+            label: getRouteLabel(field),
+            total,
+            band,
+            summary,
+            metrics: {
+              '证明材料强度': evidence,
+              '推荐信网络': recommenders,
+              '整体准备状态': readiness,
+            },
+            hints: hints.slice(0, 3),
+            nextSteps,
+          };
         }
 
-        total = Math.max(0, Math.min(100, evidence + recommenders + readiness + (total - (evidence + recommenders + readiness))));
-
-        let band = 'low';
-        let summary = '你目前还不适合进入正式申请准备。';
-        let nextSteps = getFieldSpecificNextSteps(answers.fields, 'low');
-        if (total >= 40 && total <= 69) {
-          band = 'mid';
-          summary = '你已经有一定基础，但距离稳定申请还差一段。';
-          nextSteps = getFieldSpecificNextSteps(answers.fields, 'mid');
-        }
-        if (total >= 70) {
-          band = 'high';
-          summary = '你已经具备一定申请基础。';
-          nextSteps = getFieldSpecificNextSteps(answers.fields, 'high');
-        }
+        const routeResults = selectedFields.map(calculateRouteResult).sort((a, b) => b.total - a.total);
+        const primaryRecommendation = routeResults[0];
+        const alternateRoutes = routeResults.slice(1);
 
         return {
-          total,
-          band,
-          summary,
-          metrics: {
-            '证明材料强度': evidence,
-            '推荐信网络': recommenders,
-            '整体准备状态': readiness,
-          },
-          hints: hints.slice(0, 3),
-          nextSteps,
+          total: primaryRecommendation.total,
+          band: primaryRecommendation.band,
+          summary: `如果按 ${primaryRecommendation.label} route 组织申请，你目前的准备度最高。`,
+          metrics: primaryRecommendation.metrics,
+          hints: primaryRecommendation.hints,
+          nextSteps: primaryRecommendation.nextSteps,
+          primaryRecommendation,
+          alternateRoutes,
+          routeResults,
         };
+      }
+
+      const ROUTE_OPTIONS = [
+        { value: 'visual_art', label: 'Visual Art' },
+        { value: 'design', label: 'Design' },
+        { value: 'fashion', label: 'Fashion' },
+        { value: 'film_tv', label: 'Film / TV' },
+        { value: 'architecture', label: 'Architecture' },
+        { value: 'performing_arts', label: 'Performing Arts' },
+        { value: 'cross_disciplinary', label: 'Cross-disciplinary' },
+      ];
+
+      const OPPORTUNITY_LIBRARY = [
+        { id: 'fieldwork_issue_2', name: 'Fieldwork Issue 2', routeTags: ['visual_art','cross_disciplinary'], opportunityType: 'publication', project: 'TWICE', deadlineLabel: '6 May 2026', feeSummary: '~£19', gtvFit: 'yes', whyItMatters: 'Selection timing is early enough to matter for near-term GTV preparation.', evidenceValue: ['publication', 'professional_validation'], fitRoutesNote: 'Best for visual art and image-led cross-disciplinary practices.', status: 'shortlisted' },
+        { id: 'zrfdbck_drift_2026', name: 'ZRFDBCK Drift', routeTags: ['visual_art','cross_disciplinary'], opportunityType: 'exhibition', project: 'TWICE', deadlineLabel: '20 May 2026', feeSummary: '~£19', gtvFit: 'yes', whyItMatters: 'Fast announcement timeline makes it useful for immediate momentum.', evidenceValue: ['public_presentation', 'international_visibility'], fitRoutesNote: 'Useful for visual art and lens-based practices.', status: 'shortlisted' },
+        { id: 'design_open_lab', name: 'Design Open Lab', routeTags: ['design','cross_disciplinary'], opportunityType: 'institutional_programme', project: 'Portfolio', deadlineLabel: '18 May 2026', feeSummary: 'Free', gtvFit: 'warn', whyItMatters: 'Institutional context is useful, but selection outcome may be less visible externally.', evidenceValue: ['institutional_partnership', 'professional_validation'], fitRoutesNote: 'Better for designers with a clear applied or research-led body of work.', status: 'researching' },
+        { id: 'fashion_image_feature', name: 'Fashion Image Feature', routeTags: ['fashion','visual_art'], opportunityType: 'publication', project: 'Series', deadlineLabel: '12 May 2026', feeSummary: '~£15', gtvFit: 'warn', whyItMatters: 'Can help with visibility, but depends heavily on publication quality.', evidenceValue: ['publication', 'media_coverage'], fitRoutesNote: 'More useful for fashion image-makers than for general visual art positioning.', status: 'researching' },
+        { id: 'screening_weekender', name: 'Screening Weekender', routeTags: ['film_tv'], opportunityType: 'screening', project: 'Short film', deadlineLabel: '30 May 2026', feeSummary: '~£22', gtvFit: 'yes', whyItMatters: 'Public screening and curatorial selection can become useful evidence.', evidenceValue: ['festival_screening', 'public_presentation'], fitRoutesNote: 'Strongest for filmmakers with a finished short and clear festival strategy.', status: 'shortlisted' },
+        { id: 'architecture_public_programme', name: 'Architecture Public Programme', routeTags: ['architecture'], opportunityType: 'talk', project: 'Built / research work', deadlineLabel: '28 May 2026', feeSummary: 'Free', gtvFit: 'warn', whyItMatters: 'Public programme visibility helps, though it is weaker than built work or major awards.', evidenceValue: ['public_presentation', 'professional_validation'], fitRoutesNote: 'Useful as supporting evidence, not usually core evidence.', status: 'researching' },
+        { id: 'performing_arts_residency', name: 'Performing Arts Residency', routeTags: ['performing_arts'], opportunityType: 'residency', project: 'New work', deadlineLabel: '10 June 2026', feeSummary: '~£25', gtvFit: 'yes', whyItMatters: 'Residency plus public showing can generate meaningful evidence if outcomes are documented well.', evidenceValue: ['public_presentation', 'institutional_partnership'], fitRoutesNote: 'Stronger if residency includes a public outcome and institutional host.', status: 'shortlisted' }
+      ];
+
+      function fitLabel(value) {
+        return value === 'yes' ? 'Strong fit' : value === 'warn' ? 'Possible fit' : 'Low fit';
       }
 
       function App() {
@@ -618,16 +842,88 @@
         const [leadSaved, setLeadSaved] = React.useState(false);
         const [leadSaving, setLeadSaving] = React.useState(false);
         const [leadError, setLeadError] = React.useState('');
+        const [savedLeads, setSavedLeads] = React.useState([]);
+        const [analyzeInput, setAnalyzeInput] = React.useState({ route: 'visual_art', title: '', deadline: '', text: '', project: '', targetMonth: '' });
+        const [discoverInput, setDiscoverInput] = React.useState({ route: 'visual_art', practice: '', project: '', targetMonth: '', budget: '', evidenceNeed: '' });
+        const [analysisResult, setAnalysisResult] = React.useState(null);
+        const [discoverResults, setDiscoverResults] = React.useState([]);
 
         const question = QUESTIONS[step];
         const progress = ((step + 1) / QUESTIONS.length) * 100;
         const result = React.useMemo(() => calculateResult(answers), [answers]);
         const questionOptions = question.getOptions ? question.getOptions(answers) : question.options;
 
-        function toggleMulti(id, option, maxSelect) {
+        React.useEffect(() => {
+          try {
+            const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
+            setSavedLeads(Array.isArray(existing) ? existing.reverse() : []);
+          } catch (e) {
+            setSavedLeads([]);
+          }
+        }, []);
+
+        function analyzeOpportunity() {
+          if (!analyzeInput.title.trim() && !analyzeInput.text.trim()) return;
+          const text = `${analyzeInput.title} ${analyzeInput.text}`.toLowerCase();
+          const fit = text.includes('award') || text.includes('institution') || text.includes('festival') || text.includes('publication') ? 'yes' : text.includes('competition') || text.includes('open call') ? 'warn' : 'warn';
+          const timing = analyzeInput.targetMonth ? `If your target submission is around ${analyzeInput.targetMonth}, this looks ${fit === 'yes' ? 'usable' : 'possible but not ideal'} from a timing perspective.` : 'Timing needs a target submission month to judge properly.';
+          setAnalysisResult({
+            fit,
+            strategicImportance: fit === 'yes' ? 'Core / useful' : 'Optional unless it fills a clear gap',
+            successView: fit === 'yes' ? 'Plausible if the project fit is real and the material is ready.' : 'Possible, but competitive and not obviously essential.',
+            gtvValue: fit === 'yes' ? 'Potentially useful for evidence-building.' : 'May help, but not obviously a priority without stronger route fit.',
+            timing,
+            recommendation: fit === 'yes' ? 'Worth considering. Save this and compare against your current evidence gaps.' : 'Do not prioritize this until you compare it with stronger route-aligned options.'
+          });
+        }
+
+        function findTailoredOpportunities() {
+          const filtered = OPPORTUNITY_LIBRARY.filter((item) => item.routeTags.includes(discoverInput.route) || item.routeTags.includes('cross_disciplinary'))
+            .filter((item) => !discoverInput.budget || item.feeSummary.toLowerCase().includes('free') || item.feeSummary.toLowerCase().includes('~£'))
+            .slice(0, 5);
+          setDiscoverResults(filtered);
+        }
+
+        function getDynamicMaxSelect(questionId) {
+          if (questionId !== 'recommenderQuality') return null;
+          const count = answers.recommenderCount;
+          if (count === '0 位') return 1;
+          if (count === '1 位') return 1;
+          if (count === '2 位') return 2;
+          if (count === '3 位') return 3;
+          if (count === '4 位或以上') return 4;
+          return null;
+        }
+
+        function toggleMulti(id, option, maxSelect, exclusiveOption) {
+          const effectiveMaxSelect = maxSelect || getDynamicMaxSelect(id);
           const current = answers[id] || [];
           const exists = current.includes(option);
           let next = exists ? current.filter(v => v !== option) : [...current, option];
+
+          if (!exists && exclusiveOption) {
+            if (option === exclusiveOption) {
+              next = [exclusiveOption];
+            } else {
+              next = next.filter(v => v !== exclusiveOption);
+            }
+          }
+
+          if (!exists && effectiveMaxSelect && next.length > effectiveMaxSelect) return;
+          setAnswers({ ...answers, [id]: next });
+        }
+          const current = answers[id] || [];
+          const exists = current.includes(option);
+          let next = exists ? current.filter(v => v !== option) : [...current, option];
+
+          if (!exists && exclusiveOption) {
+            if (option === exclusiveOption) {
+              next = [exclusiveOption];
+            } else {
+              next = next.filter(v => v !== exclusiveOption);
+            }
+          }
+
           if (!exists && maxSelect && next.length > maxSelect) return;
           setAnswers({ ...answers, [id]: next });
         }
@@ -640,6 +936,40 @@
           const value = answers[q.id];
           if (q.type === 'multi') return Array.isArray(value) && value.length > 0;
           return Boolean(value);
+        }
+
+        function refreshSavedLeads() {
+          try {
+            const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
+            setSavedLeads(Array.isArray(existing) ? existing.reverse() : []);
+          } catch (e) {
+            setSavedLeads([]);
+          }
+        }
+
+        function exportSavedLeads() {
+          try {
+            const raw = localStorage.getItem('gtv_leads') || '[]';
+            const blob = new Blob([raw], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `gtv-leads-${new Date().toISOString().slice(0, 10)}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+          } catch (e) {
+            setLeadError('导出失败，请稍后再试。');
+          }
+        }
+
+        function clearSavedLeads() {
+          try {
+            localStorage.removeItem('gtv_leads');
+            setSavedLeads([]);
+            setLeadSaved(false);
+          } catch (e) {
+            setLeadError('清空失败，请稍后再试。');
+          }
         }
 
         async function saveLeadPlaceholder(e) {
@@ -657,22 +987,10 @@
             const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
             existing.push({ email, answers, result, createdAt: new Date().toISOString() });
             localStorage.setItem('gtv_leads', JSON.stringify(existing));
-          } catch (e) {}
-
-          try {
-            const res = await fetch('/api/send-result', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, answers, result }),
-            });
-
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) {
-              throw new Error(data.error || '发送失败');
-            }
+            refreshSavedLeads();
             setLeadSaved(true);
           } catch (err) {
-            setLeadError(err.message || '发送失败，请稍后再试。');
+            setLeadError('保存失败，请稍后再试。');
           } finally {
             setLeadSaving(false);
           }
@@ -685,27 +1003,41 @@
                 <div className="container hero-grid">
                   <div>
                     <div className="eyebrow">GTV Insight · MVP</div>
-                    <h1>看清你现在离 UK Global Talent Visa (Arts & Culture) endorsement 还有多远。</h1>
-                    <p>用 5 分钟做一份 GTV Readiness Check，快速判断你当前的证明材料、recommendation letters 和整体准备状态。</p>
+                    <h1>先判断你现在是否适合开始准备 UK Global Talent Visa，而不是继续在信息里打转。</h1>
+                    <p>这是一份面向 Arts & Culture 申请人的 GTV Readiness Check。你会在 5 分钟内看到自己当前的证明材料强度、推荐信网络，以及整体准备状态。</p>
                     <div className="cta-row">
                       <button className="btn btn-primary" onClick={() => setScreen('quiz')}>开始免费诊断</button>
-                      <button className="btn btn-secondary" onClick={() => document.getElementById('pain-points').scrollIntoView({behavior:'smooth'})}>先看这是什么</button>
                     </div>
-                    <div className="hero-note">不需要预约，不需要先咨询。完成问卷后，可输入邮箱保存结果。</div>
+                    <div className="entry-grid">
+                      <div className="entry-card" onClick={() => setScreen('analyze')}>
+                        <h3>我来提供一个机会</h3>
+                        <p>把 open call、award、publication、residency 或链接信息交给产品，先判断值不值得投。</p>
+                      </div>
+                      <div className="entry-card" onClick={() => setScreen('discover')}>
+                        <h3>帮我找适合我的机会</h3>
+                        <p>基于你的 route、项目、时间线和预算，给你一组 tailored opportunities。</p>
+                      </div>
+                    </div>
+                    <div className="hero-note">不需要预约，不需要先咨询。先做判断，再决定要不要进入下一步准备。</div>
+                    <div className="trust-points">
+                      <div className="trust-point">你会拿到的是结构化判断，不是空泛鼓励，也不是立刻推销服务。</div>
+                      <div className="trust-point">结果会直接指出你当前最需要注意的点，以及下一步更应该补哪里。</div>
+                      <div className="trust-point">如果你已经看到某个 open call 或 award，也可以直接让产品先判断值不值得投。</div>
+                    </div>
                   </div>
                   <div className="panel">
                     <div className="score-preview">
                       <div className="mini-card">
-                        <div>你会拿到</div>
+                        <div>你会看到</div>
                         <strong>0–100 分准备度评分</strong>
                       </div>
                       <div className="mini-card">
-                        <div>系统会判断</div>
+                        <div>系统会拆开判断</div>
                         <strong>证明材料 / 推荐信 / 整体准备状态</strong>
                       </div>
                       <div className="mini-card">
-                        <div>结果里会提示</div>
-                        <strong>当前优势、明显缺口、下一步动作</strong>
+                        <div>结果会明确告诉你</div>
+                        <strong>当前缺口、注意点、下一步动作</strong>
                       </div>
                     </div>
                   </div>
@@ -736,6 +1068,85 @@
           );
         }
 
+        if (screen === 'analyze') {
+          return (
+            <div className="app section">
+              <div className="sticky-topbar"><div className="sticky-topbar-inner"><div className="muted">Analyze an opportunity</div><button className="btn btn-secondary" onClick={() => setScreen('home')}>返回首頁</button></div></div>
+              <div className="container result-grid">
+                <div className="panel">
+                  <h2 style={{marginTop:0}}>我来提供一个机会</h2>
+                  <p className="section-sub">把你看到的 open call、award、publication、residency、screening 或其他机会贴进来，我先帮你判断。</p>
+                  <div className="field-stack">
+                    <select value={analyzeInput.route} onChange={(e) => setAnalyzeInput({ ...analyzeInput, route: e.target.value })}>{ROUTE_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
+                    <input placeholder="机会标题" value={analyzeInput.title} onChange={(e) => setAnalyzeInput({ ...analyzeInput, title: e.target.value })} />
+                    <input placeholder="Deadline（可选）" value={analyzeInput.deadline} onChange={(e) => setAnalyzeInput({ ...analyzeInput, deadline: e.target.value })} />
+                    <input placeholder="你的项目名（可选）" value={analyzeInput.project} onChange={(e) => setAnalyzeInput({ ...analyzeInput, project: e.target.value })} />
+                    <input placeholder="目标提交月份，例如 Oct 2026（可选）" value={analyzeInput.targetMonth} onChange={(e) => setAnalyzeInput({ ...analyzeInput, targetMonth: e.target.value })} />
+                    <textarea placeholder="贴 opportunity 描述、链接摘要、你看到的重点要求" value={analyzeInput.text} onChange={(e) => setAnalyzeInput({ ...analyzeInput, text: e.target.value })} />
+                    <button className="btn btn-primary" onClick={analyzeOpportunity}>开始判断</button>
+                  </div>
+                </div>
+                <div className="panel">
+                  <h2 style={{marginTop:0}}>判断结果</h2>
+                  {analysisResult ? (
+                    <div className="metric-list">
+                      <div className="metric"><div className="metric-head"><span>Fit</span><span>{fitLabel(analysisResult.fit)}</span></div><div className="muted">{analysisResult.successView}</div></div>
+                      <div className="metric"><div className="metric-head"><span>Strategic importance</span><span>{analysisResult.strategicImportance}</span></div><div className="muted">{analysisResult.gtvValue}</div></div>
+                      <div className="metric"><div className="metric-head"><span>Timing</span><span>Check</span></div><div className="muted">{analysisResult.timing}</div></div>
+                      <div className="metric"><div className="metric-head"><span>Recommendation</span><span>Next</span></div><div className="muted">{analysisResult.recommendation}</div></div>
+                    </div>
+                  ) : <div className="muted">填入一个机会后，这里会输出 fit、必要性、时间判断和建议动作。</div>}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        if (screen === 'discover') {
+          return (
+            <div className="app section">
+              <div className="sticky-topbar"><div className="sticky-topbar-inner"><div className="muted">Find opportunities for me</div><button className="btn btn-secondary" onClick={() => setScreen('home')}>返回首頁</button></div></div>
+              <div className="container result-grid">
+                <div className="panel">
+                  <h2 style={{marginTop:0}}>基于我的情况推荐</h2>
+                  <p className="section-sub">先输入你的基本信息，产品再给你一组更值得优先看的 tailored opportunities。</p>
+                  <div className="field-stack">
+                    <select value={discoverInput.route} onChange={(e) => setDiscoverInput({ ...discoverInput, route: e.target.value })}>{ROUTE_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
+                    <input placeholder="你的 practice / discipline" value={discoverInput.practice} onChange={(e) => setDiscoverInput({ ...discoverInput, practice: e.target.value })} />
+                    <input placeholder="当前项目名" value={discoverInput.project} onChange={(e) => setDiscoverInput({ ...discoverInput, project: e.target.value })} />
+                    <input placeholder="目标提交月份，例如 Oct 2026" value={discoverInput.targetMonth} onChange={(e) => setDiscoverInput({ ...discoverInput, targetMonth: e.target.value })} />
+                    <input placeholder="预算偏好，例如 low / medium" value={discoverInput.budget} onChange={(e) => setDiscoverInput({ ...discoverInput, budget: e.target.value })} />
+                    <input placeholder="当前最缺什么，例如 publication / award / exhibition" value={discoverInput.evidenceNeed} onChange={(e) => setDiscoverInput({ ...discoverInput, evidenceNeed: e.target.value })} />
+                    <button className="btn btn-primary" onClick={findTailoredOpportunities}>生成 tailored options</button>
+                  </div>
+                </div>
+                <div className="panel">
+                  <h2 style={{marginTop:0}}>Tailored opportunities</h2>
+                  {discoverResults.length ? discoverResults.map((item) => (
+                    <div className="tracker-row" key={item.id}>
+                      <div style={{flex:1}}>
+                        <div className="tracker-row-title">{item.name}</div>
+                        <div className="chip-row"><span className="chip">{item.opportunityType}</span>{item.routeTags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}</div>
+                        <div className="muted" style={{marginTop:8}}>{item.whyItMatters}</div>
+                        <div className="muted" style={{marginTop:6}}>Evidence value: {item.evidenceValue.join(' / ')}</div>
+                      </div>
+                      <div style={{textAlign:'right', minWidth:120}}>
+                        <div className="muted">{item.deadlineLabel}</div>
+                        <div className="muted">{fitLabel(item.gtvFit)}</div>
+                      </div>
+                    </div>
+                  )) : <div className="muted">填完 profile 后，这里会给出 route-aware recommendations。</div>}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        if (screen === 'tracker') {
+          setScreen('home');
+          return null;
+        }
+
         if (screen === 'quiz') {
           return (
             <div className="app quiz-wrap">
@@ -764,14 +1175,15 @@
                       const selected = question.type === 'multi'
                         ? (answers[question.id] || []).includes(option)
                         : answers[question.id] === option;
+                      const dynamicMaxSelect = question.type === 'multi' ? (question.maxSelect || getDynamicMaxSelect(question.id)) : null;
                       return (
                         <button
                           key={option}
                           className={`option ${selected ? 'selected' : ''}`}
-                          onClick={() => question.type === 'multi' ? toggleMulti(question.id, option, question.maxSelect) : setSingle(question.id, option)}
+                          onClick={() => question.type === 'multi' ? toggleMulti(question.id, option, question.maxSelect, question.exclusiveOption) : setSingle(question.id, option)}
                         >
                           {option}
-                          {question.type === 'multi' && question.maxSelect ? <small>可多选，最多 {question.maxSelect} 项</small> : null}
+                          {question.type === 'multi' && dynamicMaxSelect ? <small>{question.exclusiveOption === option ? '互斥项，单独选择' : `可多选，最多 ${dynamicMaxSelect} 项`}</small> : null}
                         </button>
                       );
                     })}
@@ -786,7 +1198,14 @@
                       disabled={!isAnswered(question)}
                       style={{ opacity: isAnswered(question) ? 1 : 0.5 }}
                       onClick={() => {
-                        if (step < QUESTIONS.length - 1) setStep(step + 1);
+                        if (step < QUESTIONS.length - 1) {
+                          if (question.id === 'recommenderCount' && answers.recommenderCount === '0 位') {
+                            setAnswers({ ...answers, recommenderQuality: ['我不确定他们是否符合要求'] });
+                            setStep(Math.min(step + 2, QUESTIONS.length - 1));
+                          } else {
+                            setStep(step + 1);
+                          }
+                        }
                         else setScreen('result');
                       }}
                     >
@@ -816,12 +1235,14 @@
             </div>
             <div className="container result-grid">
               <div className="panel">
-                <div className={`badge ${result.band === 'low' ? 'badge-low' : result.band === 'mid' ? 'badge-mid' : 'badge-high'}`}>
-                  {result.band === 'low' ? '当前偏早期' : result.band === 'mid' ? '当前有基础但不稳' : '当前已具备一定基础'}
+                <div className={`badge ${result.primaryRecommendation.band === 'low' ? 'badge-low' : result.primaryRecommendation.band === 'mid' ? 'badge-mid' : 'badge-high'}`}>
+                  {result.primaryRecommendation.band === 'low' ? '当前偏早期' : result.primaryRecommendation.band === 'mid' ? '当前有基础但不稳' : '当前已具备一定基础'}
                 </div>
-                <h2 style={{marginBottom: 8}}>你的当前准备度评分</h2>
-                <div className="result-score">{result.total}</div>
-                <p className="section-sub" style={{marginBottom: 18}}>{result.summary}</p>
+                <h2 style={{marginBottom: 8}}>更建议优先按 {result.primaryRecommendation.label} route 准备</h2>
+                <div className="result-score">{result.primaryRecommendation.total}</div>
+                <p className="section-sub" style={{marginBottom: 10}}>{result.primaryRecommendation.summary}</p>
+                <div className="muted" style={{marginBottom: 10}}>{result.summary}</div>
+                {result.alternateRoutes.length ? <div className="muted" style={{marginBottom: 18}}>其他可参考方向：{result.alternateRoutes.map((item) => `${item.label} (${item.total})`).join(' / ')}</div> : <div className="muted" style={{marginBottom: 18}}>你当前只选择了一个 route，所以结果会直接按这个方向判断。</div>}
                 <div className="result-actions">
                   <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
                     返回首頁
@@ -831,10 +1252,10 @@
                   </button>
                 </div>
                 <div className="metric-list">
-                  {Object.entries(result.metrics).map(([label, value]) => (
-                    <div className="metric" key={label}>
-                      <div className="metric-head"><span>{label}</span><span>{value}</span></div>
-                      <div className="muted">{label === '证明材料强度' ? '看的是你是否已经积累了足够明确、足够近期、足够可验证、且类型结构合理的证明材料。' : label === '推荐信网络' ? '看的是你是否已经具备能实际转化为 recommendation letters 的关系网络。' : '看的是你是否能清楚说明自己的实践，以及为什么适合在英国继续发展。'}</div>
+                  {result.routeResults.map((routeResult) => (
+                    <div className="metric" key={routeResult.label}>
+                      <div className="metric-head"><span>{routeResult.label}</span><span>{routeResult.total}</span></div>
+                      <div className="muted">{routeResult.summary}</div>
                     </div>
                   ))}
                 </div>
@@ -842,31 +1263,56 @@
 
               <div style={{display:'grid', gap:20}}>
                 <div className="panel">
-                  <h3 style={{marginTop:0}}>当前最需要注意的点</h3>
+                  <h3 style={{marginTop:0}}>按 {result.primaryRecommendation.label} route 当前最需要注意的点</h3>
                   <div className="hint-list">
-                    {(result.hints.length ? result.hints : ['你当前没有触发明显的结构性红旗，下一步重点是把现有基础组织得更清楚。']).map((hint, idx) => (
+                    {(result.primaryRecommendation.hints.length ? result.primaryRecommendation.hints : ['你当前没有触发明显的结构性红旗，下一步重点是把现有基础组织得更清楚。']).map((hint, idx) => (
                       <div className="metric" key={idx}>{hint}</div>
                     ))}
                   </div>
                 </div>
 
                 <div className="panel">
-                  <h3 style={{marginTop:0}}>你现在更应该做什么</h3>
+                  <h3 style={{marginTop:0}}>如果先按 {result.primaryRecommendation.label} route 推进，你现在更应该做什么</h3>
                   <div className="next-list">
-                    {result.nextSteps.map((item, idx) => <div className="metric" key={idx}>{item}</div>)}
+                    {result.primaryRecommendation.nextSteps.map((item, idx) => <div className="metric" key={idx}>{item}</div>)}
                   </div>
                 </div>
 
                 <div className="panel">
                   <h3 style={{marginTop:0}}>保存你的结果</h3>
-                  <p className="section-sub" style={{marginBottom:14}}>邮箱收集先做占位版。你可以输入邮箱，把这次结果存到本地，方便后续演示流程。</p>
+                  <p className="section-sub" style={{marginBottom:14}}>如果你希望先留住这次判断结果，可以先输入邮箱保存。当前 demo 版本会把结果保存在本地浏览器，用于演示留资与后续跟进流程。</p>
+                  <div className="lead-panel-note" style={{marginBottom:14}}>
+                    <div style={{fontWeight:700, marginBottom:6}}>有任何问题？</div>
+                    <div className="muted">
+                      欢迎邮件咨询 <a href="mailto:gtvinsight@gmail.com?subject=GTV%20Insight%20Consultation" style={{color:'#2d5bff', textDecoration:'none', fontWeight:600}}>gtvinsight@gmail.com</a>
+                    </div>
+                  </div>
                   <form className="lead-form" onSubmit={saveLeadPlaceholder}>
                     <input type="email" name="email" required placeholder="输入你的邮箱" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <button type="submit" className="btn btn-primary" disabled={leadSaving} style={{opacity: leadSaving ? 0.7 : 1}}>{leadSaving ? '发送中...' : '保存结果并发送到邮箱'}</button>
-                    {leadSaved && <div className="status-ok">邮件已发送。你会收到本次评估结果，同时我们也会保留这条线索用于后续跟进。</div>}
+                    <button type="submit" className="btn btn-primary" disabled={leadSaving} style={{opacity: leadSaving ? 0.7 : 1}}>{leadSaving ? '保存中...' : '保存结果'}</button>
+                    {leadSaved && <div className="status-ok">结果已保存在当前浏览器。本版本暂不发送邮件，用于演示流程。</div>}
                     {leadError && <div className="status-error">{leadError}</div>}
-                    <div className="muted">说明：当前版本会把邮箱、答题结果、评分和关键提示一起提交并发送到你的邮箱。</div>
+                    <div className="muted">说明：当前版本会先保存邮箱、答题结果、评分和关键提示到本地浏览器，不会发送到邮箱。</div>
                   </form>
+                  <div className="lead-panel-note">
+                    <div style={{fontWeight:700, marginBottom:6}}>当前保存的内容</div>
+                    <div className="muted">邮箱、答题结果、总分、关键提示会一起保留，方便后续判断这是不是值得继续推进的线索。</div>
+                  </div>
+                  <div className="lead-toolbar">
+                    <button type="button" className="btn btn-secondary" onClick={refreshSavedLeads}>刷新已保存线索</button>
+                    <button type="button" className="btn btn-secondary" onClick={exportSavedLeads} disabled={!savedLeads.length} style={{opacity: savedLeads.length ? 1 : 0.5}}>导出 JSON</button>
+                    <button type="button" className="btn btn-secondary" onClick={clearSavedLeads} disabled={!savedLeads.length} style={{opacity: savedLeads.length ? 1 : 0.5}}>清空本地线索</button>
+                  </div>
+                  <div className="lead-list">
+                    <div className="muted">当前浏览器已保存 {savedLeads.length} 条线索</div>
+                    {savedLeads.slice(0, 5).map((lead, idx) => (
+                      <div className="lead-item" key={`${lead.email}-${lead.createdAt}-${idx}`}>
+                        <strong>{lead.email}</strong>
+                        <div className="muted">评分：{lead?.result?.total ?? '-'}，状态：{lead?.result?.summary ?? '-'}</div>
+                        <div className="muted">保存时间：{lead.createdAt ? new Date(lead.createdAt).toLocaleString() : '-'}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

@@ -7,6 +7,112 @@
 
 const API_BASE = "/api";
 
+function clampScore(n, min = 18, max = 95) {
+  return Math.max(min, Math.min(max, Math.round(n)));
+}
+
+function scoreProfile(profile = {}) {
+  const pathway = profile.pathway || "digital";
+  const achievements = profile.achievements || [];
+  const experience = profile.experience || "0-2";
+  const referees = profile.referees || "0";
+  const timeline = profile.timeline || "exploring";
+  const endorsementCategory = profile.endorsementCategory || "unsure";
+  const career = (profile.career || "").trim();
+  const topAchievement = (profile.topAchievement || "").trim();
+  const notes = (profile.notes || "").trim();
+
+  const expScoreMap = { "0-2": 35, "3-5": 50, "5-8": 62, "8-15": 74, "15+": 84 };
+  const refScoreMap = { "0": 20, "1-2": 42, "3+": 78 };
+  const timelineAdjMap = { asap: -8, "3-6": 0, "6-12": 4, exploring: 0 };
+  const endorsementAdjMap = {
+    talent: experience === "0-2" || experience === "3-5" ? -8 : 2,
+    promise: experience === "15+" || experience === "8-15" ? -5 : 2,
+    unsure: 0,
+  };
+
+  const achievementSignals = {
+    patents: { evidence: 8, narrative: 1 },
+    publications: { evidence: 7, narrative: 3 },
+    awards: { evidence: 7, narrative: 2, network: 2 },
+    speaking: { evidence: 3, narrative: 5, network: 4 },
+    media: { evidence: 5, narrative: 3, network: 2 },
+    opensource: { evidence: 6, narrative: 2, network: 2 },
+    revenue: { evidence: 8, narrative: 3 },
+    funding: { evidence: 6, narrative: 2, network: 2 },
+    mentoring: { narrative: 3, network: 5 },
+    leadership: { evidence: 3, narrative: 5, network: 3 },
+    exhibitions: { evidence: 7, narrative: 3, network: 2 },
+    commissions: { evidence: 6, narrative: 2, network: 3 },
+  };
+
+  let evidence = 20 + expScoreMap[experience] * 0.32;
+  let narrative = 24 + expScoreMap[experience] * 0.24;
+  let network = 14 + refScoreMap[referees] * 0.68;
+
+  achievements.forEach(id => {
+    const s = achievementSignals[id] || {};
+    evidence += s.evidence || 0;
+    narrative += s.narrative || 0;
+    network += s.network || 0;
+  });
+
+  if (career.length > 80) narrative += 6;
+  else if (career.length > 30) narrative += 3;
+
+  if (topAchievement.length > 40) {
+    evidence += 4;
+    narrative += 4;
+  }
+
+  if (notes.length > 20) narrative += 1;
+
+  evidence += timelineAdjMap[timeline] || 0;
+  narrative += endorsementAdjMap[endorsementCategory] || 0;
+  network += timeline === "asap" && referees === "0" ? -10 : 0;
+
+  if (pathway === "academia" && achievements.includes("publications")) evidence += 4;
+  if (pathway === "academia" && achievements.includes("funding")) evidence += 3;
+  if (pathway === "digital" && achievements.includes("opensource")) evidence += 3;
+  if (pathway === "digital" && achievements.includes("revenue")) evidence += 4;
+  if (pathway === "arts" && achievements.includes("exhibitions")) evidence += 4;
+  if (pathway === "arts" && achievements.includes("commissions")) network += 3;
+  if (referees === "1-2") network -= 6;
+
+  evidence = clampScore(evidence);
+  narrative = clampScore(narrative);
+  network = clampScore(network);
+  const overall = clampScore(evidence * 0.43 + narrative * 0.27 + network * 0.30);
+
+  let band = "low";
+  if (overall >= 75) band = "high";
+  else if (overall >= 45) band = "mid";
+
+  const weaknesses = [
+    { key: "evidence", score: evidence },
+    { key: "narrative", score: narrative },
+    { key: "network", score: network },
+  ].sort((a, b) => a.score - b.score);
+  const weakest = weaknesses[0];
+
+  const signals = [];
+  if (achievements.length <= 1) signals.push("few_achievements");
+  if (referees === "0") signals.push("no_referees");
+  if (referees === "1-2") signals.push("limited_referees");
+  if (timeline === "asap") signals.push("urgent_timeline");
+  if (experience === "0-2" && endorsementCategory === "talent") signals.push("talent_too_early");
+  if ((experience === "15+" || experience === "8-15") && endorsementCategory === "promise") signals.push("promise_too_conservative");
+
+  return {
+    scores: { overall, evidence, narrative, network },
+    band,
+    weakest,
+    weaknesses,
+    signals,
+    profile,
+  };
+}
+
 async function generateAssessment(profileData, lang) {
   try {
     const res = await fetch(`${API_BASE}/generate-assessment`, {
@@ -18,7 +124,7 @@ async function generateAssessment(profileData, lang) {
     return await res.json();
   } catch (e) {
     console.warn("[DEV] Assessment API unavailable, using fallback:", e.message);
-    return generateFallbackAssessment(lang);
+    return generateFallbackAssessment(profileData, lang);
   }
 }
 
@@ -63,32 +169,116 @@ async function bookStrategy(email, pathway) {
   }
 }
 
-function generateFallbackAssessment(lang) {
-  if (lang === "zh") return {
+function generateFallbackAssessment(profile = {}, lang) {
+  const scored = scoreProfile ? scoreProfile(profile) : {
     scores: { overall: 62, evidence: 55, narrative: 68, network: 45 },
-    summary: "根据您提供的信息，您具备申请全球人才签证的基本条件，但在证据材料和推荐人网络方面还需要进一步加强。本分析基于公开信息和您的自述，仅供参考。",
-    strengths: ["工作经验年限与背书标准要求相符", "拥有可构成有力证据的可量化成就", "职业叙事展现了清晰的专业发展路径"],
-    gaps: ["建议增加更多行业认可度方面的书面证据", "推荐人网络可进一步加强——建议至少联系3位高级推荐人", "证据材料中需要更多可量化的影响力指标"],
-    actions: ["系统整理所有可量化的工作成果与影响力数据", "联系3-4位能为您的专业能力作证的资深人士", "构建结构化证据档案，对应到官方评估标准", "通过行业演讲、发表文章或开源贡献提升公开知名度"],
-    timeline: [
-      { period: "第1-2周", task: "完成职业成就盘点，收集现有证据材料" },
-      { period: "第3-4周", task: "联系推荐人，讨论推荐信事宜" },
-      { period: "第2个月", task: "针对缺口领域开展补充活动" },
-      { period: "第3个月", task: "汇总材料，对照官方标准进行自查" },
-    ],
+    band: "mid",
+    weakest: { key: "network", score: 45 },
+    signals: [],
+    profile,
   };
+
+  const { scores, band, signals } = scored;
+  const { overall, evidence, narrative, network } = scores;
+
+  const makeSummaryZh = () => {
+    if (band === "high") return "根据您提供的信息，您已经具备较强的申请基础，当前重点不是是否能申请，而是如何把已有经历整理成更有说服力的提交材料。";
+    if (band === "mid") return "根据您提供的信息，您具备一定申请潜力，但当前材料支撑仍不够稳，建议先补齐关键证据和外部背书，再推进申请。";
+    return "根据您提供的信息，您距离可稳妥递交的状态还有一段距离，建议先围绕核心短板补基础，而不是马上进入申请阶段。";
+  };
+
+  const makeSummaryEn = () => {
+    if (band === "high") return "Based on the information you provided, you already have a reasonably strong foundation. The key issue is no longer whether you can apply, but how convincingly your case is packaged and evidenced.";
+    if (band === "mid") return "Based on the information you provided, your case shows potential but is not yet stable. Strengthening evidence and external validation should come before pushing ahead with an application.";
+    return "Based on the information you provided, you are still some distance from a submission-ready case. It would be better to strengthen the foundations first rather than rush into the application stage.";
+  };
+
+  const strengthsZh = [];
+  const gapsZh = [];
+  const actionsZh = [];
+  const strengthsEn = [];
+  const gapsEn = [];
+  const actionsEn = [];
+
+  if (evidence >= 65) {
+    strengthsZh.push("你已经具备一定可支撑申请的成果基础。");
+    strengthsEn.push("You already have a meaningful base of achievements that could support an application.");
+  } else {
+    gapsZh.push("当前可直接支撑申请的硬证据还不够强。");
+    gapsEn.push("The hard evidence currently available is not yet strong enough for a robust application.");
+    actionsZh.push("优先整理可量化成果、奖项、发表、媒体或项目结果，形成可提交证据包。");
+    actionsEn.push("Prioritise measurable achievements, awards, publications, media, or project outcomes into a submission-ready evidence pack.");
+  }
+
+  if (narrative >= 65) {
+    strengthsZh.push("你的背景叙事已经有一定清晰度，具备整理成申请主线的基础。");
+    strengthsEn.push("Your profile already has enough narrative clarity to be shaped into a coherent application story.");
+  } else {
+    gapsZh.push("职业叙事还不够清楚，评审未必能快速看懂你的核心价值。");
+    gapsEn.push("Your career narrative is not yet clear enough for an assessor to quickly understand your core value.");
+    actionsZh.push("把个人定位、代表成绩和申请逻辑整理成一条一致主线。");
+    actionsEn.push("Turn your positioning, key achievements, and application logic into one consistent story.");
+  }
+
+  if (network >= 65) {
+    strengthsZh.push("你的推荐人和外部背书基础相对不错。");
+    strengthsEn.push("Your referee and external validation position is relatively solid.");
+  } else {
+    gapsZh.push("推荐人或外部背书仍偏弱，会影响整体可信度。");
+    gapsEn.push("Referees or external endorsement are still too weak, which reduces overall credibility.");
+    actionsZh.push("尽快确定更强的推荐人名单，并补行业机构、合作方或第三方认可。");
+    actionsEn.push("Secure stronger referees and add external validation from institutions, partners, or third parties.");
+  }
+
+  if (signals.includes("urgent_timeline")) {
+    gapsZh.push("当前时间线偏激进，如果材料不完整，仓促推进风险较高。");
+    gapsEn.push("Your current timeline is aggressive, and moving too fast with incomplete material increases risk.");
+    actionsZh.push("如果要短期内申请，必须先锁定最关键的证据与推荐人，不要平均用力。");
+    actionsEn.push("If you want to apply soon, prioritise the most critical evidence and referees instead of spreading effort too broadly.");
+  }
+
+  if (signals.includes("talent_too_early")) {
+    gapsZh.push("当前资历阶段直接冲 Exceptional Talent 偏激进。");
+    gapsEn.push("At your current career stage, aiming directly for Exceptional Talent may be too aggressive.");
+  }
+
+  if (signals.includes("promise_too_conservative")) {
+    strengthsZh.push("你的资历深度可能支持更高定位的包装方式。");
+    strengthsEn.push("Your level of experience may support a stronger positioning than Exceptional Promise alone.");
+  }
+
+  const timelineZh = [
+    { period: "第1-2周", task: "梳理现有成果，筛出最能支撑申请的核心证据。" },
+    { period: "第3-4周", task: "确定推荐人名单，并补充缺失的叙事和证明材料。" },
+    { period: "第2个月", task: "按目标路径重组材料结构，补齐最弱板块。" },
+    { period: "第3个月", task: "完成一版可评审的申请材料并自查。" },
+  ];
+
+  const timelineEn = [
+    { period: "Week 1-2", task: "Audit your existing achievements and isolate the strongest evidence for the case." },
+    { period: "Week 3-4", task: "Confirm referee targets and close the biggest evidence or narrative gaps." },
+    { period: "Month 2", task: "Restructure the case around the target route and strengthen the weakest dimension." },
+    { period: "Month 3", task: "Complete a review-ready application pack and run a final self-check." },
+  ];
+
+  if (lang === "zh") return {
+    scores: { overall, evidence, narrative, network },
+    band,
+    summary: makeSummaryZh(),
+    strengths: strengthsZh.slice(0, 3),
+    gaps: gapsZh.slice(0, 3),
+    actions: actionsZh.slice(0, 4),
+    timeline: timelineZh,
+  };
+
   return {
-    scores: { overall: 62, evidence: 55, narrative: 68, network: 45 },
-    summary: "Based on the information you provided, you show solid foundations for a Global Talent application but key areas need strengthening. This analysis is based on publicly available criteria and your self-reported profile.",
-    strengths: ["Years of experience align with endorsement body criteria", "Demonstrable achievements that could form strong supporting evidence", "Career narrative shows a clear professional trajectory"],
-    gaps: ["Build more documented evidence of industry recognition", "Referee network could be stronger — aim for 3+ senior recommenders", "Evidence portfolio needs more quantifiable impact metrics"],
-    actions: ["Document all measurable impacts from your work with specific figures", "Identify and approach 3-4 senior professionals as potential referees", "Build a structured evidence portfolio mapping to official endorsement criteria", "Increase public profile through conference speaking, publications, or open-source contributions"],
-    timeline: [
-      { period: "Week 1-2", task: "Complete career inventory and gather existing documentation" },
-      { period: "Week 3-4", task: "Approach potential referees and discuss recommendation letters" },
-      { period: "Month 2", task: "Fill evidence gaps through targeted professional activities" },
-      { period: "Month 3", task: "Compile final portfolio and review against published criteria" },
-    ],
+    scores: { overall, evidence, narrative, network },
+    band,
+    summary: makeSummaryEn(),
+    strengths: strengthsEn.slice(0, 3),
+    gaps: gapsEn.slice(0, 3),
+    actions: actionsEn.slice(0, 4),
+    timeline: timelineEn,
   };
 }
 
@@ -239,6 +429,7 @@ const i18n = {
         ],
         btn: "Book a Free 15-min Consultation →",
         guarantee: "100% satisfaction guarantee. Full refund if you're not happy after the first session.",
+        contact: "Questions? Email us at gtvinsight@gmail.com",
       },
       disc: "This analysis is an automated information research tool based on publicly available endorsement criteria. It does not constitute immigration advice under the Immigration and Asylum Act 1999. No lawyer-client or adviser-client relationship is created. For immigration advice, please consult an OISC-registered adviser or a qualified immigration solicitor.",
       saved: "Report saved and emailed to you ✓",
@@ -383,6 +574,7 @@ const i18n = {
         ],
         btn: "预约免费15分钟咨询 →",
         guarantee: "100%满意保证。首次咨询后不满意全额退款。",
+        contact: "如有任何问题，请邮件咨询 gtvinsight@gmail.com",
       },
       disc: "本分析是基于公开背书标准的自动化信息研究工具，不构成《1999年移民与庇护法》下的移民建议，不建立任何律师-客户或顾问-客户关系。如需移民法律建议，请咨询 OISC 注册顾问或持牌移民律师。",
       saved: "报告已保存并发送至你的邮箱 ✓",
@@ -529,10 +721,103 @@ function ScoreBadge({ score, label }) {
       padding: "16px 12px", borderRadius: 10, background: bg, border: `1px solid ${c}22`,
       flex: 1, minWidth: 80,
     }}>
-      <div style={{ fontSize: 26, fontWeight: 700, color: c, fontFamily: fontDisplay }}>{score}</div>
+      <div style={{ fontSize: 26, fontWeight: 700, color: c, fontFamily: fontDisplay }}>{score}%</div>
       <div style={{ fontSize: 10, color: colors.textMuted, textAlign: "center", fontFamily: fontPrimary, fontWeight: 500 }}>{label}</div>
     </div>
   );
+}
+
+function getScoreComment(profile = {}, lang = "en") {
+  const scored = scoreProfile ? scoreProfile(profile) : null;
+  if (!scored) return "";
+
+  const { scores, band, weakest, signals } = scored;
+  const pathway = profile?.pathway || "digital";
+  const overall = scores?.overall || 0;
+
+  const zhPathwayMap = {
+    digital: {
+      evidence: "对数字技术路径来说，当前最弱的是证据强度，说明你需要更多能体现技术影响力的材料，比如产品增长、技术成果、开源贡献、媒体报道或行业奖项。",
+      narrative: "对数字技术路径来说，当前最弱的是叙事清晰度，说明你还需要把自己讲清楚，是技术领导者、产品创新者，还是高潜力专家，否则评审很难快速抓住你的核心价值。",
+      network: "对数字技术路径来说，当前最弱的是推荐人和行业背书，说明你需要更强的资深业内推荐人，以及来自行业机构、合作方或公众平台的外部认可。",
+    },
+    academia: {
+      evidence: "对学术与研究路径来说，当前最弱的是证据强度，说明你需要补强论文、引用、基金、项目成果、学术任职或其他可验证的研究影响力材料。",
+      narrative: "对学术与研究路径来说，当前最弱的是叙事清晰度，说明你需要更清楚地说明自己的研究方向、原创贡献，以及你为什么值得被认定为领域内的重要人才。",
+      network: "对学术与研究路径来说，当前最弱的是推荐人和学术背书，说明你需要更强的导师、PI、合作学者或机构层面的支持，来证明你的学术位置和发展潜力。",
+    },
+    arts: {
+      evidence: "对艺术与文化路径来说，当前最弱的是证据强度，说明你需要补更多公开作品、展演记录、媒体评价、获奖经历或行业项目成果来支撑申请。",
+      narrative: "对艺术与文化路径来说，当前最弱的是叙事清晰度，说明你需要把个人创作脉络、代表作品和行业影响讲成一条清晰主线，而不是零散经历堆积。",
+      network: "对艺术与文化路径来说，当前最弱的是推荐人和行业背书，说明你需要更强的策展人、机构负责人、合作方或行业权威来为你的专业地位背书。",
+    },
+  };
+
+  const enPathwayMap = {
+    digital: {
+      evidence: "For the digital technology route, your weakest area is evidence strength. You need stronger proof of technical impact, such as product growth, technical delivery, open-source work, media recognition, or industry awards.",
+      narrative: "For the digital technology route, your weakest area is narrative clarity. You need to frame whether you are best positioned as a technical leader, product innovator, or high-potential specialist, otherwise assessors may not quickly grasp your value.",
+      network: "For the digital technology route, your weakest area is referees and external validation. You need stronger senior referees and clearer recognition from industry organisations, partners, or public platforms.",
+    },
+    academia: {
+      evidence: "For the academia and research route, your weakest area is evidence strength. You need stronger proof through papers, citations, grants, research outputs, academic appointments, or other verifiable markers of impact.",
+      narrative: "For the academia and research route, your weakest area is narrative clarity. You need a clearer explanation of your research direction, original contribution, and why you should be recognised as an important talent in your field.",
+      network: "For the academia and research route, your weakest area is referees and academic endorsement. You need stronger support from supervisors, PIs, collaborators, or institutions to validate your academic standing and trajectory.",
+    },
+    arts: {
+      evidence: "For the arts and culture route, your weakest area is evidence strength. You need stronger support through public work, exhibitions, performances, media coverage, awards, or recognised creative outputs.",
+      narrative: "For the arts and culture route, your weakest area is narrative clarity. You need to present your creative trajectory, signature work, and industry contribution as a coherent story rather than a collection of separate experiences.",
+      network: "For the arts and culture route, your weakest area is referees and industry endorsement. You need stronger backing from curators, institutional leaders, collaborators, or recognised voices in your field.",
+    },
+  };
+
+  if (lang === "zh") {
+    const opening = band === "high"
+      ? "你的整体条件已经接近可申请状态，但成败不会取决于背景本身，而会取决于材料是否能被清楚证明。"
+      : band === "mid"
+        ? "你现在属于有潜力但还不稳的状态，问题不是完全不够格，而是材料支撑力还不足。"
+        : "你目前还不适合直接进入申请阶段，先补基础，再谈递交，会更稳。";
+
+    const focus = zhPathwayMap[pathway]?.[weakest?.key] || zhPathwayMap.digital[weakest?.key] || "";
+    const signalMap = {
+      few_achievements: "你目前主动提供的代表性成果还偏少，评审很难从少量信息里建立充分信心。",
+      no_referees: "你现在还没有明确推荐人，这会直接影响材料完整度，应该尽快开始建立推荐人名单。",
+      limited_referees: "你已经有初步推荐人人选，但距离更稳的申请配置还有差距，最好补到3位以上。",
+      urgent_timeline: "你的申请时间很赶，如果核心证据还没成型，贸然推进会放大风险。",
+      talent_too_early: "以你当前填写的资历阶段来看，直接冲 Exceptional Talent 可能偏激进，更像是先验证 Promise 路线是否成立。",
+      promise_too_conservative: "以你当前填写的资历阶段来看，只按 Promise 角度包装可能偏保守，可以同时检视 Talent 路线是否更匹配。",
+    };
+    const ending = signalMap[signals[0]] || (overall >= 70
+      ? "换句话说，你现在更需要的是整理和包装，而不是从零开始。"
+      : overall >= 40
+        ? "换句话说，先补最短板，比继续泛泛准备更有效。"
+        : "换句话说，先把最关键的一块补起来，再考虑进入正式申请节奏。");
+
+    return `${opening} ${focus} ${ending}`;
+  }
+
+  const opening = band === "high"
+    ? "Your profile is already moving toward application-ready territory, but the outcome will depend less on your background itself and more on how convincingly it is documented."
+    : band === "mid"
+      ? "Your case has potential, but it is not yet stable. The issue is not that you are clearly unqualified, it is that the supporting case is still too thin."
+      : "You are not yet at the stage where it makes sense to rush into an application. Strengthen the foundation first, then move toward submission.";
+
+  const focus = enPathwayMap[pathway]?.[weakest?.key] || enPathwayMap.digital[weakest?.key] || "";
+  const signalMap = {
+    few_achievements: "You have provided very few standout achievements so far, which makes it harder for an assessor to build confidence from the evidence presented.",
+    no_referees: "You do not yet have clear referees in place, and that directly weakens the completeness of the case, so building a referee list should be urgent.",
+    limited_referees: "You have some initial referee options, but the case would be more credible with three or more strong referees.",
+    urgent_timeline: "Your intended application timeline is very aggressive, and if the core evidence is not ready yet, rushing will increase the risk.",
+    talent_too_early: "Based on your current career stage, aiming straight at Exceptional Talent may be too aggressive, and it may be more realistic to test the Promise route first.",
+    promise_too_conservative: "Based on your current career stage, framing the case only as Exceptional Promise may be too conservative, and the Talent route should also be tested.",
+  };
+  const ending = signalMap[signals[0]] || (overall >= 70
+    ? "In practical terms, this is now more about structuring and packaging than starting from scratch."
+    : overall >= 40
+      ? "In practical terms, fixing the weakest area first will do more than broad unfocused preparation."
+      : "In practical terms, close the biggest gap first before moving into formal application mode.");
+
+  return `${opening} ${focus} ${ending}`;
 }
 
 function Section({ title, icon, children }) {
@@ -727,11 +1012,19 @@ function EmailGate({ report, onUnlock }) {
 
       {/* Score preview */}
       <p style={{ fontSize: 12, color: colors.textMuted, marginBottom: 10, fontFamily: fontPrimary, fontWeight: 500 }}>{t.gate.preview}</p>
-      <div style={{ display: "flex", gap: 8, marginBottom: 28, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
         <ScoreBadge score={report.scores.overall} label={t.rpt.sc.overall} />
         <ScoreBadge score={report.scores.evidence} label={t.rpt.sc.evidence} />
         <ScoreBadge score={report.scores.narrative} label={t.rpt.sc.narrative} />
         <ScoreBadge score={report.scores.network} label={t.rpt.sc.network} />
+      </div>
+
+      <div style={{
+        marginBottom: 28, padding: "12px 14px", borderRadius: 10,
+        background: colors.card, border: `1px solid ${colors.border}`,
+        fontSize: 12, color: colors.textMuted, lineHeight: 1.6, fontFamily: fontPrimary,
+      }}>
+        {getScoreComment(data, lang)}
       </div>
 
       {/* Blurred preview */}
@@ -867,11 +1160,19 @@ function Report({ data, report, saved, email }) {
       </div>
 
       {/* Scores */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
         <ScoreBadge score={report.scores.overall} label={t.rpt.sc.overall} />
         <ScoreBadge score={report.scores.evidence} label={t.rpt.sc.evidence} />
         <ScoreBadge score={report.scores.narrative} label={t.rpt.sc.narrative} />
         <ScoreBadge score={report.scores.network} label={t.rpt.sc.network} />
+      </div>
+
+      <div style={{
+        marginBottom: 24, padding: "12px 14px", borderRadius: 10,
+        background: colors.card, border: `1px solid ${colors.border}`,
+        fontSize: 12, color: colors.textMuted, lineHeight: 1.6, fontFamily: fontPrimary,
+      }}>
+        {getScoreComment(data, lang)}
       </div>
 
       {/* Content sections */}
@@ -972,6 +1273,14 @@ function Report({ data, report, saved, email }) {
         <p style={{ fontSize: 10, color: colors.textDim, marginTop: 10, fontFamily: fontPrimary }}>
           {t.rpt.cta.guarantee}
         </p>
+        <p style={{ fontSize: 11, color: colors.textMuted, marginTop: 8, fontFamily: fontPrimary }}>
+          <a
+            href="mailto:gtvinsight@gmail.com"
+            style={{ color: colors.accent, textDecoration: "none", fontWeight: 500 }}
+          >
+            {t.rpt.cta.contact}
+          </a>
+        </p>
       </div>
     </div>
   );
@@ -1024,7 +1333,7 @@ function AdminPanel({ onBack }) {
               padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 700, fontFamily: fontPrimary,
               color: scoreColor(s.scores?.overall),
               background: s.scores?.overall >= 70 ? colors.greenBg : s.scores?.overall >= 40 ? colors.amberBg : colors.redBg,
-            }}>{s.scores?.overall || "—"}</div>
+            }}>{s.scores?.overall != null ? `${s.scores.overall}%` : "—"}</div>
           </div>
           <div style={{ display: "flex", gap: 12, fontSize: 11, color: colors.textDim, fontFamily: fontPrimary }}>
             <span>Exp: {s.experience}</span>
