@@ -1,558 +1,724 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GTV Insight MVP</title>
-    <meta name="description" content="UK Global Talent Visa (Arts & Culture) readiness check MVP" />
+    <title>GTV Insight</title>
+    <meta name="description" content="UK Global Talent Visa (Arts & Culture) readiness check" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
+      :root {
+        --bg: #FFFFFF;
+        --surface: #F5F6F8;
+        --ink: #0F1114;
+        --ink-muted: #5A5E66;
+        --ink-faint: #A0A4AB;
+        --hairline: #0F1114;
+        --hairline-faint: rgba(15,17,20,0.10);
+        --connector: rgba(15,17,20,0.20);
+        --brand: #3B90F2;
+        --brand-soft: rgba(59,144,242,0.06);
+        --brand-ring: rgba(59,144,242,0.14);
+        --pink: #D99DCF; --tan: #E5B487; --teal: #9BD3CE; --violet: #B4A9E7;
+        --yellow: #F3D24A; --mint: #A8DDB4; --lilac: #C58DD2; --mauve: #B68994; --sky: #A7CFF5;
+      }
       * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #f5f7fb;
-        color: #162033;
+      html, body {
+        margin: 0; padding: 0;
+        background: var(--bg); color: var(--ink);
+        font-family: Geist, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 15px; line-height: 1.55; letter-spacing: -0.005em;
+        -webkit-font-smoothing: antialiased;
       }
-      button, input, select, textarea {
-        font: inherit;
-      }
-      .app {
-        min-height: 100vh;
-      }
-      .container {
-        width: min(1040px, calc(100vw - 32px));
-        margin: 0 auto;
-      }
-      .hero {
-        padding: 80px 0 56px;
-        background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
-        border-bottom: 1px solid #e5ebf5;
-      }
-      .hero-grid {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: 32px;
-        align-items: start;
-      }
-      .eyebrow {
-        display: inline-flex;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: #e6efff;
-        color: #2756c5;
-        font-size: 14px;
-        font-weight: 600;
-      }
-      h1 {
-        margin: 20px 0 16px;
-        font-size: clamp(30px, 4.8vw, 48px);
-        line-height: 1.22;
-        letter-spacing: -0.02em;
-      }
-      .hero p {
-        margin: 0 0 20px;
-        font-size: 18px;
-        line-height: 1.7;
-        color: #44506a;
-      }
-      .cta-row {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .btn {
-        border: 0;
-        border-radius: 14px;
-        padding: 14px 20px;
-        cursor: pointer;
-        transition: background-color .15s ease, border-color .15s ease, color .15s ease;
-      }
-      .btn-primary {
-        background: #1c4ed8;
-        color: white;
-        font-weight: 700;
-      }
-      .btn-primary:hover { background: #1e40af; }
-      .btn-secondary {
-        background: transparent;
-        color: #162033;
-        border: 1px solid #cfdaf1;
-      }
-      .btn-secondary:hover {
-        border-color: #2756c5;
-        color: #2756c5;
-      }
-      .hero-note {
-        margin-top: 16px;
-        font-size: 14px;
-        color: #66728a;
-      }
-      .trust-points {
-        display: grid;
-        gap: 10px;
-        margin-top: 20px;
-      }
-      .trust-point {
-        padding: 12px 14px;
-        border-radius: 12px;
-        background: rgba(255,255,255,0.72);
-        border: 1px solid #e2ebfb;
-        color: #44506a;
-        line-height: 1.6;
-      }
-      .entry-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-        margin-top: 24px;
-      }
-      .entry-card {
-        padding: 24px;
-        border-radius: 16px;
-        background: white;
-        border: 1px solid #e4eaf4;
-        cursor: pointer;
-      }
-      .entry-card:hover {
-        border-color: #bfd0ef;
-      }
-      .entry-card h3 {
-        margin: 0 0 8px;
-        font-size: 20px;
-      }
-      .entry-card p {
-        margin: 0;
-        color: #55627d;
-        line-height: 1.7;
-      }
-      .field-stack {
-        display: grid;
-        gap: 12px;
-      }
-      .field-stack input, .field-stack select, .field-stack textarea {
-        width: 100%;
-        border: 1px solid #d6e0ef;
-        border-radius: 12px;
-        padding: 14px 16px;
-        background: white;
-      }
-      .field-stack textarea {
-        min-height: 120px;
-        resize: vertical;
-      }
-      .field-stack input:focus, .field-stack select:focus, .field-stack textarea:focus {
-        outline: none;
-        border-color: #1c4ed8;
-        box-shadow: 0 0 0 3px rgba(28, 78, 216, 0.08);
-      }
-      .chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .chip {
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: #e6efff;
-        border: 1px solid #cfe0ff;
-        font-size: 12px;
-        color: #2756c5;
-      }
-      .tracker-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 14px 0;
-        border-bottom: 1px solid #e9edf5;
-      }
-      .tracker-row-title {
-        font-weight: 700;
-        margin-bottom: 6px;
-      }
-      .lead-panel-note {
-        margin-top: 12px;
-        padding: 14px 16px;
-        border-radius: 12px;
-        background: #f8fbff;
-        border: 1px solid #e2ebfb;
-      }
-      .panel {
-        background: white;
-        border: 1px solid #e4eaf4;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 6px 18px rgba(15, 32, 63, 0.05);
-      }
-      .score-preview {
-        display: grid;
-        gap: 14px;
-      }
-      .mini-card {
-        background: #f8fbff;
-        border: 1px solid #e2ebfb;
-        border-radius: 12px;
-        padding: 18px;
-      }
-      .mini-card strong {
-        display: block;
-        font-size: 24px;
-        margin-top: 4px;
-      }
-      .section {
-        padding: 72px 0;
-      }
-      .section h2 {
-        margin: 0 0 10px;
-        font-size: 28px;
-        line-height: 1.35;
-      }
-      .section-sub {
-        margin: 0 0 28px;
-        color: #55627d;
-        line-height: 1.7;
-      }
-      .grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-      }
-      .card {
-        background: white;
-        border: 1px solid #e5ebf5;
-        border-radius: 12px;
-        padding: 24px;
-      }
-      .card h3 { margin-top: 0; font-size: 20px; }
-      .card p { margin-bottom: 0; color: #57637c; line-height: 1.7; }
-      .quiz-wrap {
-        padding: 24px 0 72px;
-      }
-      .sticky-topbar {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        background: rgba(245, 247, 251, 0.92);
+      button, input, select, textarea { font: inherit; color: inherit; }
+      a { color: var(--brand); text-decoration: none; }
+
+      .frame { width: 100%; max-width: 1280px; margin: 0 auto; background: var(--bg); }
+
+      .topnav {
+        display: flex; align-items: center; gap: 12px;
+        padding: 18px 56px;
+        border-bottom: 1px solid var(--hairline-faint);
+        background: var(--bg);
+        position: sticky; top: 0; z-index: 30;
         backdrop-filter: blur(8px);
-        border-bottom: 1px solid #e5ebf5;
-        margin-bottom: 18px;
       }
-      .sticky-topbar-inner {
-        width: min(1080px, calc(100vw - 32px));
-        margin: 0 auto;
-        padding: 12px 0;
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        align-items: center;
-        flex-wrap: wrap;
+      .brand-mark { display: flex; align-items: center; gap: 10px; margin-right: 30px; cursor: pointer; }
+      .brand-mark .name { font-weight: 700; font-size: 17px; letter-spacing: -0.02em; color: var(--ink); }
+      .topnav nav { display: flex; gap: 26px; flex: 1; flex-wrap: wrap; }
+      .nav-item {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 14.5px; font-weight: 500; letter-spacing: -0.01em;
+        color: var(--ink-muted); cursor: pointer;
+        padding-bottom: 2px;
+        border: 0; border-bottom: 1.5px solid transparent;
+        background: none;
       }
-      .progress {
-        height: 10px;
-        background: #e8eef8;
-        border-radius: 999px;
-        overflow: hidden;
-        margin-bottom: 18px;
+      .nav-item.active { color: var(--ink); font-weight: 600; border-bottom-color: var(--brand); }
+      .lang-toggle {
+        display: inline-flex; border: 1px solid var(--hairline-faint); border-radius: 999px;
+        padding: 3px; background: var(--bg);
       }
-      .progress > div {
-        height: 100%;
-        background: #1c4ed8;
-        transition: width .3s ease;
+      .lang-toggle button {
+        appearance: none; border: 0; background: transparent;
+        padding: 5px 12px; border-radius: 999px;
+        font-size: 12.5px; font-weight: 600; letter-spacing: -0.005em;
+        color: var(--ink-muted); cursor: pointer;
       }
-      .question-meta {
-        color: #62708b;
-        font-size: 14px;
-        margin-bottom: 8px;
+      .lang-toggle button.active { background: var(--ink); color: var(--bg); }
+
+      .bullet { display: inline-block; border-radius: 50%; flex-shrink: 0; vertical-align: middle; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; letter-spacing: 0.03em; color: var(--ink-muted); text-transform: uppercase; }
+      .ucase { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-muted); }
+      .rule { height: 0; border-top: 1px solid var(--hairline-faint); }
+
+      .btn {
+        appearance: none; border-radius: 999px;
+        font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em;
+        padding: 12px 22px; cursor: pointer;
+        transition: opacity .15s, background-color .15s, border-color .15s;
+        border: 1px solid var(--hairline);
+        background: transparent; color: var(--ink);
       }
-      .question-title {
-        font-size: 30px;
-        line-height: 1.25;
-        margin: 0 0 10px;
-      }
-      .question-desc {
-        margin: 0 0 22px;
-        color: #59657d;
-        line-height: 1.7;
-      }
-      .options {
-        display: grid;
-        gap: 12px;
-      }
-      .option {
-        padding: 16px 18px;
-        border-radius: 12px;
-        border: 1px solid #dbe4f3;
-        background: white;
-        cursor: pointer;
-        min-height: 52px;
-        text-align: left;
-        color: #162033;
-      }
-      .option:hover {
-        border-color: #bfd0ef;
-      }
-      .option.selected {
-        border-color: #1c4ed8;
-        background: #e6efff;
-        box-shadow: inset 0 0 0 1px #1c4ed8;
-      }
-      .option small {
-        display: block;
-        margin-top: 6px;
-        color: #6a7690;
-      }
-      .nav-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        margin-top: 28px;
-      }
-      .result-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-      }
-      .result-actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin: 18px 0 22px;
-      }
-      .result-score {
-        font-size: 68px;
-        font-weight: 800;
-        line-height: 1;
-      }
-      .badge {
-        display: inline-flex;
-        padding: 7px 12px;
-        border-radius: 999px;
-        font-size: 13px;
-        font-weight: 700;
-      }
-      .badge-low { background: #feeceb; color: #d92d2d; }
-      .badge-mid { background: #fff3e0; color: #e8853d; }
-      .badge-high { background: #e6f9ee; color: #22a06b; }
-      .metric-list, .hint-list, .next-list {
-        display: grid;
-        gap: 12px;
-      }
-      .metric {
-        padding: 16px 18px;
-        border-radius: 12px;
-        background: #f8fbff;
-        border: 1px solid #e2ebfb;
-      }
-      .metric-head {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        font-weight: 700;
-        margin-bottom: 6px;
-      }
-      .lead-form {
-        display: grid;
-        gap: 12px;
-      }
-      .lead-toolbar {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 14px;
-      }
-      .lead-list {
-        display: grid;
-        gap: 10px;
-        margin-top: 14px;
-      }
-      .lead-item {
-        padding: 14px 16px;
-        border-radius: 16px;
-        background: #f8fbff;
-        border: 1px solid #e2ebfb;
-      }
-      .lead-item strong {
-        display: block;
-        margin-bottom: 4px;
-      }
-      .lead-form input {
-        width: 100%;
-        border: 1px solid #d6e0ef;
-        border-radius: 12px;
-        padding: 14px 16px;
-        background: white;
-      }
-      .lead-form input:focus {
-        outline: none;
-        border-color: #1c4ed8;
-        box-shadow: 0 0 0 3px rgba(28, 78, 216, 0.08);
-      }
-      .muted {
-        color: #6b7790;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .status-ok {
-        color: #22a06b;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .status-error {
-        color: #d92d2d;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      @media (max-width: 860px) {
-        .hero {
-          padding: 56px 0 40px;
-        }
-        .hero-grid, .grid-3, .result-grid, .entry-grid { grid-template-columns: 1fr; }
-        .sticky-topbar-inner {
-          width: min(1040px, calc(100vw - 24px));
-        }
-        .container {
-          width: min(1040px, calc(100vw - 24px));
-        }
-        .question-title {
-          font-size: 24px;
-          line-height: 1.4;
-        }
-        .panel {
-          padding: 20px;
-        }
-        .result-score {
-          font-size: 56px;
-        }
-        .btn {
-          width: 100%;
-          justify-content: center;
-        }
-        .cta-row {
-          display: grid;
-          grid-template-columns: 1fr;
-        }
-        .nav-row {
-          flex-direction: column;
-        }
+      .btn:hover { opacity: 0.85; }
+      .btn-primary { background: var(--brand); border-color: var(--brand); color: white; }
+      .btn-sm { padding: 9px 16px; font-size: 13.5px; }
+      .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+      h1, h2, h3 { margin: 0; color: var(--ink); font-weight: 600; }
+      .h-hero { font-size: clamp(40px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.035em; text-wrap: balance; }
+      .h-section { font-size: 36px; line-height: 1.05; letter-spacing: -0.028em; }
+      .h-quiz { font-size: 36px; line-height: 1.15; letter-spacing: -0.028em; text-wrap: balance; }
+      .h-result { font-size: 48px; line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+      .muted { color: var(--ink-muted); }
+      .faint { color: var(--ink-faint); }
+
+      .card { background: var(--bg); border: 1px solid var(--hairline-faint); border-radius: 16px; padding: 26px; }
+      .surface { background: var(--surface); }
+
+      .chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--bg); border: 1px solid var(--hairline-faint); font-size: 12.5px; font-weight: 500; color: var(--ink); }
+      .chip .bullet { width: 8px; height: 8px; }
+
+      .hero { padding: 72px 56px 48px; text-align: center; }
+      .hero p.lede { font-size: 18px; color: var(--ink-muted); max-width: 640px; margin: 0 auto 32px; line-height: 1.55; text-wrap: pretty; }
+      .hero .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+      .hero h1 { margin: 0 auto 22px; max-width: 960px; }
+      .hero h1 .accent { color: var(--brand); }
+
+      .mindmap-wrap { padding: 20px 56px 60px; }
+      .mindmap { position: relative; width: 100%; max-width: 1168px; height: 660px; margin: 0 auto; }
+      .mm-svg { position: absolute; inset: 0; pointer-events: none; }
+      .mm-hub { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .mm-hub .dot { width: 28px; height: 28px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 8px var(--brand-ring); }
+      .mm-hub .label { font-weight: 700; font-size: 17px; letter-spacing: -0.02em; color: var(--ink); max-width: 220px; text-align: center; line-height: 1.2; }
+      .mm-node { position: absolute; display: flex; align-items: center; gap: 10px; transform: translateY(-50%); white-space: nowrap; }
+      .mm-node.end { flex-direction: row-reverse; transform: translate(-100%, -50%); text-align: right; }
+      .mm-node .bullet { width: 14px; height: 14px; }
+      .mm-node .l-title { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; color: var(--ink); line-height: 1.3; }
+      .mm-node .l-sub { font-size: 12.5px; color: var(--ink-muted); margin-top: 2px; line-height: 1.4; }
+      .hub-caption { position: absolute; transform: translateX(-50%); font-size: 13px; color: var(--ink-muted); font-weight: 500; }
+
+      .threeways { padding: 60px 56px 72px; background: var(--surface); }
+      .threeways .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 36px; gap: 20px; flex-wrap: wrap; }
+      .threeways .head p { font-size: 15px; color: var(--ink-muted); max-width: 520px; margin: 12px 0 0; }
+      .ways-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .way-card { background: var(--bg); border: 1px solid var(--hairline-faint); border-radius: 16px; padding: 26px 26px 24px; cursor: pointer; transition: transform .15s, border-color .15s; }
+      .way-card:hover { transform: translateY(-2px); border-color: rgba(15,17,20,0.18); }
+      .way-card .head-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+      .way-card .num { font-weight: 500; font-size: 12.5px; letter-spacing: 0.03em; color: var(--ink-muted); }
+      .way-card h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 12px; }
+      .way-card p { color: var(--ink-muted); font-size: 14.5px; margin: 0 0 22px; line-height: 1.55; }
+      .way-card .cta { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; color: var(--ink); }
+      .way-card .cta .arr { color: var(--brand); }
+
+      .isnot { padding: 72px 56px 56px; }
+      .isnot-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; }
+      .isnot-grid p { font-size: 15.5px; color: var(--ink-muted); margin: 16px 0 0; max-width: 400px; line-height: 1.6; }
+      .isnot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+      .col-head { margin: 0 0 18px; }
+      .col-head.brand { color: var(--brand); }
+
+      .bullet-list { display: grid; gap: 18px; }
+      .bullet-item { display: flex; align-items: flex-start; gap: 12px; }
+      .bullet-item > .bullet { width: 12px; height: 12px; margin-top: 7px; }
+      .bullet-item .text { font-weight: 600; font-size: 16px; letter-spacing: -0.01em; line-height: 1.3; color: var(--ink); }
+      .bullet-item .sub { font-size: 13.5px; font-weight: 400; color: var(--ink-muted); margin-top: 3px; line-height: 1.5; }
+
+      .footer { padding: 36px 56px 44px; border-top: 1px solid var(--hairline-faint); display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; font-size: 13px; color: var(--ink-muted); }
+      .footer .col-title { font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+      .footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+      .footer p { margin: 0; max-width: 460px; line-height: 1.6; }
+
+      .progress-bar { flex: 1; height: 3px; background: var(--hairline-faint); position: relative; border-radius: 2px; }
+      .progress-bar > div { position: absolute; inset: 0; right: auto; background: var(--brand); border-radius: 2px; transition: width 0.25s ease; }
+      .progress-row { padding: 20px 56px; border-bottom: 1px solid var(--hairline-faint); display: flex; align-items: center; gap: 28px; }
+
+      .quiz-grid { display: grid; grid-template-columns: 1fr 380px; min-height: 760px; }
+      .quiz-main { padding: 52px 56px; border-right: 1px solid var(--hairline-faint); }
+      .quiz-side { padding: 48px 32px; background: var(--surface); }
+
+      .options { display: grid; gap: 8px; margin-top: 28px; }
+      .option { display: flex; align-items: center; gap: 16px; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--hairline-faint); background: var(--bg); cursor: pointer; text-align: left; transition: all 0.15s ease; width: 100%; }
+      .option:hover { border-color: rgba(15,17,20,0.18); }
+      .option.selected { border-color: var(--brand); background: var(--brand-soft); }
+      .option .bullet { width: 14px; height: 14px; }
+      .option .label-text { flex: 1; font-size: 16px; font-weight: 500; color: var(--ink); letter-spacing: -0.005em; }
+      .option small { display: block; margin-top: 4px; color: var(--ink-faint); font-weight: 400; font-size: 12.5px; }
+      .option .selected-tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; font-size: 12px; color: var(--brand); }
+      .option .selected-tag .bullet { width: 7px; height: 7px; background: var(--brand); }
+
+      .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 36px; }
+
+      .score-circle { width: 180px; height: 180px; border-radius: 50%; background: var(--bg); border: 2px solid var(--brand); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 0 10px rgba(59,144,242,0.08); }
+      .score-circle .num { font-size: 72px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--ink); }
+      .score-circle .lbl { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+      .axis-pill { display: inline-flex; align-items: center; gap: 12px; background: var(--bg); padding: 8px 14px; border: 1px solid var(--hairline-faint); border-radius: 999px; }
+      .axis-pill .bullet { width: 12px; height: 12px; }
+      .axis-pill .name { font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+      .axis-pill .sc { font-size: 13px; color: var(--ink-muted); }
+
+      .step-list { display: grid; gap: 22px; }
+      .step-item { display: grid; grid-template-columns: 20px 1fr; gap: 16px; }
+      .step-item .bullet { width: 14px; height: 14px; margin-top: 6px; }
+      .step-item .num { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 4px; }
+      .step-item .title { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--ink); line-height: 1.2; }
+      .step-item .body { font-size: 14px; color: var(--ink-muted); line-height: 1.55; }
+
+      .sidemap { position: relative; height: 260px; margin-bottom: 8px; }
+      .sidemap .hub { position: absolute; left: 40px; top: 130px; transform: translate(-50%, -50%); width: 22px; height: 22px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 8px var(--brand-ring); }
+      .sidemap .leaf { position: absolute; left: 180px; transform: translateY(-50%); display: flex; align-items: center; gap: 10px; }
+      .sidemap .leaf .bullet { width: 12px; height: 12px; }
+      .sidemap .leaf .name { font-size: 13.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; line-height: 1.2; }
+      .sidemap .leaf .stage { font-size: 11.5px; color: var(--ink-muted); margin-top: 2px; }
+      .sidemap .leaf.todo .name { color: var(--ink-faint); }
+
+      .mbars { display: grid; gap: 14px; }
+      .mbar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+      .mbar-head .left { display: flex; align-items: center; gap: 8px; }
+      .mbar-head .left .bullet { width: 9px; height: 9px; }
+      .mbar-head .name { font-weight: 500; font-size: 13.5px; color: var(--ink); letter-spacing: -0.005em; }
+      .mbar-head .v { font-size: 12.5px; color: var(--ink-muted); }
+      .mbar-head .v strong { color: var(--ink); font-weight: 600; }
+      .mbar-track { height: 3px; background: var(--hairline-faint); border-radius: 2px; position: relative; }
+      .mbar-track > div { position: absolute; inset: 0; right: auto; border-radius: 2px; }
+
+      .field-stack { display: grid; gap: 12px; }
+      .field-stack input, .field-stack select, .field-stack textarea { width: 100%; border: 1px solid var(--hairline-faint); border-radius: 12px; padding: 14px 16px; background: var(--bg); color: var(--ink); }
+      .field-stack textarea { min-height: 140px; resize: vertical; }
+      .field-stack input:focus, .field-stack select:focus, .field-stack textarea:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+
+      .results-bottom-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; }
+      .results-left { padding: 52px 56px; border-right: 1px solid var(--hairline-faint); }
+      .results-right { padding: 52px 56px; background: var(--surface); }
+
+      .alt-route { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--hairline-faint); }
+      .alt-route:last-child { border-bottom: 0; }
+      .alt-route .bullet { width: 12px; height: 12px; }
+      .alt-route .info { flex: 1; }
+      .alt-route .lbl { font-size: 15.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+      .alt-route .note { font-size: 13px; color: var(--ink-muted); }
+      .alt-route .num { font-size: 22px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+
+      .lead-note { margin-top: 12px; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--hairline-faint); }
+      .lead-form { display: grid; gap: 12px; }
+      .lead-form input { width: 100%; padding: 14px 16px; border-radius: 12px; background: var(--bg); border: 1px solid var(--hairline-faint); color: var(--ink); }
+      .lead-form input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+      .lead-toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+      .lead-list { display: grid; gap: 10px; margin-top: 14px; }
+      .lead-item { padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--hairline-faint); }
+      .lead-item strong { display: block; margin-bottom: 4px; color: var(--ink); }
+      .status-ok { color: #2a8a55; font-size: 13.5px; }
+      .status-error { color: #b83434; font-size: 13.5px; }
+
+      .two-col { display: grid; grid-template-columns: 1fr 1fr; }
+      .two-col > * { padding: 52px 56px; }
+      .two-col > *:first-child { border-right: 1px solid var(--hairline-faint); }
+      .two-col > *:last-child { background: var(--surface); }
+
+      .opp-row { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--hairline-faint); }
+      .opp-row:last-child { border-bottom: 0; }
+      .opp-row .title { font-weight: 600; color: var(--ink); margin-bottom: 6px; font-size: 15.5px; letter-spacing: -0.005em; }
+      .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 8px; }
+
+      @media (max-width: 960px) {
+        .topnav, .hero, .mindmap-wrap, .threeways, .isnot, .footer, .progress-row,
+        .results-left, .results-right, .two-col > * { padding-left: 24px; padding-right: 24px; }
+        .quiz-main { padding: 32px 24px; border-right: 0; border-bottom: 1px solid var(--hairline-faint); }
+        .quiz-side { padding: 32px 24px; }
+        .quiz-grid, .ways-grid, .isnot-grid, .isnot-cols, .footer, .results-bottom-grid, .two-col { grid-template-columns: 1fr; }
+        .results-left { border-right: 0; border-bottom: 1px solid var(--hairline-faint); }
+        .two-col > *:first-child { border-right: 0; border-bottom: 1px solid var(--hairline-faint); }
+        .h-hero { font-size: 40px; }
+        .h-quiz { font-size: 28px; }
+        .h-result { font-size: 32px; }
+        .mindmap { display: none; }
+        .topnav { flex-wrap: wrap; gap: 12px; }
+        .topnav nav { order: 3; flex: 1 1 100%; gap: 16px; }
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      const FIELD_EVIDENCE_OPTIONS = {
-        '视觉艺术': ['个展 / 群展', '美术馆 / 机构展出', '驻留项目', '委约创作', '作品被收藏 / 收录', '媒体评论 / 专访', '艺术奖项 / 提名', '公开发表作品 / 画册 / 专题收录'],
-        '设计': ['设计展 / 设计周展出', '品牌 / 机构委约项目', '已落地的设计作品', '专业媒体报道 / 专访', '设计奖项 / 入围', '出版 / 专题收录', '机构合作项目'],
-        '时装': ['时装发布 / runway presentation', '品牌系列 / 联名 / 委约', 'showroom / 展陈 / trade presentation', '时尚媒体报道 / 专访', '时装奖项 / 入围', '机构合作项目 / 委约项目', '公开发表作品 / lookbook / 专题收录'],
-        '影视': ['影片入围 / 放映', '电影节 / 官方单元 / 策展放映', '导演 / 编剧 / 制片 / 主创署名作品', '平台播出 / 发行', '专业媒体报道 / 评论', '影视奖项 / 提名', '机构支持 / 委约项目'],
-        '建筑': ['建成项目 / 落地项目', '建筑展 / 双年展 / 机构展出', '竞赛获奖 / 入围', '专业出版 / 专题收录', '媒体报道 / 评论', '机构委约 / 合作项目', '研究 / 策展 / 公共项目成果'],
-        '表演艺术': ['正式演出 / 巡演', '音乐节 / 戏剧节 / 艺术节呈现', '主创 / 表演 / 编导署名作品', '机构委约 / 驻留 / 合作项目', '专业媒体报道 / 评论', '表演艺术奖项 / 提名', '录音 / 影像 / 出版成果'],
-        '其他 Arts & Culture 相关领域': ['机构合作项目', '公开发表成果', '专业媒体报道 / 评论', '奖项 / 提名 / 荣誉', '驻留 / 委约 / 公共项目', '出版 / 专题收录']
+      const A = {
+        pink: 'var(--pink)', tan: 'var(--tan)', teal: 'var(--teal)', violet: 'var(--violet)',
+        yellow: 'var(--yellow)', mint: 'var(--mint)', lilac: 'var(--lilac)', mauve: 'var(--mauve)', sky: 'var(--sky)', brand: 'var(--brand)',
       };
 
-      function getEvidenceOptionsByFields(selectedFields) {
-        const fields = Array.isArray(selectedFields) ? selectedFields : [];
-        const merged = fields.flatMap((field) => FIELD_EVIDENCE_OPTIONS[field] || []);
-        const deduped = [...new Set(merged)];
-        if (!deduped.length) {
-          return ['展览 / 群展 / 个展', '演出 / 放映 / 节目呈现', '出版 / 发表 / 专题收录', '媒体报道 / 评论 / 专访', '奖项 / 提名 / 荣誉', '驻留 / 委约 / 机构合作项目', '公开发表的作品 / 项目 / 策展 / 创作成果', '我还不确定哪些算有效证明材料'];
-        }
-        return [...deduped, '我还不确定哪些算有效证明材料'];
+      // ── i18n ──────────────────────────────────────────────
+      const STR = {
+        en: {
+          nav: { home: 'Overview', quiz: 'Readiness check', analyze: 'Analyze opportunity', discover: 'Discover' },
+          startCheck: 'Start check',
+          startFreeCheck: 'Start free readiness check',
+          analyzeCta: 'Analyze an opportunity',
+          eyebrowHero: 'UK Global Talent Visa · Arts & Culture · ACE pathway',
+          heroTitleA: 'A ', heroTitleAccent: 'map', heroTitleB: ' of your readiness — not another checklist.',
+          heroLede: "Structured information analysis for applicants already in the preparation phase. We map eight dimensions of your profile against current ACE criteria — then show you what's solid, what's thin, and what to do next.",
+          hubLabel: 'Your GTV profile',
+          hubCaption: 'mapped across 8 dimensions',
+          mapNodes: [
+            { label: 'Evidence categories', sub: 'Exhibitions · publications · awards' },
+            { label: 'ACE criteria',        sub: 'Current Home Office standards' },
+            { label: 'Endorsing bodies',    sub: 'Arts Council England & partners' },
+            { label: 'Narrative & sequence', sub: 'Why now · why the UK · what next' },
+            { label: 'Recommenders',         sub: 'Three verifiable letters' },
+            { label: 'Opportunity types',    sub: 'Residencies · screenings · shows' },
+            { label: 'Timing & windows',     sub: 'Evidence recency alignment' },
+            { label: 'Excluded',             sub: 'Pay-to-publish · pay-to-exhibit' },
+          ],
+          threeWaysTitle: 'Three ways in',
+          threeWaysSub: 'Pick the question actually on your mind right now.',
+          allRoutesUseSame: 'All routes use the same reference base',
+          ways: [
+            { num: '01', title: 'Am I ready to prepare at all?', body: 'A structured 5-minute check. You get a 0–100 readiness map and a gap list — no sales pitch.', cta: 'Start readiness check', go: 'quiz' },
+            { num: '02', title: 'Is this opportunity worth it?', body: 'Paste an open call, publication, residency or award. Get a fit judgment scoped to your route.', cta: 'Analyze opportunity', go: 'analyze' },
+            { num: '03', title: 'Show me what fits', body: 'Based on route, project, timing and budget — surface tailored, route-aligned options.', cta: 'Discover opportunities', go: 'discover' },
+          ],
+          isTitle: 'What GTV Insight is',
+          isLede: "In 2026, ACE pathway scope is expanding and route confusion is rising. Generic AI tools don't reliably separate current guidance from outdated or adjacent-route material — that's the gap we fill.",
+          whatItIs: 'What it is',
+          whatItIsNot: 'What it is not',
+          isItems: [
+            { t: 'Reference base', s: 'A maintained reference on current ACE criteria.' },
+            { t: 'Judgment layer', s: 'Judgment over evidence quality and preparation sequencing.' },
+            { t: 'Monitoring layer', s: 'Active monitoring across Home Office, ACE, partners.' },
+            { t: 'Interface ≠ source', s: 'Delivered through an AI interface — not by an AI.' },
+          ],
+          isNotItems: [
+            { t: 'Not legal advice', s: 'Not a law firm or immigration adviser.' },
+            { t: 'Not an agency', s: 'Not a visa agency or document mill.' },
+            { t: 'Not a chatbot', s: 'Not a generic chatbot on outdated training data.' },
+            { t: 'No vanity evidence', s: 'Never cooperates with pay-to-publish or pay-to-exhibit services.' },
+          ],
+          footerLede: 'Structured information analysis for UK Global Talent Visa (Arts & Culture) preparation. Not a law firm, visa agency, or immigration adviser.',
+          monitoredSources: 'Monitored sources',
+          monitoredSourceList: ['Home Office', 'Arts Council England', 'Endorsing bodies & partners'],
+          updated: 'Updated',
+          updatedDate: '27 Apr 2026',
+
+          // quiz
+          questionOf: (n, t) => <>Question {n} <span className="faint" style={{ fontWeight: 400 }}>of {t}</span></>,
+          sectionPrefix: 'Section',
+          sections: ['Fields & experience', 'Evidence', 'Recommenders', 'Narrative & readiness'],
+          progressMap: 'Your progress map',
+          provisionalScore: 'Provisional score',
+          partial: '/ 100 · partial',
+          mbarLabels: { evidence: 'Evidence', recommenders: 'Recommenders', readiness: 'Readiness' },
+          stageDone: 'Complete', stageCurrent: 'In progress', stageTodo: 'Up next',
+          prev: 'Previous', back: 'Back to home', next: 'Next question', viewResults: 'View results',
+          scopedTo: 'Scoped to:',
+          notSelected: 'Not selected',
+          multiHint: (n) => `Multi-select · up to ${n}`,
+          exclusiveHint: 'Exclusive · pick alone',
+          selected: 'Selected',
+
+          // results
+          readinessComplete: 'Readiness map · complete',
+          analysisDisclaimer: 'Structured information analysis, not legal advice. Reflects your answers mapped against current ACE pathway criteria as of 27 Apr 2026.',
+          axisLabels: { evidence: 'Evidence', recommenders: 'Recommenders', readiness: 'Readiness' },
+          bandReady: 'ready', bandPartial: 'partial', bandEarly: 'early',
+          nextMoves: 'Next moves, in order',
+          scopedPrimary: 'Scoped to your primary route —',
+          openThreads: 'Open threads',
+          alternateRoutes: 'Alternate routes',
+          onlyOneRoute: 'You picked one route, so the result reflects that route directly.',
+          saveResult: 'Save result',
+          saveLede: 'Enter your email to keep this analysis in your browser for later.',
+          saveBtn: 'Save analysis', saving: 'Saving…',
+          retake: 'Retake check',
+          savedOk: 'Saved in your browser.',
+          questionsCta: 'Have questions?',
+          contactPrefix: 'Email us at ',
+          refresh: 'Refresh', exportJson: 'Export JSON', clear: 'Clear',
+          leadCount: (n) => `${n} leads stored locally`,
+          score: 'Score',
+          notrigger: 'No structural red flags. Next priority is organising what you already have into a clearer structure.',
+
+          // analyze
+          analyzeEyebrow: 'Analyze opportunity',
+          analyzeTitle: 'Paste an opportunity. Get a quick judgment of whether it’s worth your time.',
+          analyzeLede: 'Works for open calls, awards, publications, residencies, screenings. Output is scoped to your selected route.',
+          opportunityInput: 'Opportunity input',
+          oppTitle: 'Opportunity title',
+          deadline: 'Deadline (optional)',
+          targetMonth: 'Target submission month, e.g. Oct 2026 (optional)',
+          oppDesc: 'Paste the description, link summary, or key requirements.',
+          analyzeBtn: 'Analyze',
+          analyzeResult: 'Result',
+          analyzeEmpty: 'Once you fill in an opportunity, you’ll get fit, importance, timing and a recommendation.',
+          fit: 'Fit', strategicImportance: 'Strategic importance', timing: 'Timing', recommendation: 'Recommendation',
+
+          // discover
+          discoverEyebrow: 'Discover opportunities',
+          discoverTitle: 'Tailored options based on your route, project and timing.',
+          discoverLede: 'Fill in your basic profile. We surface route-aligned opportunities worth prioritising.',
+          yourProfile: 'Your profile',
+          tailored: 'Tailored opportunities',
+          discoverEmpty: 'Once your profile is complete, route-aware recommendations appear here.',
+          practice: 'Your practice / discipline',
+          currentProject: 'Current project name',
+          budget: 'Budget preference',
+          evidenceNeed: 'Most pressing evidence gap (publication / award / exhibition…)',
+          findOpts: 'Generate tailored options',
+
+          fitYes: 'Strong fit', fitWarn: 'Possible fit', fitLow: 'Low fit',
+        },
+        zh: {
+          nav: { home: '首页', quiz: '准备度诊断', analyze: '分析机会', discover: '寻找机会' },
+          startCheck: '开始诊断',
+          startFreeCheck: '开始免费诊断',
+          analyzeCta: '分析一个机会',
+          eyebrowHero: 'UK Global Talent Visa · Arts & Culture · ACE pathway',
+          heroTitleA: '一张关于你 ', heroTitleAccent: '准备度', heroTitleB: ' 的地图——不是又一份清单。',
+          heroLede: '面向已经在准备阶段的申请人的结构化信息分析。我们把你 profile 的八个维度与当前 ACE 标准对齐——指出哪些扎实、哪些薄弱、下一步要做什么。',
+          hubLabel: '你的 GTV 画像',
+          hubCaption: '对照八个维度',
+          mapNodes: [
+            { label: '证据类别',     sub: '展览 · 出版 · 奖项' },
+            { label: 'ACE 标准',     sub: '当前 Home Office 标准' },
+            { label: '背书机构',     sub: 'Arts Council England 与合作方' },
+            { label: '叙事与节奏',   sub: '为什么是现在 · 为什么是英国' },
+            { label: '推荐人',       sub: '三封可验证的推荐信' },
+            { label: '机会类型',     sub: '驻留 · 放映 · 展览' },
+            { label: '时间与窗口',   sub: '与证据时效对齐' },
+            { label: '不接受的方式', sub: '付费出版 · 付费展览' },
+          ],
+          threeWaysTitle: '三种入口',
+          threeWaysSub: '选你现在真正在意的那个问题。',
+          allRoutesUseSame: '三条路径共用同一套参考依据',
+          ways: [
+            { num: '01', title: '我现在适不适合开始准备？', body: '5 分钟结构化诊断。返回 0–100 准备度评分与缺口清单——不是销售，不是空话。', cta: '开始 readiness check', go: 'quiz' },
+            { num: '02', title: '这个机会值不值得投？', body: '把 open call、出版、驻留或奖项贴进来，按你的 route 给出 fit 判断。', cta: '分析一个机会', go: 'analyze' },
+            { num: '03', title: '帮我看看哪些机会更合适', body: '基于 route、项目、时间与预算，推一组 route-aligned 机会。', cta: '寻找机会', go: 'discover' },
+          ],
+          isTitle: 'GTV Insight 是什么',
+          isLede: '2026 年起 ACE pathway 范围在扩展、route 混淆也在上升。通用 AI 工具难以稳定区分当前规则与已过时或邻近 route 的内容——这是我们填补的空白。',
+          whatItIs: '它是什么',
+          whatItIsNot: '它不是什么',
+          isItems: [
+            { t: '参考基准', s: '维护中的 ACE 当前标准参考。' },
+            { t: '判断层', s: '对证据质量与准备节奏的结构化判断。' },
+            { t: '监测层', s: '主动监测 Home Office、ACE 与合作方更新。' },
+            { t: '界面 ≠ 来源', s: '通过 AI 界面交付，但不是由 AI 来下判断。' },
+          ],
+          isNotItems: [
+            { t: '不是法律建议', s: '不是律所，也不是移民顾问。' },
+            { t: '不是中介', s: '不是签证中介，也不是材料工厂。' },
+            { t: '不是聊天机器人', s: '不是基于过时训练数据的通用对话工具。' },
+            { t: '不接受任何包装类材料', s: '不与付费出版、付费展览类服务合作。' },
+          ],
+          footerLede: '面向 UK Global Talent Visa (Arts & Culture) 准备的结构化信息分析。不是律所、签证中介或移民顾问。',
+          monitoredSources: '监测来源',
+          monitoredSourceList: ['Home Office', 'Arts Council England', '背书机构与合作方'],
+          updated: '更新于',
+          updatedDate: '2026 年 4 月 27 日',
+
+          questionOf: (n, t) => <>第 {n} 题 <span className="faint" style={{ fontWeight: 400 }}>共 {t} 题</span></>,
+          sectionPrefix: '第',
+          sections: ['领域与经验', '证明材料', '推荐人', '叙事与准备状态'],
+          progressMap: '进度地图',
+          provisionalScore: '当前分数',
+          partial: '/ 100 · 进行中',
+          mbarLabels: { evidence: '证明材料', recommenders: '推荐信', readiness: '整体准备' },
+          stageDone: '已完成', stageCurrent: '进行中', stageTodo: '待答',
+          prev: '上一题', back: '返回首页', next: '下一题', viewResults: '查看结果',
+          scopedTo: '当前选择方向：',
+          notSelected: '未选择',
+          multiHint: (n) => `可多选，最多 ${n} 项`,
+          exclusiveHint: '互斥项，单独选择',
+          selected: '已选',
+
+          readinessComplete: '准备度地图 · 已完成',
+          analysisDisclaimer: '结构化信息分析，不是法律建议。结果基于你的回答与截至 2026 年 4 月 27 日的 ACE 标准对齐。',
+          axisLabels: { evidence: '证明材料', recommenders: '推荐信', readiness: '准备状态' },
+          bandReady: '已具备基础', bandPartial: '部分就绪', bandEarly: '偏早期',
+          nextMoves: '接下来的动作，按顺序',
+          scopedPrimary: '当前主要 route —',
+          openThreads: '当前需要注意的点',
+          alternateRoutes: '其他可参考方向',
+          onlyOneRoute: '你只选择了一个 route，结果会直接按这个方向判断。',
+          saveResult: '保存结果',
+          saveLede: '输入邮箱可把这次判断结果保留在浏览器，方便之后回看。',
+          saveBtn: '保存结果', saving: '保存中…',
+          retake: '重新测一次',
+          savedOk: '已保存在当前浏览器。',
+          questionsCta: '有任何问题？',
+          contactPrefix: '欢迎邮件咨询 ',
+          refresh: '刷新', exportJson: '导出 JSON', clear: '清空',
+          leadCount: (n) => `当前浏览器已保存 ${n} 条线索`,
+          score: '评分',
+          notrigger: '你当前没有触发明显的结构性红旗，下一步重点是把现有基础组织得更清楚。',
+
+          analyzeEyebrow: '分析机会',
+          analyzeTitle: '把你看到的机会贴进来，先判断值不值得投。',
+          analyzeLede: '支持 open call、award、publication、residency、screening 等。判断会按你选的 route 输出 fit 与必要性。',
+          opportunityInput: '机会信息',
+          oppTitle: '机会标题',
+          deadline: 'Deadline（可选）',
+          targetMonth: '目标提交月份，例如 Oct 2026（可选）',
+          oppDesc: '贴 opportunity 描述、链接摘要、你看到的重点要求',
+          analyzeBtn: '开始判断',
+          analyzeResult: '判断结果',
+          analyzeEmpty: '填入一个机会后，这里会输出 fit、必要性、时间判断和建议动作。',
+          fit: 'Fit', strategicImportance: '策略价值', timing: '时间', recommendation: '建议',
+
+          discoverEyebrow: '寻找机会',
+          discoverTitle: '基于你的 route 与项目，给一组 tailored options。',
+          discoverLede: '填写基本信息，产品会给你一组更值得优先看的 route-aligned 机会。',
+          yourProfile: '你的 profile',
+          tailored: 'Tailored opportunities',
+          discoverEmpty: '填完 profile 后，这里会给出 route-aware recommendations。',
+          practice: '你的 practice / discipline',
+          currentProject: '当前项目名',
+          budget: '预算偏好',
+          evidenceNeed: '当前最缺什么 (publication / award / exhibition...)',
+          findOpts: '生成 tailored options',
+
+          fitYes: '强匹配', fitWarn: '可能匹配', fitLow: '匹配度低',
+        },
+      };
+
+      // ── primitives ────────────────────────────────────────
+      function Bullet({ color = 'var(--brand)', size = 12, ring, style }) {
+        return <span className="bullet" style={{ width: size, height: size, background: color, boxShadow: ring ? `0 0 0 4px ${ring}` : 'none', ...style }} />;
+      }
+
+      function MMLine({ x1, y1, x2, y2, dashed }) {
+        const midX = (x1 + x2) / 2;
+        const d = `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+        return <path d={d} stroke="var(--connector)" strokeWidth="1" fill="none" strokeDasharray={dashed ? '4 4' : undefined} strokeLinecap="round" />;
+      }
+
+      function TopNav({ active, onNav, lang, setLang, t }) {
+        const items = [
+          { id: 'home', label: t.nav.home },
+          { id: 'quiz', label: t.nav.quiz },
+          { id: 'analyze', label: t.nav.analyze },
+          { id: 'discover', label: t.nav.discover },
+        ];
+        return (
+          <div className="topnav">
+            <div className="brand-mark" onClick={() => onNav('home')}>
+              <Bullet color="var(--brand)" size={14} />
+              <span className="name">GTV Insight</span>
+            </div>
+            <nav>
+              {items.map(i => (
+                <button key={i.id} className={`nav-item ${i.id === active ? 'active' : ''}`} onClick={() => onNav(i.id)}>
+                  {i.id === active && <Bullet color="var(--brand)" size={7} />}
+                  {i.label}
+                </button>
+              ))}
+            </nav>
+            <div className="lang-toggle" role="tablist" aria-label="Language">
+              <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
+              <button className={lang === 'zh' ? 'active' : ''} onClick={() => setLang('zh')}>中文</button>
+            </div>
+            <button className="btn btn-primary btn-sm" onClick={() => onNav('quiz')}>{t.startCheck}</button>
+          </div>
+        );
+      }
+
+      function Footer({ t }) {
+        return (
+          <div className="footer">
+            <div>
+              <div className="brand-mark" style={{ marginBottom: 14 }}>
+                <Bullet color="var(--brand)" size={12} />
+                <span className="name" style={{ fontSize: 16 }}>GTV Insight</span>
+              </div>
+              <p>{t.footerLede}</p>
+            </div>
+            <div>
+              <div className="col-title">{t.monitoredSources}</div>
+              <ul>{t.monitoredSourceList.map((s, i) => <li key={i}>{s}</li>)}</ul>
+            </div>
+            <div>
+              <div className="col-title">{t.updated}</div>
+              <div>{t.updatedDate}</div>
+            </div>
+          </div>
+        );
+      }
+
+      // ── data: bilingual quiz ──────────────────────────────
+      // Each option is [zh, en]. The zh string is the canonical key used in answers and SCORE_MAPS.
+      const FIELDS = [
+        ['视觉艺术', 'Visual Art'],
+        ['设计', 'Design'],
+        ['时装', 'Fashion'],
+        ['影视', 'Film & TV'],
+        ['建筑', 'Architecture'],
+        ['表演艺术', 'Performing Arts'],
+        ['其他 Arts & Culture 相关领域', 'Other Arts & Culture practice'],
+      ];
+
+      const FIELD_EVIDENCE = {
+        '视觉艺术': [
+          ['个展 / 群展', 'Solo / group exhibitions'],
+          ['美术馆 / 机构展出', 'Museum / institutional showings'],
+          ['驻留项目', 'Residencies'],
+          ['委约创作', 'Commissions'],
+          ['作品被收藏 / 收录', 'Acquisitions / collected works'],
+          ['媒体评论 / 专访', 'Reviews / press coverage'],
+          ['艺术奖项 / 提名', 'Awards & nominations'],
+          ['公开发表作品 / 画册 / 专题收录', 'Publications / catalogue inclusion'],
+        ],
+        '设计': [
+          ['设计展 / 设计周展出', 'Design week / exhibition showings'],
+          ['品牌 / 机构委约项目', 'Brand / institutional commissions'],
+          ['已落地的设计作品', 'Realised design work'],
+          ['专业媒体报道 / 专访', 'Trade press coverage'],
+          ['设计奖项 / 入围', 'Design awards / shortlists'],
+          ['出版 / 专题收录', 'Publications & features'],
+          ['机构合作项目', 'Institutional partnerships'],
+        ],
+        '时装': [
+          ['时装发布 / runway presentation', 'Runway / fashion week presentations'],
+          ['品牌系列 / 联名 / 委约', 'Collections / collaborations / commissions'],
+          ['showroom / 展陈 / trade presentation', 'Showroom / trade presentations'],
+          ['时尚媒体报道 / 专访', 'Fashion press coverage'],
+          ['时装奖项 / 入围', 'Fashion awards / shortlists'],
+          ['机构合作项目 / 委约项目', 'Institutional collaborations'],
+          ['公开发表作品 / lookbook / 专题收录', 'Lookbooks & published features'],
+        ],
+        '影视': [
+          ['影片入围 / 放映', 'Festival selections / screenings'],
+          ['电影节 / 官方单元 / 策展放映', 'Curated festival programmes'],
+          ['导演 / 编剧 / 制片 / 主创署名作品', 'Director / writer / producer credits'],
+          ['平台播出 / 发行', 'Platform distribution / broadcast'],
+          ['专业媒体报道 / 评论', 'Trade press coverage'],
+          ['影视奖项 / 提名', 'Film awards / nominations'],
+          ['机构支持 / 委约项目', 'Institutional commissions'],
+        ],
+        '建筑': [
+          ['建成项目 / 落地项目', 'Built / realised projects'],
+          ['建筑展 / 双年展 / 机构展出', 'Architecture biennials / exhibitions'],
+          ['竞赛获奖 / 入围', 'Competition wins / shortlists'],
+          ['专业出版 / 专题收录', 'Trade publications / features'],
+          ['媒体报道 / 评论', 'Press coverage / reviews'],
+          ['机构委约 / 合作项目', 'Institutional commissions'],
+          ['研究 / 策展 / 公共项目成果', 'Research / curatorial / public outcomes'],
+        ],
+        '表演艺术': [
+          ['正式演出 / 巡演', 'Public performances / tours'],
+          ['音乐节 / 戏剧节 / 艺术节呈现', 'Festival presentations'],
+          ['主创 / 表演 / 编导署名作品', 'Performance / direction credits'],
+          ['机构委约 / 驻留 / 合作项目', 'Institutional commissions / residencies'],
+          ['专业媒体报道 / 评论', 'Trade press / reviews'],
+          ['表演艺术奖项 / 提名', 'Performing arts awards'],
+          ['录音 / 影像 / 出版成果', 'Recordings / publications'],
+        ],
+        '其他 Arts & Culture 相关领域': [
+          ['机构合作项目', 'Institutional partnerships'],
+          ['公开发表成果', 'Public outcomes'],
+          ['专业媒体报道 / 评论', 'Trade press / reviews'],
+          ['奖项 / 提名 / 荣誉', 'Awards & honours'],
+          ['驻留 / 委约 / 公共项目', 'Residencies / commissions / public projects'],
+          ['出版 / 专题收录', 'Publications / features'],
+        ],
+      };
+      const EVIDENCE_FALLBACK = [
+        ['展览 / 群展 / 个展', 'Exhibitions / group / solo shows'],
+        ['演出 / 放映 / 节目呈现', 'Performances / screenings'],
+        ['出版 / 发表 / 专题收录', 'Publications / features'],
+        ['媒体报道 / 评论 / 专访', 'Press coverage / interviews'],
+        ['奖项 / 提名 / 荣誉', 'Awards / nominations'],
+        ['驻留 / 委约 / 机构合作项目', 'Residencies / commissions / partnerships'],
+        ['公开发表的作品 / 项目 / 策展 / 创作成果', 'Public works / projects / curatorial outcomes'],
+      ];
+      const EVIDENCE_UNSURE = ['我还不确定哪些算有效证明材料', "I'm not sure what counts as valid evidence yet"];
+
+      function getEvidenceOptions(answers) {
+        const fields = Array.isArray(answers.fields) ? answers.fields : [];
+        const merged = fields.flatMap(f => FIELD_EVIDENCE[f] || []);
+        const seen = new Set();
+        const unique = merged.filter(([zh]) => seen.has(zh) ? false : (seen.add(zh), true));
+        const base = unique.length ? unique : EVIDENCE_FALLBACK;
+        return [...base, EVIDENCE_UNSURE];
       }
 
       const QUESTIONS = [
-        {
-          id: 'fields',
-          type: 'multi',
-          title: '你目前主要从事哪些领域？',
-          desc: '如果你的实践跨多个领域，请选择最能代表你近几年主要工作的 1 至 3 个方向。',
-          maxSelect: 3,
-          options: ['视觉艺术', '设计', '时装', '影视', '建筑', '表演艺术', '其他 Arts & Culture 相关领域']
-        },
-        {
-          id: 'years',
-          type: 'single',
-          title: '你在这些领域持续工作了多久？',
-          options: ['少于 3 年', '3–5 年', '5–8 年', '8–12 年', '12 年以上']
-        },
-        {
-          id: 'stage',
-          type: 'single',
-          title: '你目前考虑申请 UK Global Talent Visa (Arts & Culture) 的状态更接近哪一种？',
-          options: ['我只是刚开始了解', '我已经认真看过官方要求', '我已经开始整理材料', '我已经有比较明确的申请计划', '我原本准备申请，但现在卡住了']
-        },
-        {
-          id: 'evidenceTypes',
-          type: 'multi',
-          title: '你目前已经具备哪些较明确、且更接近你所选方向的证明材料类型？',
-          getOptions: (answers) => getEvidenceOptionsByFields(answers.fields)
-        },
-        {
-          id: 'recency',
-          type: 'single',
-          title: '你目前最重要的证明材料，主要集中在哪个时间范围内？',
-          options: ['大多发生在最近 1–2 年', '大多发生在最近 3–5 年', '分布在 5 年内外，但 5 年内仍有一部分', '大多早于 5 年前', '我不确定']
-        },
-        {
-          id: 'sourceNature',
-          type: 'single',
-          title: '你目前最重要的证明材料，主要来自哪一类实践？',
-          options: ['主要来自毕业后的 Arts & Culture 专业实践', '大多来自毕业后的 Arts & Culture 专业实践，但夹杂少量学生或商业项目', 'Arts & Culture 专业实践、学生项目、商业项目都有', '大多来自商业项目', '大多来自学生时期项目']
-        },
-        {
-          id: 'evidenceStrength',
-          type: 'single',
-          title: '这些证明材料的整体情况更接近哪一种？',
-          options: ['有一些经历，但大多较弱、零散，或者难以支持申请', '有少量较强证明材料，但整体还不够稳', '已经有几项相对明确、可验证的证明材料', '证明材料基础较完整，类型和质量都还不错', '我不确定']
-        },
-        {
-          id: 'verifiability',
-          type: 'single',
-          title: '这些证明材料中，有多少可以被外部验证？',
-          options: ['很少可以验证', '有一部分可以验证', '大部分可以验证', '几乎都可以验证']
-        },
-        {
-          id: 'recommenderCount',
-          type: 'single',
-          title: '你现在大概能想到几位可能愿意为你写 recommendation letters 的人？',
-          options: ['0 位', '1 位', '2 位', '3 位', '4 位或以上']
-        },
-        {
-          id: 'recommenderQuality',
-          type: 'multi',
-          title: '这些潜在推荐人目前更接近哪种情况？',
-          desc: '可多选。可选数量会根据上一题你填写的推荐人数自动变化。若你目前还拿不准，请只选“我不确定他们是否符合要求”。',
+        { id: 'fields', type: 'multi', section: 0, maxSelect: 3,
+          title: { en: 'Which fields do you primarily work in?', zh: '你目前主要从事哪些领域？' },
+          desc:  { en: 'If your practice spans several areas, pick 1–3 that best represent your recent work.', zh: '如果你的实践跨多个领域，请选择最能代表你近几年主要工作的 1 至 3 个方向。' },
+          options: FIELDS },
+        { id: 'years', type: 'single', section: 0,
+          title: { en: 'How long have you been working in those fields?', zh: '你在这些领域持续工作了多久？' },
+          options: [['少于 3 年', 'Less than 3 years'], ['3–5 年', '3–5 years'], ['5–8 年', '5–8 years'], ['8–12 年', '8–12 years'], ['12 年以上', '12+ years']] },
+        { id: 'stage', type: 'single', section: 0,
+          title: { en: 'Where are you in considering the UK Global Talent Visa (Arts & Culture)?', zh: '你目前考虑申请 UK Global Talent Visa (Arts & Culture) 的状态更接近哪一种？' },
+          options: [['我只是刚开始了解', 'Just starting to look into it'], ['我已经认真看过官方要求', 'I have studied the official requirements'], ['我已经开始整理材料', 'I have started gathering materials'], ['我已经有比较明确的申请计划', 'I have a clear application plan'], ['我原本准备申请，但现在卡住了', 'I was preparing but I am stuck']] },
+        { id: 'evidenceTypes', type: 'multi', section: 1,
+          title: { en: 'Which evidence types do you already have in documentable, verifiable form?', zh: '你目前已经具备哪些较明确、且更接近你所选方向的证明材料类型？' },
+          desc:  { en: 'Multi-select. Options adjust to the fields you picked.', zh: '可多选。结果会按你之前选择的方向自动调整。' },
+          getOptions: getEvidenceOptions },
+        { id: 'recency', type: 'single', section: 1,
+          title: { en: 'When does your strongest evidence mostly fall?', zh: '你目前最重要的证明材料，主要集中在哪个时间范围内？' },
+          options: [['大多发生在最近 1–2 年', 'Mostly in the last 1–2 years'], ['大多发生在最近 3–5 年', 'Mostly in the last 3–5 years'], ['分布在 5 年内外，但 5 年内仍有一部分', 'Spread around 5 years, with some recent'], ['大多早于 5 年前', 'Mostly older than 5 years'], ['我不确定', 'Not sure']] },
+        { id: 'sourceNature', type: 'single', section: 1,
+          title: { en: 'Where does your strongest evidence mostly come from?', zh: '你目前最重要的证明材料，主要来自哪一类实践？' },
+          options: [['主要来自毕业后的 Arts & Culture 专业实践', 'Mostly post-grad Arts & Culture professional practice'], ['大多来自毕业后的 Arts & Culture 专业实践，但夹杂少量学生或商业项目', 'Mostly professional, with some student / commercial work'], ['Arts & Culture 专业实践、学生项目、商业项目都有', 'A mix of professional, student and commercial work'], ['大多来自商业项目', 'Mostly commercial work'], ['大多来自学生时期项目', 'Mostly student work']] },
+        { id: 'evidenceStrength', type: 'single', section: 1,
+          title: { en: 'Which best describes the overall state of your evidence?', zh: '这些证明材料的整体情况更接近哪一种？' },
+          options: [['有一些经历，但大多较弱、零散，或者难以支持申请', 'Some experience, but mostly weak or scattered'], ['有少量较强证明材料，但整体还不够稳', 'A few strong items, but not yet stable'], ['已经有几项相对明确、可验证的证明材料', 'Several clear, verifiable items'], ['证明材料基础较完整，类型和质量都还不错', 'Solid foundation across types and quality'], ['我不确定', 'Not sure']] },
+        { id: 'verifiability', type: 'single', section: 1,
+          title: { en: 'How much of your evidence can be externally verified?', zh: '这些证明材料中，有多少可以被外部验证？' },
+          options: [['很少可以验证', 'Very little'], ['有一部分可以验证', 'Some of it'], ['大部分可以验证', 'Most of it'], ['几乎都可以验证', 'Almost all of it']] },
+        { id: 'recommenderCount', type: 'single', section: 2,
+          title: { en: 'Roughly how many people might be willing to write you a recommendation letter?', zh: '你现在大概能想到几位可能愿意为你写 recommendation letters 的人？' },
+          options: [['0 位', '0 people'], ['1 位', '1 person'], ['2 位', '2 people'], ['3 位', '3 people'], ['4 位或以上', '4 or more']] },
+        { id: 'recommenderQuality', type: 'multi', section: 2,
+          title: { en: 'Which best describes your potential recommenders?', zh: '这些潜在推荐人目前更接近哪种情况？' },
+          desc:  { en: 'Multi-select. Cap follows your previous answer. If unsure, pick only "Not sure they qualify".', zh: '可多选。可选数量会根据上一题你填写的推荐人数自动变化。若你目前还拿不准，请只选"我不确定他们是否符合要求"。' },
           exclusiveOption: '我不确定他们是否符合要求',
-          options: ['和我有真实合作经历', '来自不同机构', '在行业内有一定分量或认可度', '我有把握他们能写出具体内容', '我不确定他们是否符合要求']
-        },
-        {
-          id: 'lettersConfidence',
-          type: 'single',
-          title: '如果现在就开始联系，你觉得自己拿到 3 封有实质内容的 recommendation letters 的把握有多大？',
-          options: ['很低', '比较低', '一般', '比较高', '很高']
-        },
-        {
-          id: 'narrative',
-          type: 'single',
-          title: '你现在是否能比较清楚地说明：你的 Arts & Culture 实践是什么，以及你为什么适合在英国继续发展？',
-          options: ['现在还说不清', '有一些想法，但比较模糊', '大致能说清', '说得比较清楚', '说得很清楚']
-        },
-        {
-          id: 'selfReadiness',
-          type: 'single',
-          title: '如果现在要做整体判断，你觉得自己离正式提交申请更接近哪一种状态？',
-          options: ['还差很远', '有一些基础，但差距明显', '可以开始认真准备', '已经接近可申请', '我不确定']
-        }
+          options: [['和我有真实合作经历', 'I have real collaboration history with them'], ['来自不同机构', 'They are from distinct institutions'], ['在行业内有一定分量或认可度', 'They carry weight or recognition in the field'], ['我有把握他们能写出具体内容', "I'm confident they can write substantive letters"], ['我不确定他们是否符合要求', "I'm not sure they qualify"]] },
+        { id: 'lettersConfidence', type: 'single', section: 2,
+          title: { en: 'How confident are you that you can secure 3 substantive recommendation letters right now?', zh: '如果现在就开始联系，你觉得自己拿到 3 封有实质内容的 recommendation letters 的把握有多大？' },
+          options: [['很低', 'Very low'], ['比较低', 'Low'], ['一般', 'Medium'], ['比较高', 'High'], ['很高', 'Very high']] },
+        { id: 'narrative', type: 'single', section: 3,
+          title: { en: 'Can you clearly articulate your Arts & Culture practice, and why the UK fits?', zh: '你现在是否能比较清楚地说明：你的 Arts & Culture 实践是什么，以及你为什么适合在英国继续发展？' },
+          options: [['现在还说不清', 'Not yet'], ['有一些想法，但比较模糊', 'Some ideas, but vague'], ['大致能说清', 'Roughly yes'], ['说得比较清楚', 'Clearly'], ['说得很清楚', 'Very clearly']] },
+        { id: 'selfReadiness', type: 'single', section: 3,
+          title: { en: 'How close do you feel to actually submitting an application?', zh: '如果现在要做整体判断，你觉得自己离正式提交申请更接近哪一种状态？' },
+          options: [['还差很远', 'Far from ready'], ['有一些基础，但差距明显', 'Some basis, but clear gaps'], ['可以开始认真准备', 'Ready to prepare seriously'], ['已经接近可申请', 'Close to applicable'], ['我不确定', 'Not sure']] }
       ];
+
+      const SECTION_COLORS = { 0: A.pink, 1: A.yellow, 2: A.mint, 3: A.violet };
+      const OPTION_COLORS = [A.pink, A.tan, A.teal, A.yellow, A.lilac, A.mint, A.sky, A.violet, A.mauve];
 
       const SCORE_MAPS = {
         years: { '少于 3 年': 1, '3–5 年': 2, '5–8 年': 3, '8–12 年': 4, '12 年以上': 5 },
         stage: { '我只是刚开始了解': 1, '我已经认真看过官方要求': 2, '我已经开始整理材料': 3, '我已经有比较明确的申请计划': 4, '我原本准备申请，但现在卡住了': 4 },
         recency: { '大多发生在最近 1–2 年': 10, '大多发生在最近 3–5 年': 9, '分布在 5 年内外，但 5 年内仍有一部分': 5, '大多早于 5 年前': 1, '我不确定': 2 },
-        sourceNature: { '主要来自毕业后的艺术 / 文化专业实践': 15, '大多来自毕业后的艺术 / 文化专业实践，但夹杂少量学生或商业项目': 11, '艺术 / 文化专业实践、学生项目、商业项目都有': 6, '大多来自商业项目': 1, '大多来自学生时期项目': 0 },
+        sourceNature: { '主要来自毕业后的 Arts & Culture 专业实践': 15, '大多来自毕业后的 Arts & Culture 专业实践，但夹杂少量学生或商业项目': 11, 'Arts & Culture 专业实践、学生项目、商业项目都有': 6, '大多来自商业项目': 1, '大多来自学生时期项目': 0 },
         evidenceStrength: { '有一些经历，但大多较弱、零散，或者难以支持申请': 2, '有少量较强证明材料，但整体还不够稳': 5, '已经有几项相对明确、可验证的证明材料': 8, '证明材料基础较完整，类型和质量都还不错': 10, '我不确定': 3 },
         verifiability: { '很少可以验证': 1, '有一部分可以验证': 2, '大部分可以验证': 4, '几乎都可以验证': 5 },
         recommenderCount: { '0 位': 0, '1 位': 2, '2 位': 5, '3 位': 8, '4 位或以上': 10 },
@@ -570,143 +736,141 @@
         if (n === 3) return 9;
         return 10;
       }
-
       function recommenderQualityScore(count, selected) {
         const set = new Set(selected || []);
         if (!count || count === '0 位') return 0;
         if (set.has('我不确定他们是否符合要求')) return count === '1 位' ? 1 : 0;
-
         let raw = 0;
         if (set.has('和我有真实合作经历')) raw += 3;
         if (set.has('来自不同机构')) raw += 2;
         if (set.has('在行业内有一定分量或认可度')) raw += 3;
         if (set.has('我有把握他们能写出具体内容')) raw += 2;
-
-        const capMap = {
-          '1 位': 3,
-          '2 位': 6,
-          '3 位': 8,
-          '4 位或以上': 10,
-        };
-        const cap = capMap[count] || 0;
-        return Math.min(raw, cap);
+        const capMap = { '1 位': 3, '2 位': 6, '3 位': 8, '4 位或以上': 10 };
+        return Math.min(raw, capMap[count] || 0);
       }
 
-      function getPrimaryField(selectedFields) {
-        const fields = Array.isArray(selectedFields) ? selectedFields : [];
-        return fields[0] || 'Arts & Culture';
+      // ── route labels ──────────────────────────────────────
+      const ROUTE_LABEL_EN = {
+        '视觉艺术': 'Visual Art', '设计': 'Design', '时装': 'Fashion', '影视': 'Film & TV',
+        '建筑': 'Architecture', '表演艺术': 'Performing Arts', '其他 Arts & Culture 相关领域': 'Arts & Culture',
+      };
+      function getRouteLabel(field, lang) { return lang === 'en' ? (ROUTE_LABEL_EN[field] || field) : field; }
+
+      // ── hints (bilingual) ────────────────────────────────
+      const HINTS = {
+        weakEvidence: {
+          '视觉艺术': { zh: '你当前可识别的视觉艺术证据还不够稳，尤其要看展览、驻留、委约、收藏或公开发表记录能不能撑起申请。', en: 'Your identifiable Visual Art evidence is thin — exhibitions, residencies, commissions, collections or publications need to actually carry the application.' },
+          '设计': { zh: '你当前可识别的设计证据还不够稳，尤其要看落地项目、机构合作、专业发布或奖项能不能形成支撑。', en: 'Your identifiable Design evidence is thin — realised projects, institutional partnerships, trade publications or awards need to provide real backing.' },
+          '时装': { zh: '你当前可识别的时装证据还不够稳，尤其要看发布、系列、机构合作、媒体或奖项能不能形成支撑。', en: 'Your identifiable Fashion evidence is thin — collections, presentations, partnerships, press or awards need to actually back the application.' },
+          '影视': { zh: '你当前可识别的影视证据还不够稳，尤其要看作品署名、节展、放映、发行或媒体记录能不能形成支撑。', en: 'Your identifiable Film & TV evidence is thin — credits, festivals, screenings, distribution and press need to back the application.' },
+          '建筑': { zh: '你当前可识别的建筑证据还不够稳，尤其要看建成项目、竞赛、展出、出版或机构合作能不能形成支撑。', en: 'Your identifiable Architecture evidence is thin — built work, competitions, exhibitions, publications and partnerships need to back the application.' },
+          '表演艺术': { zh: '你当前可识别的表演艺术证据还不够稳，尤其要看正式演出、节展、机构合作、署名作品或评论能不能形成支撑。', en: 'Your identifiable Performing Arts evidence is thin — formal performances, festivals, partnerships, credits and reviews need to back the application.' },
+          '其他 Arts & Culture 相关领域': { zh: '你当前可识别的专业证据还不够稳，尤其要看公开成果、机构合作、媒体或奖项能不能形成支撑。', en: 'Your identifiable professional evidence is thin — public outcomes, partnerships, press or awards need to back the application.' },
+        },
+        oldEvidence: {
+          all: { zh: '你当前最重要的证据主要早于近五年，这会明显削弱当前申请支撑力。', en: 'Your strongest evidence is mostly older than five years — that materially weakens current application support.' },
+        },
+        studentProject: {
+          all: { zh: '你目前的核心证据更偏向学生时期项目，这通常不足以支撑成熟申请。', en: 'Your core evidence skews toward student-era projects, which usually cannot support a mature application.' },
+        },
+        commercialProject: {
+          '视觉艺术': { zh: '你目前的核心证据更偏向商业项目。对视觉艺术路线来说，这类材料通常不能直接作为核心支撑。', en: 'Your core evidence is mostly commercial — for the Visual Art route, that rarely counts as primary support.' },
+          '设计': { zh: '你目前的核心证据更偏向商业项目。对设计路线来说，要进一步判断其中哪些项目具备专业影响力与公开可验证性。', en: 'Your core evidence is mostly commercial — for Design, you need to identify which projects carry professional influence and external verifiability.' },
+          '时装': { zh: '你目前的核心证据更偏向商业项目。对时装路线来说，要进一步判断其中哪些能转化为专业支撑材料。', en: 'Your core evidence is mostly commercial — for Fashion, you need to identify which work translates to professional support.' },
+          '影视': { zh: '你目前的核心证据更偏向商业项目。对影视路线来说，要进一步判断其中哪些作品具备署名、放映或行业认可价值。', en: 'Your core evidence is mostly commercial — for Film & TV, you need to identify which work carries credits, screenings or industry recognition.' },
+          '建筑': { zh: '你目前的核心证据更偏向商业项目。对建筑路线来说，要进一步判断其中哪些项目具备专业影响力与公开验证性。', en: 'Your core evidence is mostly commercial — for Architecture, you need to identify projects with professional influence and public verifiability.' },
+          '表演艺术': { zh: '你目前的核心证据更偏向商业项目。对表演艺术路线来说，要进一步判断其中哪些演出或合作具备专业支撑价值。', en: 'Your core evidence is mostly commercial — for Performing Arts, you need to identify which performances or collaborations carry professional weight.' },
+          '其他 Arts & Culture 相关领域': { zh: '你目前的核心证据更偏向商业项目，这类材料未必能直接转化为申请核心支撑。', en: 'Your core evidence is mostly commercial — that does not always translate to core application support.' },
+        },
+        weakLetters: {
+          all: { zh: '你当前的 recommendation letters 网络偏弱，这会直接影响申请能否真正推进。', en: 'Your recommendation-letter network is weak — that directly affects whether the application can move forward.' },
+        },
+        weakNarrative: {
+          all: { zh: '你目前还不能清楚说明自己的实践是什么，以及为什么适合在英国继续发展。', en: 'You cannot yet articulate clearly what your practice is and why the UK is the right next step.' },
+        },
+      };
+      function hint(kind, field, lang) {
+        const map = HINTS[kind];
+        if (!map) return '';
+        const entry = map[field] || map.all || map['其他 Arts & Culture 相关领域'];
+        return entry ? entry[lang] : '';
       }
 
-      function getRouteLabel(field) {
-        return field === 'Arts & Culture' ? 'Arts & Culture' : field;
+      // ── next-steps (bilingual) ───────────────────────────
+      const NEXT_STEPS = {
+        '视觉艺术': {
+          low:  { zh: ['先确认哪些展览、驻留、委约或收藏记录真正能作为核心证明材料。', '优先补足近五年内、可外部验证的展出或机构合作经历。', '把零散作品经历整理成清晰的创作与展示路径。'],
+                  en: ['Decide which exhibitions, residencies, commissions or collections actually count as core evidence.', 'Prioritise verifiable showings or partnerships from the last five years.', 'Organise scattered work into a coherent creation-and-exhibition path.'] },
+          mid:  { zh: ['判断哪些展览、驻留或委约项目可以成为申请主轴。', '补强媒体评论、机构背书或收藏记录等外部验证材料。', '把作品脉络、展出记录和申请叙事对齐。'],
+                  en: ['Identify which exhibitions, residencies or commissions can anchor the application.', 'Strengthen external validation: reviews, institutional backing, collection records.', 'Align body of work, exhibition history and application narrative.'] },
+          high: { zh: ['筛出最能支撑申请的展览、驻留、委约与收藏证据。', '优化推荐信与作品脉络之间的对应关系。', '把展示记录、媒体评论与个人叙事收成一版完整申请结构。'],
+                  en: ['Curate the strongest exhibitions, residencies, commissions and collection records.', 'Tune recommender alignment to your body of work.', 'Consolidate exhibition record, press and personal narrative into a full application structure.'] },
+        },
+        '设计': {
+          low:  { zh: ['先确认哪些已落地设计项目、展出或奖项能算核心材料。', '补足可验证的机构合作、品牌委约或专业发布记录。', '把设计实践从商业执行梳理成专业影响力叙事。'],
+                  en: ['Decide which realised projects, exhibitions or awards count as core evidence.', 'Add verifiable partnerships, brand commissions or trade-press features.', 'Reframe the practice from execution-for-hire into professional-influence narrative.'] },
+          mid:  { zh: ['筛出最能代表你专业影响力的设计项目与机构合作。', '补强专业媒体、出版收录或奖项等外部验证材料。', '把项目成果、行业定位和英国发展叙事连起来。'],
+                  en: ['Pick the projects and partnerships that best represent your professional influence.', 'Strengthen trade press, publications or awards as third-party validation.', 'Connect project outcomes, industry positioning and the UK rationale.'] },
+          high: { zh: ['集中保留最强的落地项目、展出、奖项和机构合作证据。', '优化推荐信与代表项目的对应关系。', '把作品、影响力与申请叙事整合成完整申请结构。'],
+                  en: ['Keep the strongest realised projects, showings, awards and partnerships.', 'Align recommenders with the headline projects.', 'Integrate work, influence and narrative into a complete application.'] },
+        },
+        '时装': {
+          low:  { zh: ['先确认哪些发布、系列、媒体或机构合作能算核心材料。', '补足近五年内可外部验证的时装呈现和行业记录。', '把零散品牌经历整理成连续的专业路径。'],
+                  en: ['Decide which collections, presentations, press or partnerships count as core.', 'Add verifiable presentations and industry records from the last five years.', 'Stitch fragmented brand work into a continuous professional path.'] },
+          mid:  { zh: ['筛出最能支撑申请的发布、委约、媒体与机构合作项目。', '补强外部报道、奖项或行业认可材料。', '把系列作品、行业定位和申请叙事连起来。'],
+                  en: ['Identify the presentations, commissions, press and partnerships that best back the application.', 'Strengthen external coverage, awards or industry recognition.', 'Connect collections, positioning and narrative.'] },
+          high: { zh: ['保留最强的发布、媒体、机构合作和奖项证据。', '优化推荐信与代表性系列或项目的对应关系。', '把时装实践路径和英国发展方向整合成申请主线。'],
+                  en: ['Keep the strongest presentations, press, partnerships and awards.', 'Align recommenders with the signature collections.', 'Consolidate path and UK rationale into the application backbone.'] },
+        },
+        '影视': {
+          low:  { zh: ['先确认哪些影片、放映、署名作品或节展经历真正有申请价值。', '补足近五年内可验证的入围、放映、发行或媒体记录。', '把零散项目经历整理成清晰的主创路径。'],
+                  en: ['Decide which films, screenings, credits or festival selections actually carry weight.', 'Add verifiable selections, screenings, distribution or press from the last five years.', 'Organise scattered credits into a clear authorial path.'] },
+          mid:  { zh: ['筛出最能支撑申请的作品、节展、放映与署名 credits。', '补强媒体评论、行业背书或奖项材料。', '把作品路径、作者定位和英国发展叙事连起来。'],
+                  en: ['Identify the works, festivals, screenings and credits that best back the application.', 'Strengthen reviews, industry backing or awards.', 'Connect works, authorial position and UK rationale.'] },
+          high: { zh: ['集中保留最强的影片、署名作品、节展和媒体证据。', '优化推荐信与代表作之间的对应关系。', '把作品成绩、作者身份和申请结构整合成一版主线。'],
+                  en: ['Keep the strongest films, credits, festivals and press.', 'Align recommenders with the headline works.', 'Integrate track record, authorial identity and structure into one spine.'] },
+        },
+        '建筑': {
+          low:  { zh: ['先确认哪些建成项目、竞赛、展出或出版记录能算核心材料。', '补足可验证的落地项目、机构合作或专业发表。', '把项目经历从零散案例整理成连续的专业实践路径。'],
+                  en: ['Decide which built work, competitions, exhibitions or publications count as core.', 'Add verifiable built work, partnerships or professional publications.', 'Stitch case work into a continuous professional path.'] },
+          mid:  { zh: ['筛出最能代表你专业影响力的项目、竞赛和机构合作。', '补强专业媒体、出版或展出等外部验证材料。', '把项目成果、方法论和申请叙事连起来。'],
+                  en: ['Identify projects, competitions and partnerships that best represent your influence.', 'Strengthen trade press, publications or exhibitions as validation.', 'Connect outcomes, methodology and narrative.'] },
+          high: { zh: ['集中保留最强的建成项目、竞赛、展出和出版证据。', '优化推荐信与代表项目之间的对应关系。', '把专业实践、公共影响和申请结构整合成一版主线。'],
+                  en: ['Keep the strongest built work, competitions, exhibitions and publications.', 'Align recommenders with the headline projects.', 'Integrate practice, public impact and application structure.'] },
+        },
+        '表演艺术': {
+          low:  { zh: ['先确认哪些演出、巡演、节展或署名作品能算核心材料。', '补足近五年内可验证的正式演出和机构合作记录。', '把零散演出经历整理成连续的专业实践路径。'],
+                  en: ['Decide which performances, tours, festivals or credits count as core.', 'Add verifiable formal performances and partnerships from the last five years.', 'Organise scattered performance history into a continuous professional path.'] },
+          mid:  { zh: ['筛出最能支撑申请的演出、节展、机构合作和媒体记录。', '补强奖项、评论或行业背书材料。', '把作品路径、专业定位和英国发展叙事连起来。'],
+                  en: ['Identify the performances, festivals, partnerships and press that best back the application.', 'Strengthen awards, reviews or industry backing.', 'Connect path, positioning and UK rationale.'] },
+          high: { zh: ['集中保留最强的演出、节展、机构合作和媒体证据。', '优化推荐信与代表性作品或演出之间的对应关系。', '把表演实践、影响力和申请结构整合成一版主线。'],
+                  en: ['Keep the strongest performances, festivals, partnerships and press.', 'Align recommenders with the signature works.', 'Integrate practice, influence and structure into one spine.'] },
+        },
+        '其他 Arts & Culture 相关领域': {
+          low:  { zh: ['先确认哪些公开成果、机构合作或媒体记录能算核心材料。', '补足近五年内可验证的专业成果。', '把零散经历整理成清晰的专业实践路径。'],
+                  en: ['Decide which public outcomes, partnerships or press records count as core.', 'Add verifiable professional outcomes from the last five years.', 'Organise scattered experience into a clear professional path.'] },
+          mid:  { zh: ['筛出最能支撑申请的机构合作、公开成果与外部验证材料。', '补强媒体、奖项或出版等第三方证明。', '把专业路径和英国发展叙事连起来。'],
+                  en: ['Identify the partnerships, public outcomes and external validation that best back the application.', 'Strengthen press, awards or publications as third-party proof.', 'Connect professional path and UK rationale.'] },
+          high: { zh: ['集中保留最强的机构合作、公开成果和第三方背书材料。', '优化推荐信与代表性成果之间的对应关系。', '把专业路径、影响力和申请结构整合成一版主线。'],
+                  en: ['Keep the strongest partnerships, public outcomes and third-party backing.', 'Align recommenders with the signature outcomes.', 'Integrate path, influence and structure into one spine.'] },
+        },
+      };
+      function nextSteps(field, band, lang) {
+        const map = NEXT_STEPS[field] || NEXT_STEPS['其他 Arts & Culture 相关领域'];
+        const entry = map[band] || map.low;
+        return entry[lang];
       }
 
-      function getFieldSpecificHint(field, kind) {
-        const hintMap = {
-          weakEvidence: {
-            '视觉艺术': '你当前可识别的视觉艺术证据还不够稳，尤其要看展览、驻留、委约、收藏或公开发表记录能不能撑起申请。',
-            '设计': '你当前可识别的设计证据还不够稳，尤其要看落地项目、机构合作、专业发布或奖项能不能形成支撑。',
-            '时装': '你当前可识别的时装证据还不够稳，尤其要看发布、系列、机构合作、媒体或奖项能不能形成支撑。',
-            '影视': '你当前可识别的影视证据还不够稳，尤其要看作品署名、节展、放映、发行或媒体记录能不能形成支撑。',
-            '建筑': '你当前可识别的建筑证据还不够稳，尤其要看建成项目、竞赛、展出、出版或机构合作能不能形成支撑。',
-            '表演艺术': '你当前可识别的表演艺术证据还不够稳，尤其要看正式演出、节展、机构合作、署名作品或评论能不能形成支撑。',
-            '其他 Arts & Culture 相关领域': '你当前可识别的专业证据还不够稳，尤其要看公开成果、机构合作、媒体或奖项能不能形成支撑。'
-          },
-          oldEvidence: {
-            '视觉艺术': '你当前最重要的视觉艺术证据主要早于近五年，这会明显削弱当前申请支撑力。',
-            '设计': '你当前最重要的设计证据主要早于近五年，这会明显削弱当前申请支撑力。',
-            '时装': '你当前最重要的时装证据主要早于近五年，这会明显削弱当前申请支撑力。',
-            '影视': '你当前最重要的影视证据主要早于近五年，这会明显削弱当前申请支撑力。',
-            '建筑': '你当前最重要的建筑证据主要早于近五年，这会明显削弱当前申请支撑力。',
-            '表演艺术': '你当前最重要的表演艺术证据主要早于近五年，这会明显削弱当前申请支撑力。',
-            '其他 Arts & Culture 相关领域': '你当前最重要的专业证据主要早于近五年，这会明显削弱当前申请支撑力。'
-          },
-          studentProject: {
-            '视觉艺术': '你目前的核心视觉艺术证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
-            '设计': '你目前的核心设计证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
-            '时装': '你目前的核心时装证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
-            '影视': '你目前的核心影视证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
-            '建筑': '你目前的核心建筑证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
-            '表演艺术': '你目前的核心表演艺术证据更偏向学生时期项目，这通常不足以支撑成熟申请。',
-            '其他 Arts & Culture 相关领域': '你目前的核心专业证据更偏向学生时期项目，这通常不足以支撑成熟申请。'
-          },
-          commercialProject: {
-            '视觉艺术': '你目前的核心证据更偏向商业项目。对视觉艺术路线来说，这类材料通常不能直接作为核心支撑。',
-            '设计': '你目前的核心证据更偏向商业项目。对设计路线来说，要进一步判断其中哪些项目具备专业影响力与公开可验证性。',
-            '时装': '你目前的核心证据更偏向商业项目。对时装路线来说，要进一步判断其中哪些能转化为专业支撑材料。',
-            '影视': '你目前的核心证据更偏向商业项目。对影视路线来说，要进一步判断其中哪些作品具备署名、放映或行业认可价值。',
-            '建筑': '你目前的核心证据更偏向商业项目。对建筑路线来说，要进一步判断其中哪些项目具备专业影响力与公开验证性。',
-            '表演艺术': '你目前的核心证据更偏向商业项目。对表演艺术路线来说，要进一步判断其中哪些演出或合作具备专业支撑价值。',
-            '其他 Arts & Culture 相关领域': '你目前的核心证据更偏向商业项目，这类材料未必能直接转化为申请核心支撑。'
-          },
-          weakLetters: {
-            '视觉艺术': '你当前的 recommendation letters 网络偏弱，这会直接影响视觉艺术申请能否真正推进。',
-            '设计': '你当前的 recommendation letters 网络偏弱，这会直接影响设计申请能否真正推进。',
-            '时装': '你当前的 recommendation letters 网络偏弱，这会直接影响时装申请能否真正推进。',
-            '影视': '你当前的 recommendation letters 网络偏弱，这会直接影响影视申请能否真正推进。',
-            '建筑': '你当前的 recommendation letters 网络偏弱，这会直接影响建筑申请能否真正推进。',
-            '表演艺术': '你当前的 recommendation letters 网络偏弱，这会直接影响表演艺术申请能否真正推进。',
-            '其他 Arts & Culture 相关领域': '你当前的 recommendation letters 网络偏弱，这会直接影响申请能否真正推进。'
-          },
-          weakNarrative: {
-            '视觉艺术': '你目前还不能清楚说明自己的视觉艺术实践是什么，以及为什么适合在英国继续发展。',
-            '设计': '你目前还不能清楚说明自己的设计实践是什么，以及为什么适合在英国继续发展。',
-            '时装': '你目前还不能清楚说明自己的时装实践是什么，以及为什么适合在英国继续发展。',
-            '影视': '你目前还不能清楚说明自己的影视实践是什么，以及为什么适合在英国继续发展。',
-            '建筑': '你目前还不能清楚说明自己的建筑实践是什么，以及为什么适合在英国继续发展。',
-            '表演艺术': '你目前还不能清楚说明自己的表演艺术实践是什么，以及为什么适合在英国继续发展。',
-            '其他 Arts & Culture 相关领域': '你目前还不能清楚说明自己的专业实践是什么，以及为什么适合在英国继续发展。'
-          }
-        };
-        return (hintMap[kind] && hintMap[kind][field]) || hintMap[kind]?.['其他 Arts & Culture 相关领域'] || '';
-      }
+      const ROUTE_SUMMARIES = {
+        low:  { zh: '你目前还不适合按这个 route 进入正式申请准备。', en: 'You are not yet ready to formally prepare on this route.' },
+        mid:  { zh: '按这个 route 看，你已经有一定基础，但距离稳定申请还差一段。', en: 'On this route you have a basis, but you are not yet at stable-application range.' },
+        high: { zh: '按这个 route 看，你已经具备一定申请基础。', en: 'On this route you already have a viable application basis.' },
+      };
 
-      function getFieldSpecificNextSteps(selectedFields, band) {
-        const primary = getPrimaryField(selectedFields);
-        const map = {
-          '视觉艺术': {
-            low: ['先确认哪些展览、驻留、委约或收藏记录真正能作为核心证明材料。', '优先补足近五年内、可外部验证的展出或机构合作经历。', '把零散作品经历整理成清晰的创作与展示路径。'],
-            mid: ['判断哪些展览、驻留或委约项目可以成为申请主轴。', '补强媒体评论、机构背书或收藏记录等外部验证材料。', '把作品脉络、展出记录和申请叙事对齐。'],
-            high: ['筛出最能支撑申请的展览、驻留、委约与收藏证据。', '优化推荐信与作品脉络之间的对应关系。', '把展示记录、媒体评论与个人叙事收成一版完整申请结构。']
-          },
-          '设计': {
-            low: ['先确认哪些已落地设计项目、展出或奖项能算核心材料。', '补足可验证的机构合作、品牌委约或专业发布记录。', '把设计实践从商业执行梳理成专业影响力叙事。'],
-            mid: ['筛出最能代表你专业影响力的设计项目与机构合作。', '补强专业媒体、出版收录或奖项等外部验证材料。', '把项目成果、行业定位和英国发展叙事连起来。'],
-            high: ['集中保留最强的落地项目、展出、奖项和机构合作证据。', '优化推荐信与代表项目的对应关系。', '把作品、影响力与申请叙事整合成完整申请结构。']
-          },
-          '时装': {
-            low: ['先确认哪些发布、系列、媒体或机构合作能算核心材料。', '补足近五年内可外部验证的时装呈现和行业记录。', '把零散品牌经历整理成连续的专业路径。'],
-            mid: ['筛出最能支撑申请的发布、委约、媒体与机构合作项目。', '补强外部报道、奖项或行业认可材料。', '把系列作品、行业定位和申请叙事连起来。'],
-            high: ['保留最强的发布、媒体、机构合作和奖项证据。', '优化推荐信与代表性系列或项目的对应关系。', '把时装实践路径和英国发展方向整合成申请主线。']
-          },
-          '影视': {
-            low: ['先确认哪些影片、放映、署名作品或节展经历真正有申请价值。', '补足近五年内可验证的入围、放映、发行或媒体记录。', '把零散项目经历整理成清晰的主创路径。'],
-            mid: ['筛出最能支撑申请的作品、节展、放映与署名 credits。', '补强媒体评论、行业背书或奖项材料。', '把作品路径、作者定位和英国发展叙事连起来。'],
-            high: ['集中保留最强的影片、署名作品、节展和媒体证据。', '优化推荐信与代表作之间的对应关系。', '把作品成绩、作者身份和申请结构整合成一版主线。']
-          },
-          '建筑': {
-            low: ['先确认哪些建成项目、竞赛、展出或出版记录能算核心材料。', '补足可验证的落地项目、机构合作或专业发表。', '把项目经历从零散案例整理成连续的专业实践路径。'],
-            mid: ['筛出最能代表你专业影响力的项目、竞赛和机构合作。', '补强专业媒体、出版或展出等外部验证材料。', '把项目成果、方法论和申请叙事连起来。'],
-            high: ['集中保留最强的建成项目、竞赛、展出和出版证据。', '优化推荐信与代表项目之间的对应关系。', '把专业实践、公共影响和申请结构整合成一版主线。']
-          },
-          '表演艺术': {
-            low: ['先确认哪些演出、巡演、节展或署名作品能算核心材料。', '补足近五年内可验证的正式演出和机构合作记录。', '把零散演出经历整理成连续的专业实践路径。'],
-            mid: ['筛出最能支撑申请的演出、节展、机构合作和媒体记录。', '补强奖项、评论或行业背书材料。', '把作品路径、专业定位和英国发展叙事连起来。'],
-            high: ['集中保留最强的演出、节展、机构合作和媒体证据。', '优化推荐信与代表性作品或演出之间的对应关系。', '把表演实践、影响力和申请结构整合成一版主线。']
-          },
-          '其他 Arts & Culture 相关领域': {
-            low: ['先确认哪些公开成果、机构合作或媒体记录能算核心材料。', '补足近五年内可验证的专业成果。', '把零散经历整理成清晰的专业实践路径。'],
-            mid: ['筛出最能支撑申请的机构合作、公开成果与外部验证材料。', '补强媒体、奖项或出版等第三方证明。', '把专业路径和英国发展叙事连起来。'],
-            high: ['集中保留最强的机构合作、公开成果和第三方背书材料。', '优化推荐信与代表性成果之间的对应关系。', '把专业路径、影响力和申请结构整合成一版主线。']
-          }
-        };
-        return (map[primary] && map[primary][band]) || ['判断现有证明材料里哪些是核心，哪些只是补充。', '优先补最影响准备度的缺口。', '开始把零散经历整理成更清晰的申请逻辑。'];
-      }
-
-      function calculateResult(answers) {
+      function calculateResult(answers, lang) {
         const selectedFields = Array.isArray(answers.fields) && answers.fields.length ? answers.fields : ['其他 Arts & Culture 相关领域'];
 
-        function calculateRouteResult(field) {
+        function calcRoute(field) {
           let evidence = 0;
           evidence += evidenceTypeScore(answers.evidenceTypes);
           evidence += SCORE_MAPS.recency[answers.recency] || 0;
@@ -731,110 +895,71 @@
           const evidenceTypes = (answers.evidenceTypes || []).filter(v => v !== '我还不确定哪些算有效证明材料');
           if (evidenceTypes.length < 2) {
             evidence = Math.min(evidence, 28);
-            hints.push(getFieldSpecificHint(field, 'weakEvidence'));
+            hints.push(hint('weakEvidence', field, lang));
           }
-          if (answers.recency === '大多早于 5 年前') {
-            total -= 5;
-            hints.push(getFieldSpecificHint(field, 'oldEvidence'));
-          }
-          if (answers.sourceNature === '大多来自学生时期项目') {
-            evidence = Math.min(evidence, 22);
-            total -= 8;
-            hints.push(getFieldSpecificHint(field, 'studentProject'));
-          }
-          if (answers.sourceNature === '大多来自商业项目') {
-            evidence = Math.min(evidence, 22);
-            total -= 8;
-            hints.push(getFieldSpecificHint(field, 'commercialProject'));
-          }
+          if (answers.recency === '大多早于 5 年前') { total -= 5; hints.push(hint('oldEvidence', field, lang)); }
+          if (answers.sourceNature === '大多来自学生时期项目') { evidence = Math.min(evidence, 22); total -= 8; hints.push(hint('studentProject', field, lang)); }
+          if (answers.sourceNature === '大多来自商业项目') { evidence = Math.min(evidence, 22); total -= 8; hints.push(hint('commercialProject', field, lang)); }
           if (answers.recommenderCount === '0 位' || answers.recommenderCount === '1 位') {
-            const uncertainOnly = Array.isArray(answers.recommenderQuality)
-              && answers.recommenderQuality.length === 1
-              && answers.recommenderQuality[0] === '我不确定他们是否符合要求';
+            const uncertainOnly = Array.isArray(answers.recommenderQuality) && answers.recommenderQuality.length === 1 && answers.recommenderQuality[0] === '我不确定他们是否符合要求';
             recommenders = Math.min(recommenders, answers.recommenderCount === '0 位' ? 2 : (uncertainOnly ? 3 : 5));
-            hints.push(getFieldSpecificHint(field, 'weakLetters'));
+            hints.push(hint('weakLetters', field, lang));
           }
-          if (answers.recommenderCount === '2 位') {
-            recommenders = Math.min(recommenders, 9);
-          }
-          if (answers.narrative === '现在还说不清' || answers.narrative === '有一些想法，但比较模糊') {
-            hints.push(getFieldSpecificHint(field, 'weakNarrative'));
-          }
+          if (answers.recommenderCount === '2 位') recommenders = Math.min(recommenders, 9);
+          if (answers.narrative === '现在还说不清' || answers.narrative === '有一些想法，但比较模糊') hints.push(hint('weakNarrative', field, lang));
 
           total = Math.max(0, Math.min(100, evidence + recommenders + readiness + (total - (evidence + recommenders + readiness))));
 
           let band = 'low';
-          let summary = '你目前还不适合按这个 route 进入正式申请准备。';
-          let nextSteps = getFieldSpecificNextSteps([field], 'low');
-          if (total >= 40 && total <= 69) {
-            band = 'mid';
-            summary = '按这个 route 看，你已经有一定基础，但距离稳定申请还差一段。';
-            nextSteps = getFieldSpecificNextSteps([field], 'mid');
-          }
-          if (total >= 70) {
-            band = 'high';
-            summary = '按这个 route 看，你已经具备一定申请基础。';
-            nextSteps = getFieldSpecificNextSteps([field], 'high');
-          }
+          if (total >= 40 && total <= 69) band = 'mid';
+          if (total >= 70) band = 'high';
 
           return {
-            field,
-            label: getRouteLabel(field),
-            total,
-            band,
-            summary,
-            metrics: {
-              '证明材料强度': evidence,
-              '推荐信网络': recommenders,
-              '整体准备状态': readiness,
-            },
-            hints: hints.slice(0, 3),
-            nextSteps,
+            field, label: getRouteLabel(field, lang), total, band,
+            summary: ROUTE_SUMMARIES[band][lang],
+            metrics: { evidence, recommenders, readiness },
+            hints: hints.filter(Boolean).slice(0, 3),
+            nextSteps: nextSteps(field, band, lang),
           };
         }
 
-        const routeResults = selectedFields.map(calculateRouteResult).sort((a, b) => b.total - a.total);
-        const primaryRecommendation = routeResults[0];
-        const alternateRoutes = routeResults.slice(1);
-
+        const routeResults = selectedFields.map(calcRoute).sort((a, b) => b.total - a.total);
+        const primary = routeResults[0];
         return {
-          total: primaryRecommendation.total,
-          band: primaryRecommendation.band,
-          summary: `如果按 ${primaryRecommendation.label} route 组织申请，你目前的准备度最高。`,
-          metrics: primaryRecommendation.metrics,
-          hints: primaryRecommendation.hints,
-          nextSteps: primaryRecommendation.nextSteps,
-          primaryRecommendation,
-          alternateRoutes,
+          total: primary.total, band: primary.band,
+          metrics: primary.metrics, hints: primary.hints, nextSteps: primary.nextSteps,
+          primaryRecommendation: primary,
+          alternateRoutes: routeResults.slice(1),
           routeResults,
         };
       }
 
       const ROUTE_OPTIONS = [
-        { value: 'visual_art', label: 'Visual Art' },
-        { value: 'design', label: 'Design' },
-        { value: 'fashion', label: 'Fashion' },
-        { value: 'film_tv', label: 'Film / TV' },
-        { value: 'architecture', label: 'Architecture' },
-        { value: 'performing_arts', label: 'Performing Arts' },
-        { value: 'cross_disciplinary', label: 'Cross-disciplinary' },
+        { value: 'visual_art', en: 'Visual Art', zh: '视觉艺术' },
+        { value: 'design', en: 'Design', zh: '设计' },
+        { value: 'fashion', en: 'Fashion', zh: '时装' },
+        { value: 'film_tv', en: 'Film / TV', zh: '影视' },
+        { value: 'architecture', en: 'Architecture', zh: '建筑' },
+        { value: 'performing_arts', en: 'Performing Arts', zh: '表演艺术' },
+        { value: 'cross_disciplinary', en: 'Cross-disciplinary', zh: '跨学科' },
       ];
 
       const OPPORTUNITY_LIBRARY = [
-        { id: 'fieldwork_issue_2', name: 'Fieldwork Issue 2', routeTags: ['visual_art','cross_disciplinary'], opportunityType: 'publication', project: 'TWICE', deadlineLabel: '6 May 2026', feeSummary: '~£19', gtvFit: 'yes', whyItMatters: 'Selection timing is early enough to matter for near-term GTV preparation.', evidenceValue: ['publication', 'professional_validation'], fitRoutesNote: 'Best for visual art and image-led cross-disciplinary practices.', status: 'shortlisted' },
-        { id: 'zrfdbck_drift_2026', name: 'ZRFDBCK Drift', routeTags: ['visual_art','cross_disciplinary'], opportunityType: 'exhibition', project: 'TWICE', deadlineLabel: '20 May 2026', feeSummary: '~£19', gtvFit: 'yes', whyItMatters: 'Fast announcement timeline makes it useful for immediate momentum.', evidenceValue: ['public_presentation', 'international_visibility'], fitRoutesNote: 'Useful for visual art and lens-based practices.', status: 'shortlisted' },
-        { id: 'design_open_lab', name: 'Design Open Lab', routeTags: ['design','cross_disciplinary'], opportunityType: 'institutional_programme', project: 'Portfolio', deadlineLabel: '18 May 2026', feeSummary: 'Free', gtvFit: 'warn', whyItMatters: 'Institutional context is useful, but selection outcome may be less visible externally.', evidenceValue: ['institutional_partnership', 'professional_validation'], fitRoutesNote: 'Better for designers with a clear applied or research-led body of work.', status: 'researching' },
-        { id: 'fashion_image_feature', name: 'Fashion Image Feature', routeTags: ['fashion','visual_art'], opportunityType: 'publication', project: 'Series', deadlineLabel: '12 May 2026', feeSummary: '~£15', gtvFit: 'warn', whyItMatters: 'Can help with visibility, but depends heavily on publication quality.', evidenceValue: ['publication', 'media_coverage'], fitRoutesNote: 'More useful for fashion image-makers than for general visual art positioning.', status: 'researching' },
-        { id: 'screening_weekender', name: 'Screening Weekender', routeTags: ['film_tv'], opportunityType: 'screening', project: 'Short film', deadlineLabel: '30 May 2026', feeSummary: '~£22', gtvFit: 'yes', whyItMatters: 'Public screening and curatorial selection can become useful evidence.', evidenceValue: ['festival_screening', 'public_presentation'], fitRoutesNote: 'Strongest for filmmakers with a finished short and clear festival strategy.', status: 'shortlisted' },
-        { id: 'architecture_public_programme', name: 'Architecture Public Programme', routeTags: ['architecture'], opportunityType: 'talk', project: 'Built / research work', deadlineLabel: '28 May 2026', feeSummary: 'Free', gtvFit: 'warn', whyItMatters: 'Public programme visibility helps, though it is weaker than built work or major awards.', evidenceValue: ['public_presentation', 'professional_validation'], fitRoutesNote: 'Useful as supporting evidence, not usually core evidence.', status: 'researching' },
-        { id: 'performing_arts_residency', name: 'Performing Arts Residency', routeTags: ['performing_arts'], opportunityType: 'residency', project: 'New work', deadlineLabel: '10 June 2026', feeSummary: '~£25', gtvFit: 'yes', whyItMatters: 'Residency plus public showing can generate meaningful evidence if outcomes are documented well.', evidenceValue: ['public_presentation', 'institutional_partnership'], fitRoutesNote: 'Stronger if residency includes a public outcome and institutional host.', status: 'shortlisted' }
+        { id: 'fieldwork_issue_2', name: 'Fieldwork Issue 2', routeTags: ['visual_art','cross_disciplinary'], opportunityType: 'publication', deadlineLabel: '6 May 2026', feeSummary: '~£19', gtvFit: 'yes', why: { en: 'Selection timing is early enough to matter for near-term GTV preparation.', zh: '入选时间靠前，对近期 GTV 准备有意义。' } },
+        { id: 'zrfdbck_drift_2026', name: 'ZRFDBCK Drift', routeTags: ['visual_art','cross_disciplinary'], opportunityType: 'exhibition', deadlineLabel: '20 May 2026', feeSummary: '~£19', gtvFit: 'yes', why: { en: 'Fast announcement timeline makes it useful for immediate momentum.', zh: '公布时间快，对当前推进很有帮助。' } },
+        { id: 'design_open_lab', name: 'Design Open Lab', routeTags: ['design','cross_disciplinary'], opportunityType: 'institutional_programme', deadlineLabel: '18 May 2026', feeSummary: 'Free', gtvFit: 'warn', why: { en: 'Institutional context is useful, but selection outcome may be less visible externally.', zh: '机构语境有用，但入选结果在外部可见度可能较低。' } },
+        { id: 'fashion_image_feature', name: 'Fashion Image Feature', routeTags: ['fashion','visual_art'], opportunityType: 'publication', deadlineLabel: '12 May 2026', feeSummary: '~£15', gtvFit: 'warn', why: { en: 'Can help with visibility, but depends heavily on publication quality.', zh: '能提高曝光，但效果取决于出版物本身的质量。' } },
+        { id: 'screening_weekender', name: 'Screening Weekender', routeTags: ['film_tv'], opportunityType: 'screening', deadlineLabel: '30 May 2026', feeSummary: '~£22', gtvFit: 'yes', why: { en: 'Public screening and curatorial selection can become useful evidence.', zh: '公开放映和策展选择可成为可用证据。' } },
+        { id: 'performing_arts_residency', name: 'Performing Arts Residency', routeTags: ['performing_arts'], opportunityType: 'residency', deadlineLabel: '10 June 2026', feeSummary: '~£25', gtvFit: 'yes', why: { en: 'Residency plus public showing can generate meaningful evidence if outcomes are documented well.', zh: '驻留加上公开呈现可以形成有价值的证据，前提是记录到位。' } },
       ];
 
-      function fitLabel(value) {
-        return value === 'yes' ? 'Strong fit' : value === 'warn' ? 'Possible fit' : 'Low fit';
-      }
+      function fitLabel(v, t) { return v === 'yes' ? t.fitYes : v === 'warn' ? t.fitWarn : t.fitLow; }
 
+      // ── App ───────────────────────────────────────────────
       function App() {
+        const [lang, setLang] = React.useState('en');
+        const t = STR[lang];
+
         const [screen, setScreen] = React.useState('home');
         const [step, setStep] = React.useState(0);
         const [answers, setAnswers] = React.useState({});
@@ -849,475 +974,633 @@
         const [discoverResults, setDiscoverResults] = React.useState([]);
 
         const question = QUESTIONS[step];
-        const progress = ((step + 1) / QUESTIONS.length) * 100;
-        const result = React.useMemo(() => calculateResult(answers), [answers]);
-        const questionOptions = question.getOptions ? question.getOptions(answers) : question.options;
+        const result = React.useMemo(() => calculateResult(answers, lang), [answers, lang]);
+        const questionOptions = question && question.getOptions ? question.getOptions(answers) : (question && question.options) || [];
 
         React.useEffect(() => {
           try {
             const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
             setSavedLeads(Array.isArray(existing) ? existing.reverse() : []);
-          } catch (e) {
-            setSavedLeads([]);
-          }
+          } catch (e) { setSavedLeads([]); }
         }, []);
 
-        function analyzeOpportunity() {
-          if (!analyzeInput.title.trim() && !analyzeInput.text.trim()) return;
-          const text = `${analyzeInput.title} ${analyzeInput.text}`.toLowerCase();
-          const fit = text.includes('award') || text.includes('institution') || text.includes('festival') || text.includes('publication') ? 'yes' : text.includes('competition') || text.includes('open call') ? 'warn' : 'warn';
-          const timing = analyzeInput.targetMonth ? `If your target submission is around ${analyzeInput.targetMonth}, this looks ${fit === 'yes' ? 'usable' : 'possible but not ideal'} from a timing perspective.` : 'Timing needs a target submission month to judge properly.';
-          setAnalysisResult({
-            fit,
-            strategicImportance: fit === 'yes' ? 'Core / useful' : 'Optional unless it fills a clear gap',
-            successView: fit === 'yes' ? 'Plausible if the project fit is real and the material is ready.' : 'Possible, but competitive and not obviously essential.',
-            gtvValue: fit === 'yes' ? 'Potentially useful for evidence-building.' : 'May help, but not obviously a priority without stronger route fit.',
-            timing,
-            recommendation: fit === 'yes' ? 'Worth considering. Save this and compare against your current evidence gaps.' : 'Do not prioritize this until you compare it with stronger route-aligned options.'
-          });
+        function navTo(target) {
+          if (target === 'quiz') { setScreen('quiz'); setStep(0); }
+          else setScreen(target);
         }
 
-        function findTailoredOpportunities() {
-          const filtered = OPPORTUNITY_LIBRARY.filter((item) => item.routeTags.includes(discoverInput.route) || item.routeTags.includes('cross_disciplinary'))
-            .filter((item) => !discoverInput.budget || item.feeSummary.toLowerCase().includes('free') || item.feeSummary.toLowerCase().includes('~£'))
-            .slice(0, 5);
-          setDiscoverResults(filtered);
-        }
-
-        function getDynamicMaxSelect(questionId) {
-          if (questionId !== 'recommenderQuality') return null;
-          const count = answers.recommenderCount;
-          if (count === '0 位') return 1;
-          if (count === '1 位') return 1;
-          if (count === '2 位') return 2;
-          if (count === '3 位') return 3;
-          if (count === '4 位或以上') return 4;
+        function getDynamicMaxSelect(qid) {
+          if (qid !== 'recommenderQuality') return null;
+          const c = answers.recommenderCount;
+          if (c === '0 位' || c === '1 位') return 1;
+          if (c === '2 位') return 2;
+          if (c === '3 位') return 3;
+          if (c === '4 位或以上') return 4;
           return null;
         }
 
-        function toggleMulti(id, option, maxSelect, exclusiveOption) {
-          const effectiveMaxSelect = maxSelect || getDynamicMaxSelect(id);
+        function toggleMulti(id, optionKey, maxSelect, exclusiveOption) {
+          const effectiveMax = maxSelect || getDynamicMaxSelect(id);
           const current = answers[id] || [];
-          const exists = current.includes(option);
-          let next = exists ? current.filter(v => v !== option) : [...current, option];
-
+          const exists = current.includes(optionKey);
+          let next = exists ? current.filter(v => v !== optionKey) : [...current, optionKey];
           if (!exists && exclusiveOption) {
-            if (option === exclusiveOption) {
-              next = [exclusiveOption];
-            } else {
-              next = next.filter(v => v !== exclusiveOption);
-            }
+            if (optionKey === exclusiveOption) next = [exclusiveOption];
+            else next = next.filter(v => v !== exclusiveOption);
           }
-
-          if (!exists && effectiveMaxSelect && next.length > effectiveMaxSelect) return;
+          if (!exists && effectiveMax && next.length > effectiveMax) return;
           setAnswers({ ...answers, [id]: next });
         }
-          const current = answers[id] || [];
-          const exists = current.includes(option);
-          let next = exists ? current.filter(v => v !== option) : [...current, option];
-
-          if (!exists && exclusiveOption) {
-            if (option === exclusiveOption) {
-              next = [exclusiveOption];
-            } else {
-              next = next.filter(v => v !== exclusiveOption);
-            }
-          }
-
-          if (!exists && maxSelect && next.length > maxSelect) return;
-          setAnswers({ ...answers, [id]: next });
-        }
-
-        function setSingle(id, option) {
-          setAnswers({ ...answers, [id]: option });
-        }
-
+        function setSingle(id, optionKey) { setAnswers({ ...answers, [id]: optionKey }); }
         function isAnswered(q) {
-          const value = answers[q.id];
-          if (q.type === 'multi') return Array.isArray(value) && value.length > 0;
-          return Boolean(value);
+          const v = answers[q.id];
+          if (q.type === 'multi') return Array.isArray(v) && v.length > 0;
+          return Boolean(v);
         }
 
         function refreshSavedLeads() {
           try {
             const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
             setSavedLeads(Array.isArray(existing) ? existing.reverse() : []);
-          } catch (e) {
-            setSavedLeads([]);
-          }
+          } catch (e) { setSavedLeads([]); }
         }
-
         function exportSavedLeads() {
           try {
             const raw = localStorage.getItem('gtv_leads') || '[]';
             const blob = new Blob([raw], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = url;
-            link.download = `gtv-leads-${new Date().toISOString().slice(0, 10)}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-          } catch (e) {
-            setLeadError('导出失败，请稍后再试。');
-          }
+            link.href = url; link.download = `gtv-leads-${new Date().toISOString().slice(0, 10)}.json`;
+            link.click(); URL.revokeObjectURL(url);
+          } catch (e) { setLeadError(lang === 'en' ? 'Export failed.' : '导出失败，请稍后再试。'); }
         }
-
         function clearSavedLeads() {
-          try {
-            localStorage.removeItem('gtv_leads');
-            setSavedLeads([]);
-            setLeadSaved(false);
-          } catch (e) {
-            setLeadError('清空失败，请稍后再试。');
-          }
+          try { localStorage.removeItem('gtv_leads'); setSavedLeads([]); setLeadSaved(false); }
+          catch (e) { setLeadError(lang === 'en' ? 'Clear failed.' : '清空失败，请稍后再试。'); }
         }
-
         async function saveLeadPlaceholder(e) {
-          e.preventDefault();
-          setLeadSaved(false);
-          setLeadError('');
-
-          if (!email.trim()) {
-            setLeadError('请先输入邮箱。');
-            return;
-          }
-
+          e.preventDefault(); setLeadSaved(false); setLeadError('');
+          if (!email.trim()) { setLeadError(lang === 'en' ? 'Please enter an email.' : '请先输入邮箱。'); return; }
           setLeadSaving(true);
           try {
             const existing = JSON.parse(localStorage.getItem('gtv_leads') || '[]');
-            existing.push({ email, answers, result, createdAt: new Date().toISOString() });
+            existing.push({ email, answers, result, lang, createdAt: new Date().toISOString() });
             localStorage.setItem('gtv_leads', JSON.stringify(existing));
-            refreshSavedLeads();
-            setLeadSaved(true);
-          } catch (err) {
-            setLeadError('保存失败，请稍后再试。');
-          } finally {
-            setLeadSaving(false);
-          }
+            refreshSavedLeads(); setLeadSaved(true);
+          } catch (err) { setLeadError(lang === 'en' ? 'Save failed, please try again.' : '保存失败，请稍后再试。'); }
+          finally { setLeadSaving(false); }
         }
 
-        if (screen === 'home') {
+        function analyzeOpportunity() {
+          if (!analyzeInput.title.trim() && !analyzeInput.text.trim()) return;
+          const text = `${analyzeInput.title} ${analyzeInput.text}`.toLowerCase();
+          const fit = text.includes('award') || text.includes('institution') || text.includes('festival') || text.includes('publication') ? 'yes' : 'warn';
+          const timingTxt = analyzeInput.targetMonth
+            ? (lang === 'en'
+                ? `If your target submission is around ${analyzeInput.targetMonth}, this looks ${fit === 'yes' ? 'usable' : 'possible but not ideal'} from a timing perspective.`
+                : `如果你的目标提交约在 ${analyzeInput.targetMonth}，从时间上看${fit === 'yes' ? '可用' : '可行但不理想'}。`)
+            : (lang === 'en' ? 'Add a target submission month to judge timing properly.' : '需要填写目标提交月份才能更准确地判断时间。');
+          setAnalysisResult({
+            fit,
+            strategicImportance: fit === 'yes' ? (lang === 'en' ? 'Core / useful' : '核心 / 有价值') : (lang === 'en' ? 'Optional unless it fills a clear gap' : '可选，除非能补一个明确缺口'),
+            successView: fit === 'yes' ? (lang === 'en' ? 'Plausible if the project fit is real and the material is ready.' : '如果项目契合且材料已就绪，是可行的。') : (lang === 'en' ? 'Possible, but competitive and not obviously essential.' : '可能可行，但竞争激烈，且未必是必须的。'),
+            gtvValue: fit === 'yes' ? (lang === 'en' ? 'Potentially useful for evidence-building.' : '对证据构建可能有用。') : (lang === 'en' ? 'May help, but not obviously a priority without stronger route fit.' : '可能有帮助，但在 route 契合度更高之前不算明显优先项。'),
+            timing: timingTxt,
+            recommendation: fit === 'yes' ? (lang === 'en' ? 'Worth considering. Save it and compare against your current evidence gaps.' : '值得考虑。保存下来，与现有证据缺口对照。') : (lang === 'en' ? 'Do not prioritise this until you compare it with stronger route-aligned options.' : '在与更契合 route 的选项对比之前，不建议优先考虑。'),
+          });
+        }
+
+        function findTailoredOpportunities() {
+          const filtered = OPPORTUNITY_LIBRARY.filter((item) => item.routeTags.includes(discoverInput.route) || item.routeTags.includes('cross_disciplinary')).slice(0, 5);
+          setDiscoverResults(filtered);
+        }
+
+        // ── render helpers ───────────────────────────────────
+        function optLabel(opt) { return Array.isArray(opt) ? opt[lang === 'en' ? 1 : 0] : opt; }
+        function optKey(opt) { return Array.isArray(opt) ? opt[0] : opt; }
+
+        // ── Landing ──────────────────────────────────────────
+        function LandingScreen() {
+          const hubX = 590, hubY = 310;
+          const positions = [
+            { x: 110,  y: 90,  anchor: 'start', color: A.pink },
+            { x: 110,  y: 250, anchor: 'start', color: A.tan },
+            { x: 110,  y: 410, anchor: 'start', color: A.teal },
+            { x: 110,  y: 560, anchor: 'start', color: A.violet },
+            { x: 1070, y: 90,  anchor: 'end',   color: A.yellow },
+            { x: 1070, y: 250, anchor: 'end',   color: A.mint },
+            { x: 1070, y: 410, anchor: 'end',   color: A.lilac },
+            { x: 1070, y: 560, anchor: 'end',   color: A.mauve },
+          ];
           return (
-            <div className="app">
-              <section className="hero">
-                <div className="container hero-grid">
+            <div className="frame">
+              <TopNav active="home" onNav={navTo} lang={lang} setLang={setLang} t={t} />
+
+              <div className="hero">
+                <div className="eyebrow" style={{ marginBottom: 22 }}>
+                  <Bullet color="var(--brand)" size={10} />
+                  <span>{t.eyebrowHero}</span>
+                </div>
+                <h1 className="h-hero">
+                  {t.heroTitleA}<span className="accent">{t.heroTitleAccent}</span>{t.heroTitleB}
+                </h1>
+                <p className="lede">{t.heroLede}</p>
+                <div className="cta-row">
+                  <button className="btn btn-primary" onClick={() => navTo('quiz')}>{t.startFreeCheck}</button>
+                  <button className="btn" onClick={() => navTo('analyze')}>{t.analyzeCta}</button>
+                </div>
+              </div>
+
+              <div className="mindmap-wrap">
+                <div className="mindmap">
+                  <svg className="mm-svg" width="1168" height="660" viewBox="0 0 1168 660" preserveAspectRatio="none">
+                    {positions.map((n, i) => (
+                      <MMLine key={i} x1={hubX} y1={hubY} x2={n.x + (n.anchor === 'end' ? -8 : 8)} y2={n.y} />
+                    ))}
+                  </svg>
+                  <div className="mm-hub" style={{ left: hubX, top: hubY }}>
+                    <div className="dot" />
+                    <div className="label">{t.hubLabel}</div>
+                  </div>
+                  <div className="hub-caption" style={{ left: hubX, top: hubY + 60 }}>{t.hubCaption}</div>
+                  {positions.map((n, i) => (
+                    <div key={i} className={`mm-node ${n.anchor === 'end' ? 'end' : ''}`} style={{ left: n.x, top: n.y }}>
+                      <Bullet color={n.color} size={14} />
+                      <div>
+                        <div className="l-title">{t.mapNodes[i].label}</div>
+                        <div className="l-sub">{t.mapNodes[i].sub}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="threeways">
+                <div className="head">
                   <div>
-                    <div className="eyebrow">GTV Insight · MVP</div>
-                    <h1>先判断你现在是否适合开始准备 UK Global Talent Visa，而不是继续在信息里打转。</h1>
-                    <p>这是一份面向 Arts & Culture 申请人的 GTV Readiness Check。你会在 5 分钟内看到自己当前的证明材料强度、推荐信网络，以及整体准备状态。</p>
-                    <div className="cta-row">
-                      <button className="btn btn-primary" onClick={() => setScreen('quiz')}>开始免费诊断</button>
-                    </div>
-                    <div className="entry-grid">
-                      <div className="entry-card" onClick={() => setScreen('analyze')}>
-                        <h3>我来提供一个机会</h3>
-                        <p>把 open call、award、publication、residency 或链接信息交给产品，先判断值不值得投。</p>
-                      </div>
-                      <div className="entry-card" onClick={() => setScreen('discover')}>
-                        <h3>帮我找适合我的机会</h3>
-                        <p>基于你的 route、项目、时间线和预算，给你一组 tailored opportunities。</p>
-                      </div>
-                    </div>
-                    <div className="hero-note">不需要预约，不需要先咨询。先做判断，再决定要不要进入下一步准备。</div>
-                    <div className="trust-points">
-                      <div className="trust-point">你会拿到的是结构化判断，不是空泛鼓励，也不是立刻推销服务。</div>
-                      <div className="trust-point">结果会直接指出你当前最需要注意的点，以及下一步更应该补哪里。</div>
-                      <div className="trust-point">如果你已经看到某个 open call 或 award，也可以直接让产品先判断值不值得投。</div>
-                    </div>
+                    <h2 className="h-section">{t.threeWaysTitle}</h2>
+                    <p>{t.threeWaysSub}</p>
                   </div>
-                  <div className="panel">
-                    <div className="score-preview">
-                      <div className="mini-card">
-                        <div>你会看到</div>
-                        <strong>0–100 分准备度评分</strong>
-                      </div>
-                      <div className="mini-card">
-                        <div>系统会拆开判断</div>
-                        <strong>证明材料 / 推荐信 / 整体准备状态</strong>
-                      </div>
-                      <div className="mini-card">
-                        <div>结果会明确告诉你</div>
-                        <strong>当前缺口、注意点、下一步动作</strong>
-                      </div>
-                    </div>
-                  </div>
+                  <span style={{ fontSize: 13, color: 'var(--ink-muted)' }}>
+                    <Bullet color="var(--brand)" size={8} style={{ marginRight: 6 }} /> {t.allRoutesUseSame}
+                  </span>
                 </div>
-              </section>
+                <div className="ways-grid">
+                  {t.ways.map((c, i) => {
+                    const colors = [A.pink, A.yellow, A.mint];
+                    return (
+                      <div key={i} className="way-card" onClick={() => navTo(c.go)}>
+                        <div className="head-row">
+                          <Bullet color={colors[i]} size={14} />
+                          <span className="num">{c.num}</span>
+                        </div>
+                        <h3>{c.title}</h3>
+                        <p>{c.body}</p>
+                        <div className="cta"><span>{c.cta}</span><span className="arr">→</span></div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-              <section id="pain-points" className="section">
-                <div className="container">
-                  <h2>为什么很多人查了很多资料，还是不敢开始申请？</h2>
-                  <p className="section-sub">不是因为他们不努力，而是因为他们始终无法形成一个稳定判断。</p>
-                  <div className="grid-3">
-                    <div className="card">
-                      <h3>不知道手上的材料算不算数</h3>
-                      <p>展览、出版、媒体报道、奖项，看起来都像加分项，但真正评审时哪些有分量、哪些不够，外部几乎没有提前确认的渠道。</p>
+              <div className="isnot">
+                <div className="isnot-grid">
+                  <div>
+                    <h2 className="h-section">{t.isTitle}</h2>
+                    <p>{t.isLede}</p>
+                  </div>
+                  <div className="isnot-cols">
+                    <div>
+                      <div className="ucase col-head brand">{t.whatItIs}</div>
+                      <div className="bullet-list">
+                        {t.isItems.map((it, i) => (
+                          <div key={i} className="bullet-item">
+                            <Bullet color="var(--brand)" size={12} style={{ marginTop: 7 }} />
+                            <div><div className="text">{it.t}</div><div className="sub">{it.s}</div></div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="card">
-                      <h3>不确定推荐信能不能撑起申请</h3>
-                      <p>不是随便找几个人写信就够了。你需要合适的人、真实的合作关系，以及能写出具体内容的 recommendation letters。</p>
-                    </div>
-                    <div className="card">
-                      <h3>信息很多，但拼不出明确判断</h3>
-                      <p>官方要求分散，论坛经验互相冲突，规则也会变化。你越查越焦虑，却还是不知道自己现在该不该申请。</p>
+                    <div>
+                      <div className="ucase col-head">{t.whatItIsNot}</div>
+                      <div className="bullet-list">
+                        {t.isNotItems.map((it, i) => (
+                          <div key={i} className="bullet-item">
+                            <Bullet color={A.mauve} size={12} style={{ marginTop: 7 }} />
+                            <div><div className="text">{it.t}</div><div className="sub">{it.s}</div></div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </section>
+              </div>
+
+              <Footer t={t} />
             </div>
           );
         }
 
-        if (screen === 'analyze') {
+        // ── Quiz ─────────────────────────────────────────────
+        function QuizScreen() {
+          const total = QUESTIONS.length;
+          const stepNum = step + 1;
+          const sectionColor = SECTION_COLORS[question.section] || A.brand;
+          const evidenceMax = question.maxSelect || getDynamicMaxSelect(question.id);
+
           return (
-            <div className="app section">
-              <div className="sticky-topbar"><div className="sticky-topbar-inner"><div className="muted">Analyze an opportunity</div><button className="btn btn-secondary" onClick={() => setScreen('home')}>返回首頁</button></div></div>
-              <div className="container result-grid">
-                <div className="panel">
-                  <h2 style={{marginTop:0}}>我来提供一个机会</h2>
-                  <p className="section-sub">把你看到的 open call、award、publication、residency、screening 或其他机会贴进来，我先帮你判断。</p>
-                  <div className="field-stack">
-                    <select value={analyzeInput.route} onChange={(e) => setAnalyzeInput({ ...analyzeInput, route: e.target.value })}>{ROUTE_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
-                    <input placeholder="机会标题" value={analyzeInput.title} onChange={(e) => setAnalyzeInput({ ...analyzeInput, title: e.target.value })} />
-                    <input placeholder="Deadline（可选）" value={analyzeInput.deadline} onChange={(e) => setAnalyzeInput({ ...analyzeInput, deadline: e.target.value })} />
-                    <input placeholder="你的项目名（可选）" value={analyzeInput.project} onChange={(e) => setAnalyzeInput({ ...analyzeInput, project: e.target.value })} />
-                    <input placeholder="目标提交月份，例如 Oct 2026（可选）" value={analyzeInput.targetMonth} onChange={(e) => setAnalyzeInput({ ...analyzeInput, targetMonth: e.target.value })} />
-                    <textarea placeholder="贴 opportunity 描述、链接摘要、你看到的重点要求" value={analyzeInput.text} onChange={(e) => setAnalyzeInput({ ...analyzeInput, text: e.target.value })} />
-                    <button className="btn btn-primary" onClick={analyzeOpportunity}>开始判断</button>
+            <div className="frame">
+              <TopNav active="quiz" onNav={navTo} lang={lang} setLang={setLang} t={t} />
+
+              <div className="progress-row">
+                <span style={{ fontWeight: 600, fontSize: 13.5, color: 'var(--ink)' }}>{t.questionOf(stepNum, total)}</span>
+                <div className="progress-bar"><div style={{ width: `${(stepNum / total) * 100}%` }} /></div>
+                <span className="muted" style={{ fontSize: 13 }}>{Math.round((stepNum/total)*100)}%</span>
+              </div>
+
+              <div className="quiz-grid">
+                <div className="quiz-main">
+                  <div className="eyebrow" style={{ marginBottom: 18 }}>
+                    <Bullet color={sectionColor} size={11} />
+                    <span>{t.sectionPrefix} {question.section + 1} · {t.sections[question.section]}</span>
                   </div>
-                </div>
-                <div className="panel">
-                  <h2 style={{marginTop:0}}>判断结果</h2>
-                  {analysisResult ? (
-                    <div className="metric-list">
-                      <div className="metric"><div className="metric-head"><span>Fit</span><span>{fitLabel(analysisResult.fit)}</span></div><div className="muted">{analysisResult.successView}</div></div>
-                      <div className="metric"><div className="metric-head"><span>Strategic importance</span><span>{analysisResult.strategicImportance}</span></div><div className="muted">{analysisResult.gtvValue}</div></div>
-                      <div className="metric"><div className="metric-head"><span>Timing</span><span>Check</span></div><div className="muted">{analysisResult.timing}</div></div>
-                      <div className="metric"><div className="metric-head"><span>Recommendation</span><span>Next</span></div><div className="muted">{analysisResult.recommendation}</div></div>
-                    </div>
-                  ) : <div className="muted">填入一个机会后，这里会输出 fit、必要性、时间判断和建议动作。</div>}
-                </div>
-              </div>
-            </div>
-          );
-        }
-
-        if (screen === 'discover') {
-          return (
-            <div className="app section">
-              <div className="sticky-topbar"><div className="sticky-topbar-inner"><div className="muted">Find opportunities for me</div><button className="btn btn-secondary" onClick={() => setScreen('home')}>返回首頁</button></div></div>
-              <div className="container result-grid">
-                <div className="panel">
-                  <h2 style={{marginTop:0}}>基于我的情况推荐</h2>
-                  <p className="section-sub">先输入你的基本信息，产品再给你一组更值得优先看的 tailored opportunities。</p>
-                  <div className="field-stack">
-                    <select value={discoverInput.route} onChange={(e) => setDiscoverInput({ ...discoverInput, route: e.target.value })}>{ROUTE_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
-                    <input placeholder="你的 practice / discipline" value={discoverInput.practice} onChange={(e) => setDiscoverInput({ ...discoverInput, practice: e.target.value })} />
-                    <input placeholder="当前项目名" value={discoverInput.project} onChange={(e) => setDiscoverInput({ ...discoverInput, project: e.target.value })} />
-                    <input placeholder="目标提交月份，例如 Oct 2026" value={discoverInput.targetMonth} onChange={(e) => setDiscoverInput({ ...discoverInput, targetMonth: e.target.value })} />
-                    <input placeholder="预算偏好，例如 low / medium" value={discoverInput.budget} onChange={(e) => setDiscoverInput({ ...discoverInput, budget: e.target.value })} />
-                    <input placeholder="当前最缺什么，例如 publication / award / exhibition" value={discoverInput.evidenceNeed} onChange={(e) => setDiscoverInput({ ...discoverInput, evidenceNeed: e.target.value })} />
-                    <button className="btn btn-primary" onClick={findTailoredOpportunities}>生成 tailored options</button>
-                  </div>
-                </div>
-                <div className="panel">
-                  <h2 style={{marginTop:0}}>Tailored opportunities</h2>
-                  {discoverResults.length ? discoverResults.map((item) => (
-                    <div className="tracker-row" key={item.id}>
-                      <div style={{flex:1}}>
-                        <div className="tracker-row-title">{item.name}</div>
-                        <div className="chip-row"><span className="chip">{item.opportunityType}</span>{item.routeTags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}</div>
-                        <div className="muted" style={{marginTop:8}}>{item.whyItMatters}</div>
-                        <div className="muted" style={{marginTop:6}}>Evidence value: {item.evidenceValue.join(' / ')}</div>
-                      </div>
-                      <div style={{textAlign:'right', minWidth:120}}>
-                        <div className="muted">{item.deadlineLabel}</div>
-                        <div className="muted">{fitLabel(item.gtvFit)}</div>
-                      </div>
-                    </div>
-                  )) : <div className="muted">填完 profile 后，这里会给出 route-aware recommendations。</div>}
-                </div>
-              </div>
-            </div>
-          );
-        }
-
-        if (screen === 'tracker') {
-          setScreen('home');
-          return null;
-        }
-
-        if (screen === 'quiz') {
-          return (
-            <div className="app quiz-wrap">
-              <div className="sticky-topbar">
-                <div className="sticky-topbar-inner">
-                  <div className="muted">UK Global Talent Visa · Arts & Culture route</div>
-                  <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
-                    返回首頁
-                  </button>
-                </div>
-              </div>
-              <div className="container">
-                <div className="panel">
-                  <div className="question-meta">第 {step + 1} 题 / 共 {QUESTIONS.length} 题</div>
-                  <div className="progress"><div style={{ width: `${progress}%` }} /></div>
-                  <h2 className="question-title">{question.title}</h2>
-                  {question.desc && <p className="question-desc">{question.desc}</p>}
+                  <h1 className="h-quiz">{question.title[lang]}</h1>
+                  {question.desc && <p className="muted" style={{ fontSize: 15, margin: '14px 0 0', maxWidth: 640, lineHeight: 1.55 }}>{question.desc[lang]}</p>}
                   {question.id === 'evidenceTypes' && (
-                    <div className="muted" style={{marginBottom: 14}}>
-                      当前选择方向：{Array.isArray(answers.fields) && answers.fields.length ? answers.fields.join(' / ') : '未选择'}
-                    </div>
+                    <p className="muted" style={{ fontSize: 14, margin: '14px 0 0' }}>
+                      {t.scopedTo}{' '}
+                      <strong style={{ color: 'var(--ink)', fontWeight: 600 }}>
+                        {Array.isArray(answers.fields) && answers.fields.length
+                          ? answers.fields.map(f => getRouteLabel(f, lang)).join(' / ')
+                          : t.notSelected}
+                      </strong>
+                    </p>
                   )}
 
                   <div className="options">
-                    {questionOptions.map((option) => {
+                    {questionOptions.map((opt, i) => {
+                      const key = optKey(opt);
+                      const label = optLabel(opt);
                       const selected = question.type === 'multi'
-                        ? (answers[question.id] || []).includes(option)
-                        : answers[question.id] === option;
-                      const dynamicMaxSelect = question.type === 'multi' ? (question.maxSelect || getDynamicMaxSelect(question.id)) : null;
+                        ? (answers[question.id] || []).includes(key)
+                        : answers[question.id] === key;
+                      const dotColor = OPTION_COLORS[i % OPTION_COLORS.length];
                       return (
-                        <button
-                          key={option}
+                        <button key={key}
                           className={`option ${selected ? 'selected' : ''}`}
-                          onClick={() => question.type === 'multi' ? toggleMulti(question.id, option, question.maxSelect, question.exclusiveOption) : setSingle(question.id, option)}
-                        >
-                          {option}
-                          {question.type === 'multi' && dynamicMaxSelect ? <small>{question.exclusiveOption === option ? '互斥项，单独选择' : `可多选，最多 ${dynamicMaxSelect} 项`}</small> : null}
+                          onClick={() => question.type === 'multi'
+                            ? toggleMulti(question.id, key, question.maxSelect, question.exclusiveOption)
+                            : setSingle(question.id, key)}>
+                          <Bullet color={dotColor} size={14} />
+                          <div className="label-text">
+                            {label}
+                            {question.type === 'multi' && evidenceMax ? (
+                              <small>{question.exclusiveOption === key ? t.exclusiveHint : t.multiHint(evidenceMax)}</small>
+                            ) : null}
+                          </div>
+                          {selected && (
+                            <span className="selected-tag">
+                              <Bullet color="var(--brand)" size={7} /> {t.selected}
+                            </span>
+                          )}
                         </button>
                       );
                     })}
                   </div>
 
                   <div className="nav-row">
-                    <button className="btn btn-secondary" onClick={() => step === 0 ? setScreen('home') : setStep(step - 1)}>
-                      {step === 0 ? '返回首页' : '上一题'}
+                    <button className="btn" onClick={() => step === 0 ? navTo('home') : setStep(step - 1)}>
+                      ← {step === 0 ? t.back : t.prev}
                     </button>
-                    <button
-                      className="btn btn-primary"
-                      disabled={!isAnswered(question)}
-                      style={{ opacity: isAnswered(question) ? 1 : 0.5 }}
+                    <button className="btn btn-primary" disabled={!isAnswered(question)}
                       onClick={() => {
                         if (step < QUESTIONS.length - 1) {
                           if (question.id === 'recommenderCount' && answers.recommenderCount === '0 位') {
                             setAnswers({ ...answers, recommenderQuality: ['我不确定他们是否符合要求'] });
                             setStep(Math.min(step + 2, QUESTIONS.length - 1));
-                          } else {
-                            setStep(step + 1);
-                          }
-                        }
-                        else setScreen('result');
-                      }}
-                    >
-                      {step < QUESTIONS.length - 1 ? '下一题' : '查看结果'}
+                          } else { setStep(step + 1); }
+                        } else { setScreen('result'); }
+                      }}>
+                      {step < QUESTIONS.length - 1 ? `${t.next} →` : `${t.viewResults} →`}
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-          );
-        }
 
-        return (
-          <div className="app section">
-            <div className="sticky-topbar">
-              <div className="sticky-topbar-inner">
-                <div className="muted">UK Global Talent Visa · Arts & Culture route</div>
-                <div style={{display:'flex', gap:'12px', flexWrap:'wrap'}}>
-                  <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
-                    返回首頁
-                  </button>
-                  <button className="btn btn-secondary" onClick={() => { setScreen('quiz'); setStep(0); setAnswers({}); setEmail(''); setLeadSaved(false); setLeadError(''); }}>
-                    重新測一次
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="container result-grid">
-              <div className="panel">
-                <div className={`badge ${result.primaryRecommendation.band === 'low' ? 'badge-low' : result.primaryRecommendation.band === 'mid' ? 'badge-mid' : 'badge-high'}`}>
-                  {result.primaryRecommendation.band === 'low' ? '当前偏早期' : result.primaryRecommendation.band === 'mid' ? '当前有基础但不稳' : '当前已具备一定基础'}
-                </div>
-                <h2 style={{marginBottom: 8}}>更建议优先按 {result.primaryRecommendation.label} route 准备</h2>
-                <div className="result-score">{result.primaryRecommendation.total}</div>
-                <p className="section-sub" style={{marginBottom: 10}}>{result.primaryRecommendation.summary}</p>
-                <div className="muted" style={{marginBottom: 10}}>{result.summary}</div>
-                {result.alternateRoutes.length ? <div className="muted" style={{marginBottom: 18}}>其他可参考方向：{result.alternateRoutes.map((item) => `${item.label} (${item.total})`).join(' / ')}</div> : <div className="muted" style={{marginBottom: 18}}>你当前只选择了一个 route，所以结果会直接按这个方向判断。</div>}
-                <div className="result-actions">
-                  <button className="btn btn-secondary" onClick={() => { setScreen('home'); setStep(0); }}>
-                    返回首頁
-                  </button>
-                  <button className="btn btn-secondary" onClick={() => { setScreen('quiz'); setStep(0); setAnswers({}); setEmail(''); setLeadSaved(false); setLeadError(''); }}>
-                    重新測一次
-                  </button>
-                </div>
-                <div className="metric-list">
-                  {result.routeResults.map((routeResult) => (
-                    <div className="metric" key={routeResult.label}>
-                      <div className="metric-head"><span>{routeResult.label}</span><span>{routeResult.total}</span></div>
-                      <div className="muted">{routeResult.summary}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                <div className="quiz-side">
+                  <div className="ucase" style={{ marginBottom: 14 }}>{t.progressMap}</div>
+                  <div className="sidemap">
+                    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                      {t.sections.map((_, i) => (
+                        <MMLine key={i} x1={40} y1={130} x2={180} y2={24 + i * 66} />
+                      ))}
+                    </svg>
+                    <div className="hub" />
+                    {t.sections.map((label, i) => {
+                      const status = i < question.section ? 'done' : i === question.section ? 'current' : 'todo';
+                      const c = SECTION_COLORS[i];
+                      return (
+                        <div key={i} className={`leaf ${status}`} style={{ top: 24 + i * 66 }}>
+                          <Bullet color={status === 'todo' ? 'var(--hairline-faint)' : c} size={12}
+                                  ring={status === 'current' ? `${c}40` : undefined} />
+                          <div>
+                            <div className="name">{label}</div>
+                            <div className="stage">{status === 'done' ? t.stageDone : status === 'current' ? t.stageCurrent : t.stageTodo}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
 
-              <div style={{display:'grid', gap:20}}>
-                <div className="panel">
-                  <h3 style={{marginTop:0}}>按 {result.primaryRecommendation.label} route 当前最需要注意的点</h3>
-                  <div className="hint-list">
-                    {(result.primaryRecommendation.hints.length ? result.primaryRecommendation.hints : ['你当前没有触发明显的结构性红旗，下一步重点是把现有基础组织得更清楚。']).map((hint, idx) => (
-                      <div className="metric" key={idx}>{hint}</div>
-                    ))}
-                  </div>
-                </div>
+                  <div className="rule" style={{ margin: '24px 0' }} />
 
-                <div className="panel">
-                  <h3 style={{marginTop:0}}>如果先按 {result.primaryRecommendation.label} route 推进，你现在更应该做什么</h3>
-                  <div className="next-list">
-                    {result.primaryRecommendation.nextSteps.map((item, idx) => <div className="metric" key={idx}>{item}</div>)}
+                  <div className="ucase" style={{ marginBottom: 12 }}>{t.provisionalScore}</div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 20 }}>
+                    <span style={{ fontSize: 52, fontWeight: 600, letterSpacing: '-0.035em', color: 'var(--ink)', lineHeight: 1 }}>{result.total || 0}</span>
+                    <span className="muted" style={{ fontSize: 13.5 }}>{t.partial}</span>
                   </div>
-                </div>
-
-                <div className="panel">
-                  <h3 style={{marginTop:0}}>保存你的结果</h3>
-                  <p className="section-sub" style={{marginBottom:14}}>如果你希望先留住这次判断结果，可以先输入邮箱保存。当前 demo 版本会把结果保存在本地浏览器，用于演示留资与后续跟进流程。</p>
-                  <div className="lead-panel-note" style={{marginBottom:14}}>
-                    <div style={{fontWeight:700, marginBottom:6}}>有任何问题？</div>
-                    <div className="muted">
-                      欢迎邮件咨询 <a href="mailto:gtvinsight@gmail.com?subject=GTV%20Insight%20Consultation" style={{color:'#2d5bff', textDecoration:'none', fontWeight:600}}>gtvinsight@gmail.com</a>
-                    </div>
-                  </div>
-                  <form className="lead-form" onSubmit={saveLeadPlaceholder}>
-                    <input type="email" name="email" required placeholder="输入你的邮箱" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <button type="submit" className="btn btn-primary" disabled={leadSaving} style={{opacity: leadSaving ? 0.7 : 1}}>{leadSaving ? '保存中...' : '保存结果'}</button>
-                    {leadSaved && <div className="status-ok">结果已保存在当前浏览器。本版本暂不发送邮件，用于演示流程。</div>}
-                    {leadError && <div className="status-error">{leadError}</div>}
-                    <div className="muted">说明：当前版本会先保存邮箱、答题结果、评分和关键提示到本地浏览器，不会发送到邮箱。</div>
-                  </form>
-                  <div className="lead-panel-note">
-                    <div style={{fontWeight:700, marginBottom:6}}>当前保存的内容</div>
-                    <div className="muted">邮箱、答题结果、总分、关键提示会一起保留，方便后续判断这是不是值得继续推进的线索。</div>
-                  </div>
-                  <div className="lead-toolbar">
-                    <button type="button" className="btn btn-secondary" onClick={refreshSavedLeads}>刷新已保存线索</button>
-                    <button type="button" className="btn btn-secondary" onClick={exportSavedLeads} disabled={!savedLeads.length} style={{opacity: savedLeads.length ? 1 : 0.5}}>导出 JSON</button>
-                    <button type="button" className="btn btn-secondary" onClick={clearSavedLeads} disabled={!savedLeads.length} style={{opacity: savedLeads.length ? 1 : 0.5}}>清空本地线索</button>
-                  </div>
-                  <div className="lead-list">
-                    <div className="muted">当前浏览器已保存 {savedLeads.length} 条线索</div>
-                    {savedLeads.slice(0, 5).map((lead, idx) => (
-                      <div className="lead-item" key={`${lead.email}-${lead.createdAt}-${idx}`}>
-                        <strong>{lead.email}</strong>
-                        <div className="muted">评分：{lead?.result?.total ?? '-'}，状态：{lead?.result?.summary ?? '-'}</div>
-                        <div className="muted">保存时间：{lead.createdAt ? new Date(lead.createdAt).toLocaleString() : '-'}</div>
+                  <div className="mbars">
+                    {[
+                      { k: 'evidence',     max: 40, c: A.yellow },
+                      { k: 'recommenders', max: 25, c: A.mint },
+                      { k: 'readiness',    max: 35, c: A.violet },
+                    ].map(m => (
+                      <div key={m.k}>
+                        <div className="mbar-head">
+                          <div className="left"><Bullet color={m.c} size={9} /><span className="name">{t.mbarLabels[m.k]}</span></div>
+                          <span className="v"><strong>{result.metrics[m.k]}</strong> / {m.max}</span>
+                        </div>
+                        <div className="mbar-track"><div style={{ width: `${Math.min(100, (result.metrics[m.k]/m.max)*100)}%`, background: m.c }} /></div>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
+
+              <Footer t={t} />
             </div>
-          </div>
-        );
+          );
+        }
+
+        // ── Results ──────────────────────────────────────────
+        function ResultsScreen() {
+          const score = result.total;
+          const hubX = 220, hubY = 260;
+          const axes = [
+            { x: 520, y: 110, color: A.yellow, label: t.axisLabels.evidence,     score: `${result.metrics.evidence} / 40` },
+            { x: 520, y: 260, color: A.mint,   label: t.axisLabels.recommenders, score: `${result.metrics.recommenders} / 25` },
+            { x: 520, y: 410, color: A.violet, label: t.axisLabels.readiness,    score: `${result.metrics.readiness} / 35` },
+          ];
+          const hints = (result.hints && result.hints.length ? result.hints : [t.notrigger]).slice(0, 6);
+          const leaves = hints.map((h, i) => ({ from: i % 3, x: 880, y: 60 + i * 80, color: i % 2 === 0 ? A.pink : A.yellow, label: h.length > 28 ? h.slice(0, 28) + '…' : h }));
+          const bandLabel = result.band === 'high' ? t.bandReady : result.band === 'mid' ? t.bandPartial : t.bandEarly;
+
+          return (
+            <div className="frame">
+              <TopNav active="quiz" onNav={navTo} lang={lang} setLang={setLang} t={t} />
+
+              <div style={{ padding: '56px 56px 36px' }}>
+                <div className="eyebrow" style={{ marginBottom: 18 }}>
+                  <Bullet color="var(--brand)" size={10} />
+                  <span>{t.readinessComplete}</span>
+                </div>
+                <h1 className="h-result">
+                  {result.primaryRecommendation.label} · {result.primaryRecommendation.summary}
+                </h1>
+                <p className="muted" style={{ fontSize: 16, maxWidth: 720, margin: '14px 0 0', lineHeight: 1.55 }}>
+                  {t.analysisDisclaimer}
+                </p>
+              </div>
+
+              <div style={{ padding: '20px 56px 40px', borderBottom: '1px solid var(--hairline-faint)' }}>
+                <div className="mindmap" style={{ height: 560 }}>
+                  <svg className="mm-svg" width="1168" height="560" viewBox="0 0 1168 560" preserveAspectRatio="none">
+                    {axes.map((a, i) => (<MMLine key={'a'+i} x1={hubX + 28} y1={hubY} x2={a.x - 8} y2={a.y} />))}
+                    {leaves.map((l, i) => (<MMLine key={'l'+i} x1={axes[l.from].x + 140} y1={axes[l.from].y} x2={l.x - 8} y2={l.y} dashed />))}
+                  </svg>
+                  <div style={{ position: 'absolute', left: hubX, top: hubY, transform: 'translate(-50%, -50%)' }}>
+                    <div className="score-circle">
+                      <div className="num">{score}</div>
+                      <div className="lbl">/ 100 · {bandLabel}</div>
+                    </div>
+                  </div>
+                  {axes.map((a, i) => (
+                    <div key={i} className="axis-pill" style={{ position: 'absolute', left: a.x, top: a.y, transform: 'translateY(-50%)' }}>
+                      <Bullet color={a.color} size={12} />
+                      <span className="name">{a.label}</span>
+                      <span className="sc">{a.score}</span>
+                    </div>
+                  ))}
+                  {leaves.map((l, i) => (
+                    <div key={i} className="mm-node" style={{ left: l.x, top: l.y }}>
+                      <Bullet color={l.color} size={11} />
+                      <div><div className="l-title" style={{ whiteSpace: 'normal', maxWidth: 260 }}>{l.label}</div></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="results-bottom-grid">
+                <div className="results-left">
+                  <h2 className="h-section" style={{ fontSize: 32 }}>{t.nextMoves}</h2>
+                  <p className="muted" style={{ fontSize: 14.5, margin: '10px 0 30px' }}>
+                    {t.scopedPrimary} <strong style={{ color: 'var(--ink)', fontWeight: 600 }}>{result.primaryRecommendation.label}</strong>.
+                  </p>
+                  <div className="step-list">
+                    {result.primaryRecommendation.nextSteps.map((s, i) => {
+                      const c = [A.yellow, A.mint, A.violet, A.pink][i % 4];
+                      return (
+                        <div key={i} className="step-item">
+                          <Bullet color={c} size={14} />
+                          <div>
+                            <div className="num">0{i + 1}</div>
+                            <div className="title">{s}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="rule" style={{ margin: '36px 0 28px' }} />
+                  <div className="ucase" style={{ marginBottom: 14 }}>{t.openThreads}</div>
+                  <div className="bullet-list">
+                    {hints.map((h, i) => (
+                      <div key={i} className="bullet-item">
+                        <Bullet color={A.tan} size={12} style={{ marginTop: 7 }} />
+                        <div><div className="text" style={{ fontWeight: 500 }}>{h}</div></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="results-right">
+                  <div className="ucase" style={{ marginBottom: 14 }}>{t.alternateRoutes}</div>
+                  {result.alternateRoutes.length ? (
+                    <div>
+                      {result.alternateRoutes.map((r, i) => (
+                        <div key={r.label} className="alt-route">
+                          <Bullet color={[A.teal, A.lilac, A.sky, A.mauve][i % 4]} size={12} />
+                          <div className="info">
+                            <div className="lbl">{r.label}</div>
+                            <div className="note">{r.summary}</div>
+                          </div>
+                          <span className="num">{r.total}</span>
+                          <span className="faint">→</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="muted">{t.onlyOneRoute}</div>
+                  )}
+
+                  <div className="rule" style={{ margin: '32px 0 24px' }} />
+                  <div className="ucase" style={{ marginBottom: 14 }}>{t.saveResult}</div>
+                  <p className="muted" style={{ fontSize: 14, margin: '0 0 14px', lineHeight: 1.55 }}>{t.saveLede}</p>
+                  <form className="lead-form" onSubmit={saveLeadPlaceholder}>
+                    <input type="email" required placeholder={lang === 'en' ? 'Your email' : '你的邮箱'} value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                      <button type="submit" className="btn btn-primary" disabled={leadSaving}>{leadSaving ? t.saving : t.saveBtn}</button>
+                      <button type="button" className="btn" onClick={() => { setScreen('quiz'); setStep(0); setAnswers({}); setEmail(''); setLeadSaved(false); setLeadError(''); }}>{t.retake}</button>
+                    </div>
+                    {leadSaved && <div className="status-ok">{t.savedOk}</div>}
+                    {leadError && <div className="status-error">{leadError}</div>}
+                  </form>
+                  <div className="lead-toolbar">
+                    <button type="button" className="btn btn-sm" onClick={refreshSavedLeads}>{t.refresh}</button>
+                    <button type="button" className="btn btn-sm" onClick={exportSavedLeads} disabled={!savedLeads.length}>{t.exportJson}</button>
+                    <button type="button" className="btn btn-sm" onClick={clearSavedLeads} disabled={!savedLeads.length}>{t.clear}</button>
+                  </div>
+                  <div className="lead-list">
+                    <div className="muted">{t.leadCount(savedLeads.length)}</div>
+                    {savedLeads.slice(0, 3).map((lead, idx) => (
+                      <div className="lead-item" key={`${lead.email}-${lead.createdAt}-${idx}`}>
+                        <strong>{lead.email}</strong>
+                        <div className="muted">{t.score} {lead?.result?.total ?? '-'} · {lead.createdAt ? new Date(lead.createdAt).toLocaleString() : '-'}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="lead-note">
+                    <div style={{ fontWeight: 600, marginBottom: 6, color: 'var(--ink)' }}>{t.questionsCta}</div>
+                    <div className="muted">
+                      {t.contactPrefix}<a href="mailto:gtvinsight@gmail.com?subject=GTV%20Insight%20Consultation">gtvinsight@gmail.com</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Footer t={t} />
+            </div>
+          );
+        }
+
+        // ── Analyze ──────────────────────────────────────────
+        function AnalyzeScreen() {
+          return (
+            <div className="frame">
+              <TopNav active="analyze" onNav={navTo} lang={lang} setLang={setLang} t={t} />
+              <div style={{ padding: '56px 56px 36px' }}>
+                <div className="eyebrow" style={{ marginBottom: 18 }}>
+                  <Bullet color={A.yellow} size={10} />
+                  <span>{t.analyzeEyebrow}</span>
+                </div>
+                <h1 className="h-result">{t.analyzeTitle}</h1>
+                <p className="muted" style={{ fontSize: 16, maxWidth: 720, margin: '14px 0 0', lineHeight: 1.55 }}>{t.analyzeLede}</p>
+              </div>
+
+              <div className="two-col">
+                <div>
+                  <div className="ucase" style={{ marginBottom: 18 }}>{t.opportunityInput}</div>
+                  <div className="field-stack">
+                    <select value={analyzeInput.route} onChange={(e) => setAnalyzeInput({ ...analyzeInput, route: e.target.value })}>
+                      {ROUTE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o[lang]}</option>)}
+                    </select>
+                    <input placeholder={t.oppTitle} value={analyzeInput.title} onChange={(e) => setAnalyzeInput({ ...analyzeInput, title: e.target.value })} />
+                    <input placeholder={t.deadline} value={analyzeInput.deadline} onChange={(e) => setAnalyzeInput({ ...analyzeInput, deadline: e.target.value })} />
+                    <input placeholder={t.targetMonth} value={analyzeInput.targetMonth} onChange={(e) => setAnalyzeInput({ ...analyzeInput, targetMonth: e.target.value })} />
+                    <textarea placeholder={t.oppDesc} value={analyzeInput.text} onChange={(e) => setAnalyzeInput({ ...analyzeInput, text: e.target.value })} />
+                    <button className="btn btn-primary" onClick={analyzeOpportunity} style={{ justifySelf: 'start' }}>{t.analyzeBtn}</button>
+                  </div>
+                </div>
+                <div>
+                  <div className="ucase" style={{ marginBottom: 18 }}>{t.analyzeResult}</div>
+                  {analysisResult ? (
+                    <div className="bullet-list">
+                      <div className="bullet-item"><Bullet color={A.yellow} size={12} style={{ marginTop: 7 }} /><div><div className="text">{t.fit} · {fitLabel(analysisResult.fit, t)}</div><div className="sub">{analysisResult.successView}</div></div></div>
+                      <div className="bullet-item"><Bullet color={A.mint} size={12} style={{ marginTop: 7 }} /><div><div className="text">{t.strategicImportance} · {analysisResult.strategicImportance}</div><div className="sub">{analysisResult.gtvValue}</div></div></div>
+                      <div className="bullet-item"><Bullet color={A.violet} size={12} style={{ marginTop: 7 }} /><div><div className="text">{t.timing}</div><div className="sub">{analysisResult.timing}</div></div></div>
+                      <div className="bullet-item"><Bullet color="var(--brand)" size={12} style={{ marginTop: 7 }} /><div><div className="text">{t.recommendation}</div><div className="sub">{analysisResult.recommendation}</div></div></div>
+                    </div>
+                  ) : (<div className="muted" style={{ fontSize: 14 }}>{t.analyzeEmpty}</div>)}
+                </div>
+              </div>
+              <Footer t={t} />
+            </div>
+          );
+        }
+
+        // ── Discover ─────────────────────────────────────────
+        function DiscoverScreen() {
+          return (
+            <div className="frame">
+              <TopNav active="discover" onNav={navTo} lang={lang} setLang={setLang} t={t} />
+              <div style={{ padding: '56px 56px 36px' }}>
+                <div className="eyebrow" style={{ marginBottom: 18 }}>
+                  <Bullet color={A.mint} size={10} />
+                  <span>{t.discoverEyebrow}</span>
+                </div>
+                <h1 className="h-result">{t.discoverTitle}</h1>
+                <p className="muted" style={{ fontSize: 16, maxWidth: 720, margin: '14px 0 0', lineHeight: 1.55 }}>{t.discoverLede}</p>
+              </div>
+
+              <div className="two-col">
+                <div>
+                  <div className="ucase" style={{ marginBottom: 18 }}>{t.yourProfile}</div>
+                  <div className="field-stack">
+                    <select value={discoverInput.route} onChange={(e) => setDiscoverInput({ ...discoverInput, route: e.target.value })}>
+                      {ROUTE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o[lang]}</option>)}
+                    </select>
+                    <input placeholder={t.practice} value={discoverInput.practice} onChange={(e) => setDiscoverInput({ ...discoverInput, practice: e.target.value })} />
+                    <input placeholder={t.currentProject} value={discoverInput.project} onChange={(e) => setDiscoverInput({ ...discoverInput, project: e.target.value })} />
+                    <input placeholder={t.targetMonth} value={discoverInput.targetMonth} onChange={(e) => setDiscoverInput({ ...discoverInput, targetMonth: e.target.value })} />
+                    <input placeholder={t.budget} value={discoverInput.budget} onChange={(e) => setDiscoverInput({ ...discoverInput, budget: e.target.value })} />
+                    <input placeholder={t.evidenceNeed} value={discoverInput.evidenceNeed} onChange={(e) => setDiscoverInput({ ...discoverInput, evidenceNeed: e.target.value })} />
+                    <button className="btn btn-primary" onClick={findTailoredOpportunities} style={{ justifySelf: 'start' }}>{t.findOpts}</button>
+                  </div>
+                </div>
+                <div>
+                  <div className="ucase" style={{ marginBottom: 18 }}>{t.tailored}</div>
+                  {discoverResults.length ? discoverResults.map((item, i) => {
+                    const c = [A.pink, A.yellow, A.mint, A.violet, A.teal][i % 5];
+                    return (
+                      <div className="opp-row" key={item.id}>
+                        <Bullet color={c} size={12} style={{ marginTop: 6 }} />
+                        <div style={{ flex: 1 }}>
+                          <div className="title">{item.name}</div>
+                          <div className="chip-row">
+                            <span className="chip"><Bullet color={c} size={8} />{item.opportunityType}</span>
+                            {item.routeTags.map((t2) => <span className="chip" key={t2}>{t2}</span>)}
+                          </div>
+                          <div className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>{item.why[lang]}</div>
+                        </div>
+                        <div style={{ textAlign: 'right', minWidth: 120 }}>
+                          <div style={{ fontSize: 13, color: 'var(--ink)', fontWeight: 600 }}>{item.deadlineLabel}</div>
+                          <div className="muted" style={{ fontSize: 12.5 }}>{fitLabel(item.gtvFit, t)} · {item.feeSummary}</div>
+                        </div>
+                      </div>
+                    );
+                  }) : (<div className="muted" style={{ fontSize: 14 }}>{t.discoverEmpty}</div>)}
+                </div>
+              </div>
+              <Footer t={t} />
+            </div>
+          );
+        }
+
+        if (screen === 'home')     return <LandingScreen />;
+        if (screen === 'quiz')     return <QuizScreen />;
+        if (screen === 'result')   return <ResultsScreen />;
+        if (screen === 'analyze')  return <AnalyzeScreen />;
+        if (screen === 'discover') return <DiscoverScreen />;
+        return <LandingScreen />;
       }
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
