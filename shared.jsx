@@ -233,7 +233,7 @@ function TopNav({ theme, active = 'home' }) {
          style={{ display: 'flex', alignItems: 'center', gap: 10, marginRight: 40, cursor: 'pointer', textDecoration: 'none' }}>
         <Bullet color={theme.brand} size={14} />
         <span style={{ fontFamily: 'Geist', fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em', color: theme.ink }}>
-          Folio
+          Candidacy
         </span>
       </a>
       <nav style={{ display: 'flex', gap: 26, flex: 1 }}>
@@ -290,7 +290,7 @@ function Footer({ theme }) {
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
           <Bullet color={theme.brand} size={12} />
-          <span style={{ fontFamily: 'Geist', fontWeight: 700, fontSize: 16, letterSpacing: '-0.02em', color: theme.ink }}>Folio</span>
+          <span style={{ fontFamily: 'Geist', fontWeight: 700, fontSize: 16, letterSpacing: '-0.02em', color: theme.ink }}>Candidacy</span>
         </div>
         <p style={{ margin: 0, maxWidth: 460, lineHeight: 1.6 }}>
           {t(
@@ -394,7 +394,7 @@ function MMHub({ x, y, label, size = 20, theme, color }) {
 // Style: 'curved' (Bezier), 'straight' (line), 'orth' (right-angle elbow).
 function MMLine({ x1, y1, x2, y2, color, dashed = false, width = 1, style }) {
   // Default to global tweak if no style passed
-  const effectiveStyle = style || window.__FOLIO_CONNECTOR_STYLE || 'curved';
+  const effectiveStyle = style || window.__CANDIDACY_CONNECTOR_STYLE || 'curved';
   let d;
   if (effectiveStyle === 'straight') {
     d = `M ${x1} ${y1} L ${x2} ${y2}`;

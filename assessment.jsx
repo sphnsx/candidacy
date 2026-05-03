@@ -303,16 +303,16 @@ function useAnswers() { return React.useContext(AnswersContext); }
 
 function AnswersProvider({ children }) {
   const [answers, setAnswers] = React.useState(() => {
-    try { return JSON.parse(localStorage.getItem('folio_answers') || '{}'); } catch (e) { return {}; }
+    try { return JSON.parse(localStorage.getItem('candidacy_answers') || '{}'); } catch (e) { return {}; }
   });
   const [step, setStep] = React.useState(() => {
-    try { return Number(localStorage.getItem('folio_step') || 0) || 0; } catch (e) { return 0; }
+    try { return Number(localStorage.getItem('candidacy_step') || 0) || 0; } catch (e) { return 0; }
   });
   React.useEffect(() => {
-    try { localStorage.setItem('folio_answers', JSON.stringify(answers)); } catch (e) {}
+    try { localStorage.setItem('candidacy_answers', JSON.stringify(answers)); } catch (e) {}
   }, [answers]);
   React.useEffect(() => {
-    try { localStorage.setItem('folio_step', String(step)); } catch (e) {}
+    try { localStorage.setItem('candidacy_step', String(step)); } catch (e) {}
   }, [step]);
 
   const setAnswer = React.useCallback((id, value) => {
@@ -335,7 +335,7 @@ function AnswersProvider({ children }) {
   }, []);
   const reset = React.useCallback(() => {
     setAnswers({}); setStep(0);
-    try { localStorage.removeItem('folio_answers'); localStorage.removeItem('folio_step'); } catch (e) {}
+    try { localStorage.removeItem('candidacy_answers'); localStorage.removeItem('candidacy_step'); } catch (e) {}
   }, []);
 
   const ctx = React.useMemo(() => ({ answers, setAnswer, toggleMulti, reset, step, setStep }), [answers, step, setAnswer, toggleMulti, reset]);

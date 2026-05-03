@@ -82,7 +82,7 @@ function LandingScreen({ theme }) {
           </svg>
 
           {/* Hub */}
-          <MMHub x={hubX} y={hubY} size={28} theme={theme} label={t('Your Folio profile', '你的 Folio profile')} />
+          <MMHub x={hubX} y={hubY} size={28} theme={theme} label={t('Your Candidacy profile', '你的 Candidacy profile')} />
           <div style={{
             position: 'absolute', left: hubX, top: hubY + 60,
             transform: 'translateX(-50%)',
@@ -127,8 +127,8 @@ function LandingScreen({ theme }) {
       <div style={{ padding: '72px 56px 56px' }}>
         <div style={{ marginBottom: 40, maxWidth: 720 }}>
           <ColorHeader color={theme.ink} size={44}>{t(
-            <>What Folio <em style={{ fontStyle: 'italic', color: theme.brand, fontWeight: 400 }}>is</em> — and isn’t</>,
-            <>Folio <em style={{ fontStyle: 'italic', color: theme.brand, fontWeight: 400 }}>是</em>什么——又不是什么</>
+            <>What Candidacy <em style={{ fontStyle: 'italic', color: theme.brand, fontWeight: 400 }}>is</em> — and isn’t</>,
+            <>Candidacy <em style={{ fontStyle: 'italic', color: theme.brand, fontWeight: 400 }}>是</em>什么——又不是什么</>
           )}</ColorHeader>
           <p style={{ fontSize: 15.5, color: theme.inkMuted, margin: '16px 0 0', lineHeight: 1.6 }}>
             {t(
