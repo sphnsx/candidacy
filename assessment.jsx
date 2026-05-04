@@ -221,7 +221,7 @@ const SCORE_MAPS = {
   years:            { years_lt_3: 1, years_3_5: 2, years_5_8: 3, years_8_12: 4, years_12_plus: 5 },
   stage:            { stage_just_starting: 1, stage_studied_requirements: 2, stage_gathering: 3, stage_clear_plan: 4, stage_stuck: 4 },
   recency:          { recency_last_1_2: 10, recency_last_3_5: 9, recency_around_5: 5, recency_older_than_5: 1, recency_unsure: 2 },
-  sourceNature:     { source_professional: 15, source_mostly_professional: 11, source_mixed: 6, source_mostly_commercial: 1, source_mostly_student: 0 },
+  sourceNature:     { source_professional: 12, source_mostly_professional: 10, source_mixed: 6, source_mostly_commercial: 1, source_mostly_student: 0 },
   evidenceStrength: { strength_weak_scattered: 2, strength_few_strong: 5, strength_several_clear: 8, strength_solid: 10, strength_unsure: 3 },
   verifiability:    { verify_very_little: 1, verify_some: 2, verify_most: 4, verify_almost_all: 5 },
   recommenderCount: { count_0: 0, count_1: 2, count_2: 5, count_3: 8, count_4_plus: 10 },
@@ -236,8 +236,8 @@ function evidenceTypeScore(selected) {
   if (n <= 0) return 0;
   if (n === 1) return 3;
   if (n === 2) return 7;
-  if (n === 3) return 9;
-  return 10;
+  if (n === 3) return 8;
+  return 9;
 }
 function recommenderQualityScore(count, selected) {
   const set = new Set(selected || []);
@@ -298,6 +298,15 @@ const ROUTE_SUMMARIES = {
   high: { zh: '按这条路径看，你已经具备一定申请基础。',                           en: 'On this route you already have a viable application basis.' },
 };
 
+// Override summary when the evidence axis is below ACE-application range,
+// regardless of how strong the other two axes look. For ACE the evidence
+// axis is the substantive gate — recommenders and readiness can support
+// an application but cannot substitute for it.
+const EVIDENCE_GAP_SUMMARY = {
+  en: 'Evidence base is not yet at application range. For the ACE pathway, evidence is the deciding gap — strong recommenders and readiness can support an application but cannot substitute for it.',
+  zh: '证据基础还未达到可申请范围。对 ACE 路径来说，证据是决定性的缺口——再强的推荐人与准备状态可以支撑申请，但无法替代证据。',
+};
+
 function calculateResult(answers, lang) {
   const selectedFields = Array.isArray(answers.fields) && answers.fields.length ? answers.fields : ['other_arts_culture'];
 
@@ -344,13 +353,26 @@ function calculateResult(answers, lang) {
     readiness    = Math.max(0, Math.min(30, readiness));
     total = Math.max(0, Math.min(100, evidence + recommenders + readiness));
 
+    // Evidence gate — for ACE the evidence axis is the substantive gate.
+    // Below 15/40, cap the headline total at 49 so a strong recommender /
+    // readiness stack does not pull a thin-evidence profile into a
+    // misleadingly high score.
+    if (evidence < 15) total = Math.min(total, 49);
+
     let band = 'low';
     if (total >= 40 && total <= 69) band = 'mid';
     if (total >= 70) band = 'high';
 
+    // Below 20/40 evidence, override the route summary with copy that
+    // names the gap explicitly — independent of band, since a borderline
+    // case (uncapped total but evidence still below application range)
+    // still needs the framing.
+    const summary = evidence < 20
+      ? EVIDENCE_GAP_SUMMARY[lang]
+      : ROUTE_SUMMARIES[band][lang];
+
     return {
-      field, label: getRouteLabel(field, lang), total, band,
-      summary: ROUTE_SUMMARIES[band][lang],
+      field, label: getRouteLabel(field, lang), total, band, summary,
       metrics: { evidence, recommenders, readiness },
       hints: hints.filter(Boolean).slice(0, 3),
       nextSteps: nextSteps(field, band, lang),
