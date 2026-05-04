@@ -16,6 +16,7 @@ const COPY = {
     bridge: 'Candidacy 体检 告诉你「现状是什么」。完整 Candidacy 告诉你「该做什么、按什么顺序、为什么」——包括按当前 ACE 标准筛过的机会 shortlist、证据策略，以及 30/60/90 天行动计划。完整产品上线后，我们会通过此邮箱通知你。',
     disclaimerHeading: '关于这份评估',
     disclaimer: 'Candidacy 不提供受 OISC 监管的移民法律建议，不担任移民代理，不撰写或提交签证申请，不预测 endorsement 结果，也不与 vanity evidence 服务（付费展览画廊、付费发表期刊等）合作。本份 Candidacy 体检 是基于你提交的结构化 intake 自动生成的诊断，不构成针对你个案的法律或策略建议。',
+    privacyNote: '我们只发送一次，邮箱只用于本次报告。我们不会把你加入邮件列表。',
     metricLabels: {
       evidence: '证据强度',
       recommenders: '推荐信网络',
@@ -49,6 +50,7 @@ const COPY = {
     bridge: 'The Candidacy Scan tells you what is. The full Candidacy tells you what to do, in what order, and why — including a prioritised opportunity shortlist judged against current ACE standards, an evidence strategy, and a 30/60/90-day action plan. We will notify you at this email when the full product is available.',
     disclaimerHeading: 'About this assessment',
     disclaimer: 'Candidacy does not provide OISC-regulated immigration advice, does not act as an immigration agent, does not draft or submit visa applications, does not predict endorsement outcomes, and does not cooperate with vanity-evidence services (pay-to-exhibit galleries, pay-to-publish journals). This Candidacy Scan is an automated diagnostic generated from your structured intake; it is not legal or strategic advice on your individual case.',
+    privacyNote: 'We sent this once and used your address only for this report. We don’t add you to a mailing list.',
     metricLabels: {
       evidence: 'Evidence strength',
       recommenders: 'Recommender network',
@@ -176,6 +178,7 @@ exports.handler = async (event) => {
         </div>
         <h3 style="font-size: 14px; margin-top: 28px; color: #5a6782;">${escapeHtml(copy.disclaimerHeading)}</h3>
         <p style="font-size: 13px; color: #5a6782; margin-top: 4px;">${escapeHtml(copy.disclaimer)}</p>
+        <p style="font-size: 12px; color: #8a92a8; margin-top: 16px; border-top: 1px solid #eef1f8; padding-top: 12px;">${escapeHtml(copy.privacyNote)}</p>
       </div>
     `;
 
