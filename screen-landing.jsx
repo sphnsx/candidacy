@@ -105,7 +105,7 @@ function LandingScreen({ theme }) {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
             <Bullet color={A.pink} size={10} />
             <span style={{ fontFamily: 'Geist', fontWeight: 500, fontSize: 12.5, letterSpacing: '0.03em', textTransform: 'uppercase', color: theme.inkMuted }}>
-              {t('Gap Scan · free diagnostic', 'Gap Scan · 免费诊断')}
+              {t('Candidacy Scan · free diagnostic', 'Candidacy 体检 · 免费诊断')}
             </span>
           </div>
           <ColorHeader color={theme.ink} size={36}>

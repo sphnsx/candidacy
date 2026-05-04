@@ -217,7 +217,7 @@ function TopNav({ theme, active = 'home' }) {
   const { go, signedIn } = useNav();
   const { lang, setLang } = useLang();
   const t = useT();
-  // MVP scope: Gap Scan only. Other layers hidden until built.
+  // MVP scope: Candidacy Scan only. Other layers hidden until built.
   const items = [
     { id: 'home',      to: 'landing', label: t('Overview', '概览') },
     { id: 'check',     to: 'quiz',    label: t('Readiness check', '准备度评估') },
