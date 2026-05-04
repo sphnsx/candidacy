@@ -27,13 +27,15 @@ function ResultsScreen({ theme }) {
       // Build a payload compatible with netlify/functions/send-result.js
       const payload = {
         email,
+        lang,
         result: {
           total: result.total,
+          band: primary.band,
           summary: primary.summary,
           metrics: {
-            '证明材料强度': result.metrics.evidence,
-            '推荐信网络':   result.metrics.recommenders,
-            '整体准备状态': result.metrics.readiness,
+            evidence: result.metrics.evidence,
+            recommenders: result.metrics.recommenders,
+            readiness: result.metrics.readiness,
           },
           hints: result.hints || [],
           nextSteps: result.nextSteps || [],
