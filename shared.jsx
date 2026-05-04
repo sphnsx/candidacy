@@ -300,16 +300,16 @@ function Footer({ theme }) {
         </p>
       </div>
       <div>
-        <div style={{ fontWeight: 600, color: theme.ink, marginBottom: 10 }}>{t('Monitored sources', '监测来源')}</div>
+        <div style={{ fontWeight: 600, color: theme.ink, marginBottom: 10 }}>{t('Reference sources', '参考来源')}</div>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 6 }}>
           <li>Home Office</li>
           <li>Arts Council England</li>
-          <li>{t('Endorsing bodies & partners', 'Endorsing body 与合作机构')}</li>
+          <li>{t('ACE-pathway endorsing bodies', 'ACE 路径下的 Endorsing body')}</li>
         </ul>
       </div>
       <div>
-        <div style={{ fontWeight: 600, color: theme.ink, marginBottom: 10 }}>{t('Updated', '更新于')}</div>
-        <div>{t('24 Apr 2026', '2026 年 4 月 24 日')}</div>
+        <div style={{ fontWeight: 600, color: theme.ink, marginBottom: 10 }}>{t('Status', '状态')}</div>
+        <div>{t('Beta · under iteration', 'Beta · 持续迭代中')}</div>
       </div>
     </div>
   );

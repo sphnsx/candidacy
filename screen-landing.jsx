@@ -16,7 +16,7 @@ function LandingScreen({ theme }) {
   const nodes = [
     { x: 110,  y: 90,  anchor: 'start', color: A.pink,   label: t('Evidence categories', '证据类别'), sub: t('Exhibitions · publications · awards', '展览 · 出版 · 奖项') },
     { x: 110,  y: 250, anchor: 'start', color: A.tan,    label: t('ACE criteria', 'ACE 标准'),        sub: t('Home Office / ACE guidance · monitored', 'Home Office / ACE 指引 · 持续追踪') },
-    { x: 110,  y: 410, anchor: 'start', color: A.teal,   label: t('Endorsing bodies', 'Endorsing body'),    sub: t('Arts Council England & partners', 'Arts Council England 与合作机构') },
+    { x: 110,  y: 410, anchor: 'start', color: A.teal,   label: t('Endorsing bodies', 'Endorsing body'),    sub: t('Arts Council England · ACE pathway', 'Arts Council England · ACE 路径') },
     { x: 110,  y: 560, anchor: 'start', color: A.violet, label: t('Narrative & sequence', '叙述与时序'), sub: t('Why now · why the UK · what next', '为何此时 · 为何英国 · 接下来') },
 
     { x: 1070, y: 90,  anchor: 'end',   color: A.yellow, label: t('Recommenders', '推荐人'),         sub: t('Three verifiable letters', '三封可核实的推荐信') },
@@ -125,8 +125,8 @@ function LandingScreen({ theme }) {
           </ColorHeader>
           <p style={{ fontSize: 15.5, color: theme.inkMuted, maxWidth: 600, margin: '14px 0 24px', lineHeight: 1.6 }}>
             {t(
-              'A structured 5-minute check. You get a 0–100 readiness map and a gap list — no sales pitch.',
-              '5 分钟结构化评估，输出 0–100 的准备度地图与缺口清单——没有推销。'
+              'A structured 5–10 minute check. You get a 0–100 readiness map and a gap list — no sales pitch.',
+              '5 至 10 分钟的结构化评估，输出 0–100 的准备度地图与缺口清单——没有推销。'
             )}
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -151,8 +151,8 @@ function LandingScreen({ theme }) {
           )}</ColorHeader>
           <p style={{ fontSize: 15.5, color: theme.inkMuted, margin: '16px 0 0', lineHeight: 1.6 }}>
             {t(
-              'ACE pathway scope and route boundaries shift over time, and route confusion is a recurring risk. Generic AI tools don’t reliably separate current guidance from outdated or adjacent-route material — that’s the gap we fill.',
-              'ACE 路径的范围与边界会随时间调整，路径混淆也是持续存在的风险。通用 AI 工具无法稳定区分现行指引、过时指引与相邻路径要求——这是我们要填补的空缺。'
+              'ACE pathway scope and route boundaries shift over time, and route confusion is a recurring risk. We keep a working reading of Home Office and ACE guidance and re-check it when sources change — that’s the gap we try to fill.',
+              'ACE 路径的范围与边界会随时间调整，路径混淆也是持续存在的风险。我们维护对 Home Office 与 ACE 指引的当前理解，并会在来源更新时重新核对——这是我们要填补的空缺。'
             )}
           </p>
         </div>
@@ -160,9 +160,8 @@ function LandingScreen({ theme }) {
           <div>
             <div style={{ fontFamily: 'Geist', fontSize: 12, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: theme.brand, margin: '0 0 22px' }}>{t('What it is', '它是什么')}</div>
             <div style={{ display: 'grid', gap: 20 }}>
-              <BulletItem theme={theme} color={A.blue} sub={t('A maintained reference on Home Office / ACE guidance as we currently understand it.', '我们对 Home Office / ACE 指引的当前理解，持续维护的参考库。')}>{t('Reference base', '参考库')}</BulletItem>
+              <BulletItem theme={theme} color={A.blue} sub={t('A working reading of Home Office / ACE guidance, re-checked when sources change.', '我们对 Home Office / ACE 指引的当前理解，并会在来源更新时重新核对。')}>{t('Reference base', '参考库')}</BulletItem>
               <BulletItem theme={theme} color={A.blue} sub={t('Judgement over evidence quality and preparation sequencing.', '对证据质量与准备时序的判断。')}>{t('Judgement layer', '判断层')}</BulletItem>
-              <BulletItem theme={theme} color={A.blue} sub={t('Active monitoring across Home Office, ACE, partners.', '主动监测 Home Office、ACE 与合作机构的变化。')}>{t('Monitoring layer', '监测层')}</BulletItem>
               <BulletItem theme={theme} color={A.blue} sub={t('Delivered through an AI interface — not by an AI.', '通过 AI 界面交付——而不是由 AI 给出答案。')}>{t('Interface ≠ source', '界面 ≠ 信息源')}</BulletItem>
             </div>
           </div>
@@ -171,7 +170,7 @@ function LandingScreen({ theme }) {
             <div style={{ display: 'grid', gap: 20 }}>
               <BulletItem theme={theme} color={A.mauve} sub={t('Not a law firm or immigration adviser.', '不是律师事务所，也不是移民顾问。')}>{t('Not legal advice', '不是法律意见')}</BulletItem>
               <BulletItem theme={theme} color={A.mauve} sub={t('Not a visa agency or document mill.', '不是签证代办，也不代写材料。')}>{t('Not an agency', '不是代办机构')}</BulletItem>
-              <BulletItem theme={theme} color={A.mauve} sub={t('Not a generic chatbot on outdated training data.', '不是基于过时训练数据的通用聊天机器人。')}>{t('Not a chatbot', '不是聊天机器人')}</BulletItem>
+              <BulletItem theme={theme} color={A.mauve} sub={t('Not a chatbot answering from training data alone.', '不是仅靠训练数据回答的通用聊天机器人。')}>{t('Not a chatbot', '不是聊天机器人')}</BulletItem>
               <BulletItem theme={theme} color={A.mauve} sub={t('Never cooperates with pay-to-publish or pay-to-exhibit services.', '从不与付费发表或付费展览服务合作。')}>{t('No vanity evidence', '不计入 vanity evidence')}</BulletItem>
             </div>
           </div>
