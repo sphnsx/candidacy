@@ -62,8 +62,8 @@ function LandingScreen({ theme }) {
           textWrap: 'pretty',
         }}>
           {t(
-            'Structured information analysis for applicants already in the preparation phase. We map eight dimensions of your profile against Home Office / ACE guidance as we currently read it — then show you what looks solid, what looks thin, and what to do next.',
-            '面向已进入准备阶段的申请人，提供结构化信息分析。我们将你 profile 的八个维度对照我们当前理解的 Home Office / ACE 指引——告诉你哪些看起来稳健、哪些薄弱、接下来该做什么。'
+            'Structured information analysis for applicants already in the preparation phase. We map your profile across eight inputs and score it on three axes against Home Office / ACE guidance as we currently read it — then show you what looks solid, what looks thin, and what to do next.',
+            '面向已进入准备阶段的申请人，提供结构化信息分析。我们将你 profile 的八个维度对照我们当前理解的 Home Office / ACE 指引、并在三个维度上打分——告诉你哪些看起来稳健、哪些薄弱、接下来该做什么。'
           )}
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -121,7 +121,7 @@ function LandingScreen({ theme }) {
             </span>
           </div>
           <ColorHeader color={theme.ink} size={36}>
-            {t('Am I ready to prepare at all?', '我现在适合开始准备吗？')}
+            {t('How ready am I to prepare?', '我目前的准备度如何？')}
           </ColorHeader>
           <p style={{ fontSize: 15.5, color: theme.inkMuted, maxWidth: 600, margin: '14px 0 24px', lineHeight: 1.6 }}>
             {t(
@@ -160,9 +160,9 @@ function LandingScreen({ theme }) {
           <div>
             <div style={{ fontFamily: 'Geist', fontSize: 12, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: theme.brand, margin: '0 0 22px' }}>{t('What it is', '它是什么')}</div>
             <div style={{ display: 'grid', gap: 20 }}>
-              <BulletItem theme={theme} color={A.blue} sub={t('A working reading of Home Office / ACE guidance, re-checked when sources change.', '我们对 Home Office / ACE 指引的当前理解，并会在来源更新时重新核对。')}>{t('Reference base', '参考库')}</BulletItem>
-              <BulletItem theme={theme} color={A.blue} sub={t('Judgement over evidence quality and preparation sequencing.', '对证据质量与准备时序的判断。')}>{t('Judgement layer', '判断层')}</BulletItem>
-              <BulletItem theme={theme} color={A.blue} sub={t('Delivered through an AI interface — not by an AI.', '通过 AI 界面交付——而不是由 AI 给出答案。')}>{t('Interface ≠ source', '界面 ≠ 信息源')}</BulletItem>
+              <BulletItem theme={theme} color={A.blue} sub={t('A working reading of Home Office and ACE guidance, re-checked when sources change.', '我们对 Home Office 与 ACE 指引的当前理解，并会在来源更新时重新核对。')}>{t('What we keep current', '我们持续维护的内容')}</BulletItem>
+              <BulletItem theme={theme} color={A.blue} sub={t('Evidence quality, recency, and preparation sequencing — not whether you’ll be endorsed.', '证据质量、时效性与准备时序——而不是预测你能否获得 endorsement。')}>{t('What we judge', '我们做出的判断')}</BulletItem>
+              <BulletItem theme={theme} color={A.blue} sub={t('A structured diagnostic delivered through an AI interface, not a chatbot answer.', '通过 AI 界面交付的结构化诊断，而不是聊天机器人的回答。')}>{t('How we deliver it', '我们如何交付')}</BulletItem>
             </div>
           </div>
           <div>
