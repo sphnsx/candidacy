@@ -112,6 +112,7 @@ const QUESTIONS = [
   { id: 'evidenceTypes', type: 'multi', section: 1,
     title: { en: 'Which evidence types do you already have in documentable, verifiable form?', zh: '你目前已经具备哪些较明确、且更接近你所选方向的证明材料类型？' },
     desc:  { en: 'Multi-select. Options adjust to the fields you picked.', zh: '可多选。结果会按你之前选择的方向自动调整。' },
+    exclusiveOption: '我还不确定哪些算有效证明材料',
     getOptions: getEvidenceOptions },
   { id: 'recency', type: 'single', section: 1,
     title: { en: 'When does your strongest evidence mostly fall?', zh: '你目前最重要的证明材料，主要集中在哪个时间范围内？' },
