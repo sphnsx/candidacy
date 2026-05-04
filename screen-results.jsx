@@ -70,19 +70,41 @@ function ResultsScreen({ theme }) {
   // Axis imbalance — surface when the gap between strongest and weakest axis
   // is meaningful (≥ 15 percentage points), so users see why the score lands
   // where it does instead of treating the number as a black box.
+  // Three shapes: one weak outlier (others stronger than it), one strong
+  // outlier (it stronger than the others), or a spread (top vs bottom).
   const axisPcts = [
     { key: 'evidence',     pct: (result.metrics.evidence     || 0) / 40, label: t('evidence base',       '证据基础') },
     { key: 'recommenders', pct: (result.metrics.recommenders || 0) / 30, label: t('recommender network', '推荐人网络') },
     { key: 'readiness',    pct: (result.metrics.readiness    || 0) / 30, label: t('readiness & narrative', '准备状态与叙述') },
   ];
-  const strongAxis = axisPcts.reduce((a, b) => (b.pct > a.pct ? b : a));
-  const weakAxis   = axisPcts.reduce((a, b) => (b.pct < a.pct ? b : a));
-  const imbalanceNote = (strongAxis.pct - weakAxis.pct) >= 0.15
-    ? t(
-        `Stronger on ${strongAxis.label} than on ${weakAxis.label} — the overall score reflects that gap, not just one weakest area.`,
-        `${strongAxis.label}方面比${weakAxis.label}方面更稳——总分反映的是这种不平衡，而不是单一最弱项。`
-      )
-    : null;
+  const sortedAxes = [...axisPcts].sort((a, b) => a.pct - b.pct);
+  const [weakAxis, midAxis, strongAxis] = sortedAxes;
+  const overallGap = strongAxis.pct - weakAxis.pct;
+  const wmGap = midAxis.pct - weakAxis.pct;
+  const msGap = strongAxis.pct - midAxis.pct;
+
+  let imbalanceNote = null;
+  if (overallGap >= 0.15) {
+    if (wmGap >= msGap + 0.15) {
+      // Weakest axis is the clear outlier — name the other two as a cluster.
+      imbalanceNote = t(
+        `${midAxis.label} and ${strongAxis.label} read notably stronger than ${weakAxis.label} — the overall score reflects that gap, not just one weakest area.`,
+        `${midAxis.label}和${strongAxis.label}明显强于${weakAxis.label}——总分反映的是这种不平衡，而不是单一最弱项。`
+      );
+    } else if (msGap >= wmGap + 0.15) {
+      // Strongest axis is the clear outlier — name the other two as a cluster.
+      imbalanceNote = t(
+        `${strongAxis.label} reads notably stronger than ${weakAxis.label} and ${midAxis.label} — the overall score reflects that gap, not a single strong area.`,
+        `${strongAxis.label}明显强于${weakAxis.label}和${midAxis.label}——总分反映的是这种不平衡，而不是只看单一最强项。`
+      );
+    } else {
+      // Even spread — fall back to a two-axis comparison between the extremes.
+      imbalanceNote = t(
+        `Stronger on ${strongAxis.label} than on ${weakAxis.label} — the overall score reflects that gap.`,
+        `${strongAxis.label}方面比${weakAxis.label}方面更稳——总分反映的是这种不平衡。`
+      );
+    }
+  }
 
   const hintLeaves = (result.hints && result.hints.length ? result.hints : [
     t('No structural red flags — focus on tightening what you already have.', '当前没有结构性红旗——重点是把已有的部分整理得更清楚。')
