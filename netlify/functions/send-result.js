@@ -140,7 +140,7 @@ exports.handler = async (event) => {
     const metricRows = Object.entries(metrics)
       .map(([key, value]) => {
         const label = copy.metricLabels[key] || key;
-        return `<li>${escapeHtml(label)}:${escapeHtml(value ?? '-')}</li>`;
+        return `<li>${escapeHtml(label)}: ${escapeHtml(value ?? '-')}</li>`;
       })
       .join('');
 
