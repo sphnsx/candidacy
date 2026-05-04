@@ -214,12 +214,12 @@ function hint(kind, field, lang) {
 }
 
 const NEXT_STEPS_GENERIC = {
-  low: { zh: ['先确认哪些公开成果、机构合作或媒体记录能算核心材料。', '补足近五年内可验证的专业成果。', '把零散经历整理成清晰的专业实践路径。'],
-         en: ['Decide which public outcomes, partnerships or press records count as core evidence.', 'Add verifiable professional outcomes from the last five years.', 'Organise scattered experience into a clear professional path.'] },
-  mid: { zh: ['筛出最能支撑申请的机构合作、公开成果与外部验证材料。', '补强媒体、奖项或出版等第三方证明。', '把专业路径和英国发展叙事连起来。'],
-         en: ['Identify the partnerships, public outcomes and external validation that best back the application.', 'Strengthen press, awards or publications as third-party proof.', 'Connect professional path and UK rationale.'] },
-  high:{ zh: ['集中保留最强的机构合作、公开成果和第三方背书材料。', '优化推荐信与代表性成果之间的对应关系。', '把专业路径、影响力和申请结构整合成一版主线。'],
-         en: ['Keep the strongest partnerships, public outcomes and third-party backing.', 'Align recommenders with the signature outcomes.', 'Integrate path, influence and structure into one spine.'] },
+  low: { zh: ['核心材料的范围目前尚未明确——公开成果、机构合作与媒体记录之间的层级关系还没有确立。', '近五年内可验证的专业成果在 profile 中分布稀疏。', '现有经历的形态偏向零散,尚未呈现出清晰的专业实践路径。'],
+         en: ['The range of what counts as core evidence is not yet defined — the hierarchy between public outcomes, partnerships, and press records has not been established.', 'Verifiable professional outcomes from the last five years are sparse in the current profile.', 'The current experience reads as scattered rather than as a coherent professional path.'] },
+  mid: { zh: ['可用的材料已经存在,但其中哪些机构合作、公开成果与外部验证最能支撑申请,目前仍不清晰。', '第三方背书——媒体、奖项与出版——是证据结构中相对最薄弱的一项。', '专业路径与英国发展叙事之间的连接,在现有证据结构中仍偏弱。'],
+         en: ['There is material to work with, but which partnerships, public outcomes and external validation most strongly back the application is not yet clear.', 'Third-party validation — press, awards, publications — is currently the weakest component of the evidence base.', 'The connection between professional path and UK rationale is underdeveloped in the current evidence structure.'] },
+  high:{ zh: ['最强的机构合作、公开成果与第三方背书已经可以辨识;但现有证据的覆盖面比申请实际所需更宽。', '推荐人与代表性成果之间的对应关系,是当前一致性最弱的一块。', '专业路径、影响力与申请结构都已具备,但尚未整合为一条主线。'],
+         en: ['The strongest partnerships, public outcomes and third-party backing are identifiable; the body of evidence is currently broader than the application requires.', 'The correspondence between recommenders and the signature outcomes is the area where alignment is least consistent.', 'Professional path, influence and application structure are all present but have not yet consolidated into a single spine.'] },
 };
 function nextSteps(field, band, lang) { return NEXT_STEPS_GENERIC[band][lang]; }
 
