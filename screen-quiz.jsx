@@ -98,15 +98,14 @@ function QuizScreen({ theme }) {
 
           <div style={{ marginTop: 24, display: 'grid', gap: 8 }}>
             {options.map((opt, i) => {
-              const [zhKey, enLabel] = opt;
-              const display = lang === 'zh' ? zhKey : enLabel;
+              const display = opt.labels[lang] || opt.labels.en;
               const selected = question.type === 'multi'
-                ? Array.isArray(value) && value.includes(zhKey)
-                : value === zhKey;
+                ? Array.isArray(value) && value.includes(opt.id)
+                : value === opt.id;
               const colorPalette = [A.pink, A.tan, A.teal, A.yellow, A.lilac, A.mint, A.sky, A.violet, A.mauve];
               const dotColor = colorPalette[i % colorPalette.length];
               return (
-                <div key={zhKey} onClick={() => question.type === 'multi' ? pickMulti(zhKey) : pickSingle(zhKey)} style={{
+                <div key={opt.id} onClick={() => question.type === 'multi' ? pickMulti(opt.id) : pickSingle(opt.id)} style={{
                   display: 'flex', alignItems: 'center', gap: 16,
                   padding: '14px 18px',
                   borderRadius: 12,

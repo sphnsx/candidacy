@@ -11,12 +11,12 @@ function OnboardingScreen({ theme }) {
   const selectedFields = Array.isArray(answers.fields) ? answers.fields : [];
   const fieldColors = [A.pink, A.teal, A.violet, A.yellow, A.tan, A.lilac, A.mint];
 
-  const routes = FIELDS.map((pair, i) => ({
-    key: pair[0],
-    label: lang === 'zh' ? pair[0] : pair[1],
+  const routes = FIELDS.map((f, i) => ({
+    key: f.id,
+    label: f.labels[lang] || f.labels.en,
     sub: '',
     c: fieldColors[i % fieldColors.length],
-    selected: selectedFields.includes(pair[0]),
+    selected: selectedFields.includes(f.id),
   }));
 
   const stepsList = [
