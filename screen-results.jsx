@@ -150,7 +150,7 @@ function ResultsScreen({ theme }) {
 
           {hintLeaves.map((l, i) => (
             <MMNode key={i} theme={theme} x={l.x} y={l.y} anchor="start" color={l.color} size={11}
-              label={l.label.length > 38 ? l.label.slice(0, 38) + '…' : l.label} />
+              wrap maxWidth={260} label={l.label} />
           ))}
         </MindMap>
       </div>

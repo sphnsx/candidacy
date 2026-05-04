@@ -1,9 +1,14 @@
-/* global React, Bullet, BulletItem, ColorHeader, Chip, Btn, Rule, Frame, TopNav, Footer, MMNode, MMHub, MMLine, MindMap, useNav */
+/* global React, Bullet, BulletItem, ColorHeader, Chip, Btn, Rule, Frame, TopNav, Footer, MMNode, MMHub, MMLine, MindMap, useNav, useAnswers */
 
 function LandingScreen({ theme }) {
   const A = theme.accent;
   const { go } = useNav();
   const t = useT();
+  const { answers, step, reset } = useAnswers();
+
+  const hasProgress = step > 0 || (Array.isArray(answers.fields) && answers.fields.length > 0);
+  const startFresh = () => { reset(); go('onboarding'); };
+  const resumeCheck = () => go(step > 0 ? 'quiz' : 'onboarding');
 
   // Hero mind-map layout — central hub, 8 satellite nodes.
   // Canvas is 1180 wide × 620 tall; nodes positioned absolutely.
@@ -61,8 +66,15 @@ function LandingScreen({ theme }) {
             '面向已进入准备阶段的申请人，提供结构化信息分析。我们将你 profile 的八个维度对照当前 ACE 标准——告诉你哪些稳健、哪些薄弱、接下来该做什么。'
           )}
         </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-          <Btn variant="primary" theme={theme} onClick={() => go('onboarding')}>{t('Start readiness check', '开始准备度评估')}</Btn>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          {hasProgress ? (
+            <>
+              <Btn variant="primary" theme={theme} onClick={resumeCheck}>{t('Resume readiness check', '继续上次评估')}</Btn>
+              <Btn theme={theme} onClick={startFresh}>{t('Start over', '重新开始')}</Btn>
+            </>
+          ) : (
+            <Btn variant="primary" theme={theme} onClick={startFresh}>{t('Start readiness check', '开始准备度评估')}</Btn>
+          )}
         </div>
       </div>
 
@@ -117,9 +129,16 @@ function LandingScreen({ theme }) {
               '5 分钟结构化评估，输出 0–100 的准备度地图与缺口清单——没有推销。'
             )}
           </p>
-          <Btn variant="primary" theme={theme} onClick={() => go('onboarding')}>
-            {t('Start readiness check', '开始准备度评估')}
-          </Btn>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {hasProgress ? (
+              <>
+                <Btn variant="primary" theme={theme} onClick={resumeCheck}>{t('Resume readiness check', '继续上次评估')}</Btn>
+                <Btn theme={theme} onClick={startFresh}>{t('Start over', '重新开始')}</Btn>
+              </>
+            ) : (
+              <Btn variant="primary" theme={theme} onClick={startFresh}>{t('Start readiness check', '开始准备度评估')}</Btn>
+            )}
+          </div>
         </div>
       </div>
 

@@ -318,7 +318,7 @@ function Footer({ theme }) {
 // ─── MIND MAP PRIMITIVES ───────────────────────────────────────────────────
 
 // A single mind-map node: colored dot + label. Positioned absolutely by caller.
-function MMNode({ x, y, color, size = 14, label, sub, theme, align = 'left', anchor = 'start', highlight = false }) {
+function MMNode({ x, y, color, size = 14, label, sub, theme, align = 'left', anchor = 'start', highlight = false, wrap = false, maxWidth }) {
   const labelStyle = {
     fontFamily: 'Geist, sans-serif',
     fontWeight: 600,
@@ -326,7 +326,8 @@ function MMNode({ x, y, color, size = 14, label, sub, theme, align = 'left', anc
     letterSpacing: '-0.01em',
     color: theme.ink,
     lineHeight: 1.3,
-    whiteSpace: 'nowrap',
+    whiteSpace: wrap ? 'normal' : 'nowrap',
+    maxWidth: wrap ? (maxWidth || 240) : undefined,
   };
   const subStyle = {
     fontFamily: 'Geist, sans-serif',
@@ -334,7 +335,8 @@ function MMNode({ x, y, color, size = 14, label, sub, theme, align = 'left', anc
     color: theme.inkMuted,
     marginTop: 2,
     lineHeight: 1.4,
-    whiteSpace: 'nowrap',
+    whiteSpace: wrap ? 'normal' : 'nowrap',
+    maxWidth: wrap ? (maxWidth || 240) : undefined,
   };
   // anchor: start = label to the right of dot; end = label to the left
   return (

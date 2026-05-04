@@ -6,7 +6,7 @@ function OnboardingScreen({ theme }) {
   const t = useT();
   const { lang } = useLang();
   const { answers, toggleMulti, setAnswer } = useAnswers();
-  const step = 2, total = 4;
+  const step = 1, total = 2;
 
   const selectedFields = Array.isArray(answers.fields) ? answers.fields : [];
   const fieldColors = [A.pink, A.teal, A.violet, A.yellow, A.tan, A.lilac, A.mint];
@@ -20,10 +20,8 @@ function OnboardingScreen({ theme }) {
   }));
 
   const stepsList = [
-    { n: 1, label: t('Welcome', '欢迎'),                    done: true },
-    { n: 2, label: t('Pick your routes', '选择路径'),        done: false, current: true },
-    { n: 3, label: t('Project & timing', '项目与时间'),      done: false },
-    { n: 4, label: t('Account', '账户'),                    done: false },
+    { n: 1, label: t('Pick your routes', '选择路径'),        done: false, current: true },
+    { n: 2, label: t('Readiness check', '准备度评估'),       done: false },
   ];
 
   const canContinue = selectedFields.length > 0;

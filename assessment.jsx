@@ -164,7 +164,7 @@ const QUESTIONS = [
       { id: 'verify_almost_all',  labels: { zh: '几乎都可以验证',   en: 'Almost all of it' } },
     ] },
   { id: 'recommenderCount', type: 'single', section: 2,
-    title: { en: 'Roughly how many people might be willing to write you a recommendation letter?', zh: '你现在大概能想到几位可能愿意为你写 recommendation letters 的人？' },
+    title: { en: 'Roughly how many people might be willing to write you a recommendation letter?', zh: '你现在大概能想到几位可能愿意为你写推荐信的人？' },
     options: [
       { id: 'count_0',      labels: { zh: '0 位',     en: '0 people' } },
       { id: 'count_1',      labels: { zh: '1 位',     en: '1 person' } },
@@ -184,7 +184,7 @@ const QUESTIONS = [
       { id: 'quality_unsure',                labels: { zh: '我不确定他们是否符合要求',    en: "I'm not sure they qualify" } },
     ] },
   { id: 'lettersConfidence', type: 'single', section: 2,
-    title: { en: 'How confident are you that you can secure 3 substantive recommendation letters right now?', zh: '如果现在就开始联系，你觉得自己拿到 3 封有实质内容的 recommendation letters 的把握有多大？' },
+    title: { en: 'How confident are you that you can secure 3 substantive recommendation letters right now?', zh: '如果现在就开始联系，你觉得自己拿到 3 封有实质内容的推荐信的把握有多大？' },
     options: [
       { id: 'letters_very_low',  labels: { zh: '很低',   en: 'Very low' } },
       { id: 'letters_low',       labels: { zh: '比较低', en: 'Low' } },
@@ -272,7 +272,7 @@ const HINTS = {
   oldEvidence:       { all: { zh: '你当前最重要的证据主要早于近五年，这会明显削弱当前申请支撑力。',                       en: 'Your strongest evidence is mostly older than five years — that materially weakens current application support.' } },
   studentProject:    { all: { zh: '你目前的核心证据更偏向学生时期项目，这通常不足以支撑成熟申请。',                       en: 'Your core evidence skews toward student-era projects, which usually cannot support a mature application.' } },
   commercialProject: { all: { zh: '你目前的核心证据更偏向商业项目，这类材料未必能直接转化为申请核心支撑。',             en: 'Your core evidence is mostly commercial — that does not always translate to core application support.' } },
-  weakLetters:       { all: { zh: '你当前的 recommendation letters 网络偏弱，这会直接影响申请能否真正推进。',           en: 'Your recommendation-letter network is weak — that directly affects whether the application can move forward.' } },
+  weakLetters:       { all: { zh: '你当前的推荐信网络偏弱，这会直接影响申请能否真正推进。',                              en: 'Your recommendation-letter network is weak — that directly affects whether the application can move forward.' } },
   weakNarrative:     { all: { zh: '你目前还不能清楚说明自己的实践是什么，以及为什么适合在英国继续发展。',               en: 'You cannot yet articulate clearly what your practice is and why the UK is the right next step.' } },
 };
 function hint(kind, field, lang) {
@@ -283,19 +283,19 @@ function hint(kind, field, lang) {
 }
 
 const NEXT_STEPS_GENERIC = {
-  low: { zh: ['核心材料的范围目前尚未明确——公开成果、机构合作与媒体记录之间的层级关系还没有确立。', '近五年内可验证的专业成果在 profile 中分布稀疏。', '现有经历的形态偏向零散,尚未呈现出清晰的专业实践路径。'],
+  low: { zh: ['核心材料的范围目前尚未明确——公开成果、机构合作与媒体记录之间的层级关系还没有确立。', '近五年内可验证的专业成果在 profile 中分布稀疏。', '现有经历的形态偏向零散，尚未呈现出清晰的专业实践路径。'],
          en: ['The range of what counts as core evidence is not yet defined — the hierarchy between public outcomes, partnerships, and press records has not been established.', 'Verifiable professional outcomes from the last five years are sparse in the current profile.', 'The current experience reads as scattered rather than as a coherent professional path.'] },
-  mid: { zh: ['可用的材料已经存在,但其中哪些机构合作、公开成果与外部验证最能支撑申请,目前仍不清晰。', '第三方背书——媒体、奖项与出版——是证据结构中相对最薄弱的一项。', '专业路径与英国发展叙事之间的连接,在现有证据结构中仍偏弱。'],
+  mid: { zh: ['可用的材料已经存在，但其中哪些机构合作、公开成果与外部验证最能支撑申请，目前仍不清晰。', '第三方背书——媒体、奖项与出版——是证据结构中相对最薄弱的一项。', '专业路径与英国发展叙事之间的连接，在现有证据结构中仍偏弱。'],
          en: ['There is material to work with, but which partnerships, public outcomes and external validation most strongly back the application is not yet clear.', 'Third-party validation — press, awards, publications — is currently the weakest component of the evidence base.', 'The connection between professional path and UK rationale is underdeveloped in the current evidence structure.'] },
-  high:{ zh: ['最强的机构合作、公开成果与第三方背书已经可以辨识;但现有证据的覆盖面比申请实际所需更宽。', '推荐人与代表性成果之间的对应关系,是当前一致性最弱的一块。', '专业路径、影响力与申请结构都已具备,但尚未整合为一条主线。'],
+  high:{ zh: ['最强的机构合作、公开成果与第三方背书已经可以辨识；但现有证据的覆盖面比申请实际所需更宽。', '推荐人与代表性成果之间的对应关系，是当前一致性最弱的一块。', '专业路径、影响力与申请结构都已具备，但尚未整合为一条主线。'],
          en: ['The strongest partnerships, public outcomes and third-party backing are identifiable; the body of evidence is currently broader than the application requires.', 'The correspondence between recommenders and the signature outcomes is the area where alignment is least consistent.', 'Professional path, influence and application structure are all present but have not yet consolidated into a single spine.'] },
 };
 function nextSteps(field, band, lang) { return NEXT_STEPS_GENERIC[band][lang]; }
 
 const ROUTE_SUMMARIES = {
-  low:  { zh: '你目前还不适合按这个 route 进入正式申请准备。',                  en: 'You are not yet ready to formally prepare on this route.' },
-  mid:  { zh: '按这个 route 看，你已经有一定基础，但距离稳定申请还差一段。',     en: 'On this route you have a basis, but you are not yet at stable-application range.' },
-  high: { zh: '按这个 route 看，你已经具备一定申请基础。',                       en: 'On this route you already have a viable application basis.' },
+  low:  { zh: '你目前还不适合按这条路径进入正式申请准备。',                      en: 'You are not yet ready to formally prepare on this route.' },
+  mid:  { zh: '按这条路径看，你已经有一定基础，但距离稳定申请还差一段。',         en: 'On this route you have a basis, but you are not yet at stable-application range.' },
+  high: { zh: '按这条路径看，你已经具备一定申请基础。',                           en: 'On this route you already have a viable application basis.' },
 };
 
 function calculateResult(answers, lang) {
@@ -339,6 +339,9 @@ function calculateResult(answers, lang) {
     if (answers.recommenderCount === 'count_2') recommenders = Math.min(recommenders, 9);
     if (answers.narrative === 'narrative_not_yet' || answers.narrative === 'narrative_vague') hints.push(hint('weakNarrative', field, lang));
 
+    evidence     = Math.max(0, Math.min(40, evidence));
+    recommenders = Math.max(0, Math.min(30, recommenders));
+    readiness    = Math.max(0, Math.min(30, readiness));
     total = Math.max(0, Math.min(100, evidence + recommenders + readiness));
 
     let band = 'low';
