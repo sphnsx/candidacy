@@ -67,6 +67,23 @@ function ResultsScreen({ theme }) {
     { x: 520, y: 410, color: A.violet, label: t('Readiness', '准备状态'),   score: `${result.metrics.readiness} / 30` },
   ];
 
+  // Axis imbalance — surface when the gap between strongest and weakest axis
+  // is meaningful (≥ 15 percentage points), so users see why the score lands
+  // where it does instead of treating the number as a black box.
+  const axisPcts = [
+    { key: 'evidence',     pct: (result.metrics.evidence     || 0) / 40, label: t('evidence base',       '证据基础') },
+    { key: 'recommenders', pct: (result.metrics.recommenders || 0) / 30, label: t('recommender network', '推荐人网络') },
+    { key: 'readiness',    pct: (result.metrics.readiness    || 0) / 30, label: t('readiness & narrative', '准备状态与叙述') },
+  ];
+  const strongAxis = axisPcts.reduce((a, b) => (b.pct > a.pct ? b : a));
+  const weakAxis   = axisPcts.reduce((a, b) => (b.pct < a.pct ? b : a));
+  const imbalanceNote = (strongAxis.pct - weakAxis.pct) >= 0.15
+    ? t(
+        `Stronger on ${strongAxis.label} than on ${weakAxis.label} — the overall score reflects that gap, not just one weakest area.`,
+        `${strongAxis.label}方面比${weakAxis.label}方面更稳——总分反映的是这种不平衡，而不是单一最弱项。`
+      )
+    : null;
+
   const hintLeaves = (result.hints && result.hints.length ? result.hints : [
     t('No structural red flags — focus on tightening what you already have.', '当前没有结构性红旗——重点是把已有的部分整理得更清楚。')
   ]).slice(0, 6).map((h, i) => ({
@@ -94,6 +111,11 @@ function ResultsScreen({ theme }) {
         }}>
           {primary.summary}
         </h1>
+        {imbalanceNote && (
+          <p style={{ color: theme.ink, fontSize: 16.5, maxWidth: 760, margin: '0 0 10px', lineHeight: 1.55, fontWeight: 500 }}>
+            {imbalanceNote}
+          </p>
+        )}
         <p style={{ color: theme.inkMuted, fontSize: 16, maxWidth: 720, margin: 0, lineHeight: 1.55 }}>
           {t(
             `Primary route: ${primary.label}. A structured information analysis, not legal advice.`,
@@ -249,7 +271,10 @@ function ResultsScreen({ theme }) {
               </div>
               {sendError && <div style={{ fontSize: 12.5, color: A.mauve, marginTop: 8 }}>{sendError}</div>}
               <div style={{ fontSize: 12, color: theme.inkMuted, marginTop: 10, lineHeight: 1.5 }}>
-                {t('We send it once and use the address only for this report.', '我们只发送一次，邮箱只用于本次报告。')}
+                {t(
+                  'We send it once and use the address only for this report. We don’t add you to a mailing list.',
+                  '我们只发送一次，邮箱只用于本次报告。我们不会把你加入邮件列表。'
+                )}
               </div>
             </form>
           )}

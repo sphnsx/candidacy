@@ -15,7 +15,7 @@ function LandingScreen({ theme }) {
   const hubX = 590, hubY = 310;
   const nodes = [
     { x: 110,  y: 90,  anchor: 'start', color: A.pink,   label: t('Evidence categories', '证据类别'), sub: t('Exhibitions · publications · awards', '展览 · 出版 · 奖项') },
-    { x: 110,  y: 250, anchor: 'start', color: A.tan,    label: t('ACE criteria', 'ACE 标准'),        sub: t('Current Home Office standards', '当前 Home Office 指引') },
+    { x: 110,  y: 250, anchor: 'start', color: A.tan,    label: t('ACE criteria', 'ACE 标准'),        sub: t('Home Office / ACE guidance · monitored', 'Home Office / ACE 指引 · 持续追踪') },
     { x: 110,  y: 410, anchor: 'start', color: A.teal,   label: t('Endorsing bodies', 'Endorsing body'),    sub: t('Arts Council England & partners', 'Arts Council England 与合作机构') },
     { x: 110,  y: 560, anchor: 'start', color: A.violet, label: t('Narrative & sequence', '叙述与时序'), sub: t('Why now · why the UK · what next', '为何此时 · 为何英国 · 接下来') },
 
@@ -62,8 +62,8 @@ function LandingScreen({ theme }) {
           textWrap: 'pretty',
         }}>
           {t(
-            'Structured information analysis for applicants already in the preparation phase. We map eight dimensions of your profile against current ACE criteria — then show you what’s solid, what’s thin, and what to do next.',
-            '面向已进入准备阶段的申请人，提供结构化信息分析。我们将你 profile 的八个维度对照当前 ACE 标准——告诉你哪些稳健、哪些薄弱、接下来该做什么。'
+            'Structured information analysis for applicants already in the preparation phase. We map eight dimensions of your profile against Home Office / ACE guidance as we currently read it — then show you what looks solid, what looks thin, and what to do next.',
+            '面向已进入准备阶段的申请人，提供结构化信息分析。我们将你 profile 的八个维度对照我们当前理解的 Home Office / ACE 指引——告诉你哪些看起来稳健、哪些薄弱、接下来该做什么。'
           )}
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -151,8 +151,8 @@ function LandingScreen({ theme }) {
           )}</ColorHeader>
           <p style={{ fontSize: 15.5, color: theme.inkMuted, margin: '16px 0 0', lineHeight: 1.6 }}>
             {t(
-              'In 2026, ACE pathway scope is expanding and route confusion is rising. Generic AI tools don’t reliably separate current guidance from outdated or adjacent-route material — that’s the gap we fill.',
-              '2026 年，ACE 路径范围正在扩展、路径混淆风险也在上升。通用 AI 工具无法稳定区分现行指引、过时指引与相邻路径要求——这是我们要填补的空缺。'
+              'ACE pathway scope and route boundaries shift over time, and route confusion is a recurring risk. Generic AI tools don’t reliably separate current guidance from outdated or adjacent-route material — that’s the gap we fill.',
+              'ACE 路径的范围与边界会随时间调整，路径混淆也是持续存在的风险。通用 AI 工具无法稳定区分现行指引、过时指引与相邻路径要求——这是我们要填补的空缺。'
             )}
           </p>
         </div>
@@ -160,7 +160,7 @@ function LandingScreen({ theme }) {
           <div>
             <div style={{ fontFamily: 'Geist', fontSize: 12, fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: theme.brand, margin: '0 0 22px' }}>{t('What it is', '它是什么')}</div>
             <div style={{ display: 'grid', gap: 20 }}>
-              <BulletItem theme={theme} color={A.blue} sub={t('A maintained reference on current ACE criteria.', '关于当前 ACE 标准的、持续维护的参考库。')}>{t('Reference base', '参考库')}</BulletItem>
+              <BulletItem theme={theme} color={A.blue} sub={t('A maintained reference on Home Office / ACE guidance as we currently understand it.', '我们对 Home Office / ACE 指引的当前理解，持续维护的参考库。')}>{t('Reference base', '参考库')}</BulletItem>
               <BulletItem theme={theme} color={A.blue} sub={t('Judgement over evidence quality and preparation sequencing.', '对证据质量与准备时序的判断。')}>{t('Judgement layer', '判断层')}</BulletItem>
               <BulletItem theme={theme} color={A.blue} sub={t('Active monitoring across Home Office, ACE, partners.', '主动监测 Home Office、ACE 与合作机构的变化。')}>{t('Monitoring layer', '监测层')}</BulletItem>
               <BulletItem theme={theme} color={A.blue} sub={t('Delivered through an AI interface — not by an AI.', '通过 AI 界面交付——而不是由 AI 给出答案。')}>{t('Interface ≠ source', '界面 ≠ 信息源')}</BulletItem>
