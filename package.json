@@ -1,23 +1,23 @@
 {
-  "name": "globaltalent-mvp",
+  "name": "candidacy",
   "version": "1.0.0",
-  "description": "",
+  "description": "Readiness assessment for UK Global Talent Visa applicants on the ACE pathway.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/idocu1024-lab/globaltalent-mvp.git"
+    "url": "git+https://github.com/sphnsx/candidacy.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/idocu1024-lab/globaltalent-mvp/issues"
+    "url": "https://github.com/sphnsx/candidacy/issues"
   },
-  "homepage": "https://github.com/idocu1024-lab/globaltalent-mvp#readme",
+  "homepage": "https://github.com/sphnsx/candidacy#readme",
   "private": "true",
   "dependencies": {
     "@supabase/supabase-js": "^2.105.3",
