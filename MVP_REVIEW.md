@@ -8,13 +8,40 @@ This file tracks what's left to harden the free Scan, then what's needed to ship
 
 ## A. Free Scan — gaps before promotion goes live
 
-- [ ] Privacy policy page (collecting email triggers UK/EU obligations)
-- [ ] Terms of service (informational-only, OISC boundary)
-- [ ] Funnel analytics (Promotion §6 KPI: Scan completions per channel — UTM-based attribution at minimum)
+- [x] Privacy policy page (drafted, pending solicitor review)
+- [x] Terms of service (drafted, pending solicitor review)
+- [ ] Funnel analytics (Promotion §6 KPI: Scan completions per channel — Plausible deferred for now)
 - [ ] Cookie consent (only if analytics tool requires it — Plausible doesn't, PostHog does)
-- [ ] Confirm all 5 ACE sub-routes covered in onboarding picker; design gated to 2026-07-01 ✅ done
-- [ ] Fetch timeout on `/api/send-result` ✅ done
-- [ ] Persistent storage for leads (currently fire-and-forget via Resend; no record of who completed the Scan)
+- [x] Confirm all 5 ACE sub-routes covered in onboarding picker; design gated to 2026-07-01
+- [x] Fetch timeout on `/api/send-result`
+- [x] Persistent storage for leads (Supabase `leads` table, write-only via service_role)
+
+### Supabase setup (for replay)
+
+Schema and grants required by `netlify/functions/send-result.js`. Re-run when bootstrapping a new Supabase project:
+
+```sql
+create table leads (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz default now(),
+  email text not null,
+  lang text,
+  score integer,
+  band text,
+  routes text[],
+  answers jsonb,
+  result jsonb
+);
+
+alter table leads enable row level security;
+grant insert, select on table leads to service_role;
+```
+
+The `grant` is required because "Automatically expose new tables" is unchecked in the Data API settings — without it, even `service_role` gets `permission denied for table leads`. RLS stays on with no policies; only `service_role` (bypasses RLS) can write.
+
+Env vars required in Netlify:
+- `SUPABASE_URL` — project URL, not secret
+- `SUPABASE_SERVICE_KEY` — secret key (sb_secret_…), marked as secret in Netlify
 
 ## B. Paid MVP — Preview-and-Unlock
 
