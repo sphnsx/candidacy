@@ -42,18 +42,30 @@ function ResultsScreen({ theme }) {
         },
         answers,
       };
-      const res = await fetch('/api/send-result', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      let res;
+      try {
+        res = await fetch('/api/send-result', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || `HTTP ${res.status}`);
       }
       setSent(true);
     } catch (err) {
-      setSendError(t('Send failed. Please try again.', '发送失败，请稍后再试。'));
+      if (err && err.name === 'AbortError') {
+        setSendError(t('Send timed out. Check your connection and try again.', '发送超时，请检查网络后重试。'));
+      } else {
+        setSendError(t('Send failed. Please try again.', '发送失败，请稍后再试。'));
+      }
     } finally {
       setSending(false);
     }
@@ -294,8 +306,8 @@ function ResultsScreen({ theme }) {
               {sendError && <div style={{ fontSize: 12.5, color: A.mauve, marginTop: 8 }}>{sendError}</div>}
               <div style={{ fontSize: 12, color: theme.inkMuted, marginTop: 10, lineHeight: 1.5 }}>
                 {t(
-                  'We send it once and use the address only for this report. We don’t add you to a mailing list.',
-                  '我们只发送一次，邮箱只用于本次报告。我们不会把你加入邮件列表。'
+                  <>We send it once and use the address only for this report. We don’t add you to a mailing list. <a href="/privacy.html" style={{ color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 2 }}>Privacy</a>.</>,
+                  <>我们只发送一次，邮箱只用于本次报告。我们不会把你加入邮件列表。<a href="/privacy.html" style={{ color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 2 }}>隐私政策</a>。</>
                 )}
               </div>
             </form>

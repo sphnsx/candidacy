@@ -309,7 +309,15 @@ function Footer({ theme }) {
       </div>
       <div>
         <div style={{ fontWeight: 600, color: theme.ink, marginBottom: 10 }}>{t('Status', '状态')}</div>
-        <div>{t('Beta · under iteration', 'Beta · 持续迭代中')}</div>
+        <div style={{ marginBottom: 14 }}>{t('Beta · under iteration', 'Beta · 持续迭代中')}</div>
+        <div style={{ display: 'flex', gap: 14 }}>
+          <a href="/privacy.html" style={{ color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 2 }}>
+            {t('Privacy', '隐私政策')}
+          </a>
+          <a href="/terms.html" style={{ color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 2 }}>
+            {t('Terms', '服务条款')}
+          </a>
+        </div>
       </div>
     </div>
   );

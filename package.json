@@ -20,6 +20,7 @@
   "homepage": "https://github.com/idocu1024-lab/globaltalent-mvp#readme",
   "private": "true",
   "dependencies": {
+    "@supabase/supabase-js": "^2.105.3",
     "resend": "^6.11.0"
   }
 }

@@ -1,4 +1,26 @@
 const { Resend } = require('resend');
+const { createClient } = require('@supabase/supabase-js');
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+async function persistLead({ email, lang, result, answers }) {
+  if (!supabase) return;
+  const routes = Array.isArray(answers && answers.fields) ? answers.fields : null;
+  const { error } = await supabase.from('leads').insert({
+    email,
+    lang: lang || null,
+    score: typeof result.total === 'number' ? result.total : null,
+    band: result.band || null,
+    routes,
+    answers: answers || null,
+    result: result || null,
+  });
+  if (error) {
+    console.error('supabase insert failed', error.message);
+  }
+}
 
 const COPY = {
   zh: {
@@ -181,6 +203,8 @@ exports.handler = async (event) => {
         <p style="font-size: 12px; color: #8a92a8; margin-top: 16px; border-top: 1px solid #eef1f8; padding-top: 12px;">${escapeHtml(copy.privacyNote)}</p>
       </div>
     `;
+
+    await persistLead({ email, lang, result, answers });
 
     await resend.emails.send({
       from,

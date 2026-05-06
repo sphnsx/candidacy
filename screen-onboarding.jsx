@@ -11,13 +11,19 @@ function OnboardingScreen({ theme }) {
   const selectedFields = Array.isArray(answers.fields) ? answers.fields : [];
   const fieldColors = [A.pink, A.teal, A.violet, A.yellow, A.tan, A.lilac, A.mint];
 
-  const routes = FIELDS.map((f, i) => ({
-    key: f.id,
-    label: f.labels[lang] || f.labels.en,
-    sub: '',
-    c: fieldColors[i % fieldColors.length],
-    selected: selectedFields.includes(f.id),
-  }));
+  const today = new Date().toISOString().slice(0, 10);
+  const routes = FIELDS.map((f, i) => {
+    const note = f.availableFrom && today < f.availableFrom
+      ? (f.availableNote && (f.availableNote[lang] || f.availableNote.en)) || ''
+      : '';
+    return {
+      key: f.id,
+      label: f.labels[lang] || f.labels.en,
+      sub: note,
+      c: fieldColors[i % fieldColors.length],
+      selected: selectedFields.includes(f.id),
+    };
+  });
 
   const stepsList = [
     { n: 1, label: t('Pick your routes', '选择路径'),        done: false, current: true },
@@ -94,6 +100,9 @@ function OnboardingScreen({ theme }) {
                 <Bullet color={r.c} size={16} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: 'Geist', fontSize: 17, fontWeight: 600, color: theme.ink, letterSpacing: '-0.01em' }}>{r.label}</div>
+                  {r.sub && (
+                    <div style={{ fontFamily: 'Geist', fontSize: 12, fontWeight: 500, color: theme.inkFaint, marginTop: 3, letterSpacing: '-0.005em' }}>{r.sub}</div>
+                  )}
                 </div>
                 <div style={{
                   width: 22, height: 22, borderRadius: '50%',

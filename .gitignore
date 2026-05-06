@@ -3,3 +3,9 @@
 
 # Netlify Edge Functions / Deno cache
 deno.lock
+
+# Node deps (installed at deploy time)
+node_modules/
+
+# Claude Code workspace
+.claude/

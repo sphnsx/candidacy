@@ -5,7 +5,9 @@
 
 const FIELDS = [
   { id: 'visual_art',         labels: { zh: '视觉艺术',                  en: 'Visual Art' } },
-  { id: 'design',             labels: { zh: '设计',                      en: 'Design' } },
+  { id: 'design',             labels: { zh: '设计',                      en: 'Design' },
+    availableFrom: '2026-07-01',
+    availableNote: { zh: '设计 sub-route 自 2026 年 7 月 1 日起开放', en: 'Design sub-route opens 1 July 2026' } },
   { id: 'fashion',            labels: { zh: '时装',                      en: 'Fashion' } },
   { id: 'film_tv',            labels: { zh: '影视',                      en: 'Film & TV' } },
   { id: 'architecture',       labels: { zh: '建筑',                      en: 'Architecture' } },
