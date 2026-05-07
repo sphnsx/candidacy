@@ -19,6 +19,23 @@
     .scrn  { transform-origin: top left; }
     /* Mobile renders natively — no scale transform. */
     .scrn-wrap-mobile { width: 100%; max-width: 480px; margin: 0 auto; }
+    /* Chinese glyphs are square and dense — they need looser tracking and
+       leading than the negative tracking used for Latin serif display type.
+       Apply to all heading levels so serif and sans headings both get relief. */
+    html[lang="zh"] h1,
+    html[lang="zh"] h2,
+    html[lang="zh"] h3 {
+      letter-spacing: 0 !important;
+      line-height: 1.3 !important;
+    }
+    /* Chinese serif fonts don't ship italic styles; the browser synthesises
+       an oblique that worsens the crowded feel. Drop the slant on highlighted
+       fragments — colour alone carries the emphasis in CJK typography. */
+    html[lang="zh"] h1 em,
+    html[lang="zh"] h2 em,
+    html[lang="zh"] h3 em {
+      font-style: normal !important;
+    }
   </style>
 </head>
 <body>
@@ -104,6 +121,12 @@
         try { localStorage.setItem('candidacy_lang', next); } catch (e) {}
       }, []);
       const langCtx = React.useMemo(() => ({ lang, setLang }), [lang, setLang]);
+
+      // Mirror lang to the html element so :lang / [lang] CSS rules engage —
+      // used to relax tracking/leading and drop synthesised italic in zh.
+      React.useEffect(() => {
+        document.documentElement.lang = lang;
+      }, [lang]);
 
       const screenEntry = SCREENS.find(s => s.id === t.screen) || SCREENS[0];
       const signedIn = screenEntry.signedIn;
