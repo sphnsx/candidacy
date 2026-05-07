@@ -17,6 +17,8 @@
     .site { width: 100%; }
     .scrn-wrap { width: 100%; }
     .scrn  { transform-origin: top left; }
+    /* Mobile renders natively — no scale transform. */
+    .scrn-wrap-mobile { width: 100%; max-width: 480px; margin: 0 auto; }
   </style>
 </head>
 <body>
@@ -29,6 +31,11 @@
   <script type="text/babel" src="screen-onboarding.jsx"></script>
   <script type="text/babel" src="screen-quiz.jsx"></script>
   <script type="text/babel" src="screen-results.jsx"></script>
+  <script type="text/babel" src="mobile-shared.jsx"></script>
+  <script type="text/babel" src="m-screen-landing.jsx"></script>
+  <script type="text/babel" src="m-screen-onboarding.jsx"></script>
+  <script type="text/babel" src="m-screen-quiz.jsx"></script>
+  <script type="text/babel" src="m-screen-results.jsx"></script>
   <!-- Hidden until MVP scope expands (post-purchase paid layers + signed-in dashboard).
        Per 4P docs: launch = Candidacy Scan free diagnostic only.
   <script type="text/babel" src="screen-dashboard.jsx"></script>
@@ -48,11 +55,13 @@
     }/*EDITMODE-END*/;
 
     const SCREENS = [
-      { id: 'landing',    label: 'Landing',           Comp: window.LandingScreen,    signedIn: false },
-      { id: 'onboarding', label: 'Onboarding',        Comp: window.OnboardingScreen, signedIn: false },
-      { id: 'quiz',       label: 'Readiness check',   Comp: window.QuizScreen,       signedIn: false },
-      { id: 'results',    label: 'Results',           Comp: window.ResultsScreen,    signedIn: false },
+      { id: 'landing',    label: 'Landing',           Comp: window.LandingScreen,    MComp: window.MLandingScreen,    signedIn: false },
+      { id: 'onboarding', label: 'Onboarding',        Comp: window.OnboardingScreen, MComp: window.MOnboardingScreen, signedIn: false },
+      { id: 'quiz',       label: 'Readiness check',   Comp: window.QuizScreen,       MComp: window.MQuizScreen,       signedIn: false },
+      { id: 'results',    label: 'Results',           Comp: window.ResultsScreen,    MComp: window.MResultsScreen,    signedIn: false },
     ];
+
+    const MOBILE_BREAKPOINT = 768;
 
     const THEME_MAP = { light: window.THEMES.light, warm: window.THEMES.warm, dark: window.THEMES.dark };
 
@@ -88,8 +97,19 @@
       const langCtx = React.useMemo(() => ({ lang, setLang }), [lang, setLang]);
 
       const screenEntry = SCREENS.find(s => s.id === t.screen) || SCREENS[0];
-      const ScreenComp = screenEntry.Comp;
       const signedIn = screenEntry.signedIn;
+
+      // Track viewport so we can render mobile screens natively at <=768px,
+      // and keep the existing scale-to-fit desktop deck above that.
+      const [isMobile, setIsMobile] = React.useState(() =>
+        typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT
+      );
+      React.useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+      }, []);
+      const ScreenComp = isMobile && screenEntry.MComp ? screenEntry.MComp : screenEntry.Comp;
 
       const baseTheme = THEME_MAP[t.theme] || THEME_MAP.light;
       const theme = React.useMemo(() => {
@@ -106,7 +126,7 @@
         window.__CANDIDACY_CONNECTOR_STYLE = t.connectorStyle;
       }, [t.connectorStyle]);
 
-      // Responsive scale-to-fit
+      // Responsive scale-to-fit (desktop only — mobile renders natively).
       const FRAME_W = 1280;
       const siteRef = React.useRef(null);
       const scrnRef = React.useRef(null);
@@ -116,20 +136,20 @@
         function fit() {
           const w = siteRef.current;
           if (!w) return;
+          if (isMobile) { setScale(1); return; }
           const avail = w.clientWidth;
-          // Always scale to viewport (up or down) so the site is full-bleed.
           setScale(avail / FRAME_W);
         }
         fit();
         window.addEventListener('resize', fit);
         return () => window.removeEventListener('resize', fit);
-      }, []);
+      }, [isMobile]);
 
       const [scrnH, setScrnH] = React.useState(1000);
       React.useLayoutEffect(() => {
         if (!scrnRef.current) return;
         setScrnH(scrnRef.current.scrollHeight);
-      }, [t.screen, t.theme, t.accent, t.connectorStyle, scale]);
+      }, [t.screen, t.theme, t.accent, t.connectorStyle, scale, isMobile]);
 
       const navCtx = React.useMemo(() => ({
         go: (id) => {
@@ -151,17 +171,23 @@
         <AnswersProvider>
         <NavContext.Provider value={navCtx}>
           <div className="site" ref={siteRef}>
-            <div className="scrn-wrap" style={{ height: scrnH * scale }}>
-              <div className="scrn"
-                ref={scrnRef}
-                data-screen-label={`${String(idx+1).padStart(2,'0')} ${screenEntry.label}`}
-                style={{
-                  width: FRAME_W,
-                  transform: `scale(${scale})`,
-                }}>
-                <ScreenComp theme={theme} key={`${t.connectorStyle}-${t.theme}-${t.accent}-${t.screen}`} />
+            {isMobile ? (
+              <div className="scrn-wrap-mobile">
+                <ScreenComp theme={theme} key={`m-${t.theme}-${t.accent}-${t.screen}`} />
               </div>
-            </div>
+            ) : (
+              <div className="scrn-wrap" style={{ height: scrnH * scale }}>
+                <div className="scrn"
+                  ref={scrnRef}
+                  data-screen-label={`${String(idx+1).padStart(2,'0')} ${screenEntry.label}`}
+                  style={{
+                    width: FRAME_W,
+                    transform: `scale(${scale})`,
+                  }}>
+                  <ScreenComp theme={theme} key={`${t.connectorStyle}-${t.theme}-${t.accent}-${t.screen}`} />
+                </div>
+              </div>
+            )}
           </div>
 
           <TweaksPanel title="Tweaks">
