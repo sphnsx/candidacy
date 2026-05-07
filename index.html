@@ -30,11 +30,13 @@
     }
     /* Chinese serif fonts don't ship italic styles; the browser synthesises
        an oblique that worsens the crowded feel. Drop the slant on highlighted
-       fragments — colour alone carries the emphasis in CJK typography. */
+       fragments and lift the weight instead — heavier strokes are the CJK-
+       native emphasis pattern (重点) and pair well with the blue accent. */
     html[lang="zh"] h1 em,
     html[lang="zh"] h2 em,
     html[lang="zh"] h3 em {
       font-style: normal !important;
+      font-weight: 500 !important;
     }
   </style>
 </head>
