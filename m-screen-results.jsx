@@ -176,7 +176,7 @@ function MResultsScreen({ theme }) {
           flexShrink: 0,
         }}>
           <div style={{
-            fontFamily: theme.serif || '"Source Serif 4",serif',
+            fontFamily: theme.serif || '"Source Serif 4","Noto Serif SC",serif',
             fontSize: 42, fontWeight: 400, color: theme.ink, letterSpacing: '-0.03em', lineHeight: 1,
           }}>{score}</div>
           <div style={{ fontFamily: 'Geist', fontSize: 9.5, color: theme.inkMuted, marginTop: 2 }}>

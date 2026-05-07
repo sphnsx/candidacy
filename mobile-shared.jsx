@@ -154,7 +154,7 @@ function MEyebrow({ theme, color, children }) {
 function MHeader({ theme, size = 28, children, color }) {
   return (
     <h2 style={{
-      fontFamily: theme.serif || '"Source Serif 4","Source Serif Pro",Georgia,serif',
+      fontFamily: theme.serif || '"Source Serif 4","Source Serif Pro","Noto Serif SC",Georgia,serif',
       fontWeight: 400, fontSize: size, letterSpacing: '-0.022em',
       color: color || theme.ink, margin: 0, lineHeight: 1.05, textWrap: 'balance',
     }}>{children}</h2>

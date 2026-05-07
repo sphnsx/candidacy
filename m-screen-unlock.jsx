@@ -98,7 +98,7 @@ function MUnlockScreen({ theme }) {
           {t('price_lbl')}
         </div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
-          <span style={{ fontFamily: theme.serif || '"Source Serif 4",serif', fontSize: 44, fontWeight: 400, color: theme.ink, letterSpacing: '-0.03em' }}>{t('price_main')}</span>
+          <span style={{ fontFamily: theme.serif || '"Source Serif 4","Noto Serif SC",serif', fontSize: 44, fontWeight: 400, color: theme.ink, letterSpacing: '-0.03em' }}>{t('price_main')}</span>
           <span style={{ fontFamily: 'Geist', fontSize: 13, color: theme.inkMuted, textDecoration: 'line-through' }}>{t('price_strike')}</span>
         </div>
         <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.5, color: theme.inkMuted, textWrap: 'pretty' }}>{t('price_anchor')}</p>

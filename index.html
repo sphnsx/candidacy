@@ -6,7 +6,7 @@
   <title>Candidacy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Instrument+Serif:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Instrument+Serif:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600&display=swap" />
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
@@ -80,10 +80,13 @@
       mint:   '#9DC9A8',
     };
 
+    // Latin serifs first, then "Noto Serif SC" so the browser picks a Chinese
+    // serif for Han glyphs (per-glyph fallback). Without this, Chinese in
+    // highlighted/italic fragments falls through to the system sans-serif.
     const SERIF_FONTS = {
-      source:     '"Source Serif 4", "Source Serif Pro", Georgia, serif',
-      instrument: '"Instrument Serif", Georgia, serif',
-      fraunces:   '"Fraunces", Georgia, serif',
+      source:     '"Source Serif 4", "Source Serif Pro", "Noto Serif SC", Georgia, serif',
+      instrument: '"Instrument Serif", "Noto Serif SC", Georgia, serif',
+      fraunces:   '"Fraunces", "Noto Serif SC", Georgia, serif',
     };
 
     function withAccent(theme, accentKey) {
