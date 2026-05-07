@@ -4,13 +4,17 @@
 const M_PRV_T = {
   topbar: { en: 'Preview vs. Full Candidacy', zh: 'Preview vs. Full Candidacy' },
   eyebrow: { en: 'What you see — and don’t', zh: '你能看到什么——以及看不到什么' },
+  lead: {
+    en: 'Planned content split for the paid Preview-and-Unlock product. Not yet shipping — the free Candidacy Scan is what’s currently available.',
+    zh: '付费 Preview-and-Unlock 产品的计划内容划分。尚未上线——目前可用的是免费 Candidacy 体检。',
+  },
   title: {
     en: ['The line is sharp. ', 'Diagnosis', ' in the Preview. Prescription in the unlock.'],
     zh: ['边界清晰。预览中是', '诊断', '，解锁后是处方。'],
   },
   body: {
-    en: 'A user who reads the Preview knows roughly where they stand. A user who unlocks knows what to do about it — in what order, why, and at what cost.',
-    zh: '读完预览的用户大致知道自己在哪。解锁的用户知道接下来该做什么、按什么顺序、为什么、代价是什么。',
+    en: 'When this launches: a user who reads the Preview will know roughly where they stand. A user who unlocks will know what to do about it — in what order, why, and at what cost.',
+    zh: '上线后：读完预览的用户大致会知道自己在哪。解锁的用户会知道接下来该做什么、按什么顺序、为什么、代价是什么。',
   },
   prv_h: { en: 'Candidacy Preview · included',     zh: 'Candidacy 预览 · 包含' },
   ful_h: { en: 'Full Candidacy · unlocks',         zh: 'Full Candidacy · 解锁后' },
@@ -68,6 +72,10 @@ function MPreviewScreen({ theme }) {
         <div style={{ marginBottom: 12 }}>
           <StatusPill theme={theme} color={PALETTE.tan}>{mt('coming_soon', lang)}</StatusPill>
         </div>
+        <p style={{
+          margin: '0 0 18px', fontSize: 12, fontStyle: 'italic',
+          color: theme.inkMuted, lineHeight: 1.5,
+        }}>{t('lead')}</p>
         <MEyebrow theme={theme} color={A}>{t('eyebrow')}</MEyebrow>
         <MHeader theme={theme} size={24}>
           {t('title')[0]}
@@ -136,9 +144,9 @@ function MPreviewScreen({ theme }) {
         </div>
       </div>
 
-      {/* CTA */}
+      {/* CTA — both ghost since the buy mechanism is not yet wired. */}
       <div style={{ padding: '8px 18px 32px', display: 'grid', gap: 8 }}>
-        <MBtn theme={theme} variant="primary" fullWidth onClick={() => {}}>{t('cta')}</MBtn>
+        <MBtn theme={theme} fullWidth onClick={() => {}}>{t('cta')}</MBtn>
         <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('results')}>{t('cta_alt')}</MBtn>
       </div>
 

@@ -5,11 +5,16 @@
 
 const D_UNL_T = {
   eyebrow: { en: 'Preview-and-Unlock', zh: 'Preview-and-Unlock' },
+  lead: {
+    en: 'Planned funnel for the paid Preview-and-Unlock product. Not yet shipping — the free Candidacy Scan is what’s currently available.',
+    zh: '付费 Preview-and-Unlock 产品的计划流程。尚未上线——目前可用的是免费 Candidacy 体检。',
+  },
   title: { en: ['Pay once. ', 'Preview first', '.'], zh: ['一次付费。', '先看预览', '。'] },
   body: {
-    en: 'You don’t commit to the full Candidacy before seeing how your case is read. Pay £349, complete a 30-min intake, and within 24–48 hours your Candidacy Preview lands. You then have 7 days to unlock — or take a no-questions refund.',
-    zh: '在看到系统如何读你的案例之前，你不必承诺完整 Candidacy。付款 £349，完成 30 分钟 intake，24–48 小时内 Preview 抵达。你有 7 天时间解锁——或申请无理由退款。',
+    en: 'Once this launches, you won’t commit to the full Candidacy before seeing how your case is read. The plan: pay £349, complete a 30-min intake, and within 24–48 hours your Candidacy Preview lands. You then have 7 days to unlock — or take a no-questions refund.',
+    zh: '上线之后，你不必在看到系统如何读你的案例之前承诺完整 Candidacy。计划如下：付款 £349，完成 30 分钟 intake，24–48 小时内 Preview 抵达。你有 7 天时间解锁——或申请无理由退款。',
   },
+  how_it_will_work: { en: 'How it will work', zh: '上线后的流程' },
   s1_t: { en: '01 · Purchase + intake',           zh: '01 · 付款与 intake' },
   s1_m: { en: 'Immediate',                         zh: '即时' },
   s1_b: { en: '£349 launch / £499 regular. Structured intake captures profile, evidence, timing.', zh: '首发 £349 / 常规 £499。结构化 intake 收集 profile、证据、时间窗。' },
@@ -22,13 +27,14 @@ const D_UNL_T = {
   s4_t: { en: '04 · Full Candidacy + 1 free update', zh: '04 · Full Candidacy + 一次免费更新' },
   s4_m: { en: '14-day window',                     zh: '14 天窗口' },
   s4_b: { en: 'Strategy, opportunity shortlist, evidence plan, 30/60/90-day pipeline.', zh: '策略、机会 shortlist、证据计划、30/60/90 天 pipeline。' },
-  price_lbl: { en: 'Launch price · founding cohort', zh: '首发价 · founding cohort' },
+  price_lbl: { en: 'Planned launch price · founding cohort', zh: '计划首发价 · founding cohort' },
   price_anchor: { en: 'Below the £766 GTV application fee. Far below the £2k+ vanity-evidence category.', zh: '低于 £766 GTV 申请费。远低于 £2k+ vanity evidence 类目。' },
+  price_launch: { en: 'launch', zh: '首发' },
   price_strike: { en: '£499 regular', zh: '常规价 £499' },
   cta: { en: 'See Preview vs. Full', zh: '查看 Preview vs. Full' },
   back: { en: 'Back to my Scan', zh: '回到我的体检' },
   coming_soon: { en: 'Coming soon · planned launch', zh: '即将推出 · 计划中' },
-  refund: { en: 'Refund policy', zh: '退款政策' },
+  refund: { en: 'Planned refund policy at launch', zh: '上线后的退款政策（计划）' },
   refund_b: {
     en: 'Pre-preview: full refund. Pre-unlock (7 d): full refund. Post-unlock (14 d): refund only if components are missing. After 14 d: statutory rights only.',
     zh: '预览前：全额退款。解锁前（7 天）：全额退款。解锁后（14 天）：仅在组件缺失时退款。14 天后：仅适用法定权益。',
@@ -56,6 +62,10 @@ function UnlockScreen({ theme }) {
         <div style={{ marginBottom: 14 }}>
           <StatusPill theme={theme} color={PALETTE.tan}>{t('coming_soon')}</StatusPill>
         </div>
+        <p style={{
+          margin: '0 0 22px', fontSize: 13, fontStyle: 'italic',
+          color: theme.inkMuted, maxWidth: 760, lineHeight: 1.55,
+        }}>{t('lead')}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <Bullet color={A} size={10} />
           <span style={{ fontFamily: 'Geist', fontWeight: 500, fontSize: 13, letterSpacing: '0.04em', textTransform: 'uppercase', color: theme.inkMuted }}>
@@ -77,6 +87,10 @@ function UnlockScreen({ theme }) {
 
       {/* 4-stage strip */}
       <div style={{ padding: '24px 56px 48px', borderTop: `1px solid ${theme.hairlineFaint}`, borderBottom: `1px solid ${theme.hairlineFaint}` }}>
+        <div style={{
+          fontFamily: 'Geist', fontSize: 11, letterSpacing: '0.07em',
+          textTransform: 'uppercase', color: theme.inkMuted, marginBottom: 22,
+        }}>{t('how_it_will_work')}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 28 }}>
           {stages.map((s, i) => (
             <div key={i} style={{ position: 'relative' }}>
@@ -100,9 +114,10 @@ function UnlockScreen({ theme }) {
           <div style={{ fontFamily: 'Geist', fontSize: 11, letterSpacing: '0.07em', textTransform: 'uppercase', color: theme.inkMuted, marginBottom: 16 }}>
             {t('price_lbl')}
           </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 18, marginBottom: 14 }}>
-            <span style={{ fontFamily: theme.serif, fontSize: 112, fontWeight: 400, color: theme.ink, letterSpacing: '-0.035em', lineHeight: 1 }}>£349</span>
-            <span style={{ fontFamily: 'Geist', fontSize: 16, color: theme.inkMuted, textDecoration: 'line-through' }}>{t('price_strike')}</span>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, marginBottom: 14, fontFamily: 'Geist' }}>
+            <span style={{ fontSize: 26, fontWeight: 600, color: theme.ink, letterSpacing: '-0.01em' }}>£349</span>
+            <span style={{ fontSize: 14, color: theme.inkMuted }}>{t('price_launch')}</span>
+            <span style={{ fontSize: 14, color: theme.inkMuted, textDecoration: 'line-through' }}>{t('price_strike')}</span>
           </div>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: theme.inkMuted, maxWidth: 520, textWrap: 'pretty' }}>{t('price_anchor')}</p>
           <div style={{ marginTop: 30, display: 'flex', gap: 10 }}>

@@ -4,10 +4,14 @@
 
 const D_PRV_T = {
   eyebrow: { en: 'Preview vs. Full Candidacy', zh: 'Preview vs. Full Candidacy' },
+  lead: {
+    en: 'Planned content split for the paid Preview-and-Unlock product. Not yet shipping — the free Candidacy Scan is what’s currently available.',
+    zh: '付费 Preview-and-Unlock 产品的计划内容划分。尚未上线——目前可用的是免费 Candidacy 体检。',
+  },
   title: { en: ['Diagnosis in the Preview. ', 'Prescription', ' in the unlock.'], zh: ['预览中是诊断。解锁后是', '处方', '。'] },
   body: {
-    en: 'A user who reads the Preview knows roughly where they stand. A user who unlocks knows what to do about it — in what order, why, and at what cost.',
-    zh: '读完预览的用户大致知道自己在哪。解锁的用户知道接下来该做什么、按什么顺序、为什么、代价是什么。',
+    en: 'When this launches: a user who reads the Preview will know roughly where they stand. A user who unlocks will know what to do about it — in what order, why, and at what cost.',
+    zh: '上线后：读完预览的用户大致会知道自己在哪。解锁的用户会知道接下来该做什么、按什么顺序、为什么、代价是什么。',
   },
   prv_h: { en: 'Candidacy Preview · included',  zh: 'Candidacy 预览 · 包含' },
   ful_h: { en: 'Full Candidacy · unlocks',       zh: 'Full Candidacy · 解锁后' },
@@ -66,6 +70,10 @@ function PreviewScreen({ theme }) {
         <div style={{ marginBottom: 14 }}>
           <StatusPill theme={theme} color={PALETTE.tan}>{t('coming_soon')}</StatusPill>
         </div>
+        <p style={{
+          margin: '0 0 22px', fontSize: 13, fontStyle: 'italic',
+          color: theme.inkMuted, maxWidth: 760, lineHeight: 1.55,
+        }}>{t('lead')}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <Bullet color={A} size={10} />
           <span style={{ fontFamily: 'Geist', fontWeight: 500, fontSize: 13, letterSpacing: '0.04em', textTransform: 'uppercase', color: theme.inkMuted }}>
@@ -119,7 +127,7 @@ function PreviewScreen({ theme }) {
           </div>
 
           <div style={{ marginTop: 28, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Btn variant="primary" theme={theme} onClick={() => {}}>{t('cta')}</Btn>
+            <Btn theme={theme} onClick={() => {}}>{t('cta')}</Btn>
             <Btn theme={theme} onClick={() => go('unlock')}>{t('back')}</Btn>
           </div>
         </div>
