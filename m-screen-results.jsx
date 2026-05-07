@@ -36,8 +36,10 @@ const M_RES_T = {
     en: 'So you can come back to this Scan, and so we can notify you of one thing only — when the maintained reference base materially changes the read on your profile. No marketing.',
     zh: '为了你能再回到这份体检，以及只在一件事上联系你——当持续维护的参考库实质性改变了对你 profile 的解读时。不发营销邮件。',
   },
-  retake:    { en: 'Retake the scan', zh: '重新评估' },
-  home:      { en: 'Back to home', zh: '返回首页' },
+  unlock_cta:{ en: 'See what unlock includes', zh: '查看解锁后包含什么' },
+  past_diag: { en: 'Past diagnosis?',           zh: '已读完诊断？' },
+  retake:    { en: 'Retake the scan',           zh: '重新评估' },
+  home:      { en: 'Back to home',              zh: '返回首页' },
   band_low:  { en: 'initial', zh: '初步' },
   band_mid:  { en: 'mid', zh: '中段' },
   band_high: { en: 'strong', zh: '靠前' },
@@ -335,10 +337,25 @@ function MResultsScreen({ theme }) {
         )}
       </div>
 
-      {/* Bottom CTAs */}
-      <div style={{ padding: '20px 18px 28px', display: 'grid', gap: 8 }}>
+      {/* Bottom CTAs — free-Scan flow stays primary. */}
+      <div style={{ padding: '20px 18px 12px', display: 'grid', gap: 8 }}>
         <MBtn theme={theme} variant="primary" fullWidth onClick={() => go('landing')}>{t('home')}</MBtn>
         <MBtn theme={theme} variant="ghost" fullWidth onClick={() => { reset(); go('quiz'); }}>{t('retake')}</MBtn>
+      </div>
+      {/* Paid-tier entrance — quieter, set off by a hairline. */}
+      <div style={{ padding: '0 18px 28px' }}>
+        <div style={{
+          paddingTop: 16,
+          borderTop: `1px solid ${theme.hairlineFaint}`,
+          fontSize: 12, color: theme.inkMuted, lineHeight: 1.5,
+        }}>
+          <span style={{ fontStyle: 'italic' }}>{t('past_diag')}</span>{' '}
+          <a onClick={() => go('unlock')} style={{
+            color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer',
+          }}>
+            {t('unlock_cta')} →
+          </a>
+        </div>
       </div>
 
       <MFooter theme={theme} />

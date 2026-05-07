@@ -180,7 +180,17 @@ function MStatus({ kind, theme, label }) {
   );
 }
 
+// Lock icon — used by paid-tier teasers to mark gated items.
+function MLock({ theme, size = 12 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none">
+      <rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke={theme.inkMuted} strokeWidth="1.2" />
+      <path d="M4.5 6V4.2a2.5 2.5 0 0 1 5 0V6" stroke={theme.inkMuted} strokeWidth="1.2" />
+    </svg>
+  );
+}
+
 Object.assign(window, {
-  MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, MStatus,
+  MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, MStatus, MLock,
   M_W, mt, M_STRINGS,
 });

@@ -31,11 +31,15 @@
   <script type="text/babel" src="screen-onboarding.jsx"></script>
   <script type="text/babel" src="screen-quiz.jsx"></script>
   <script type="text/babel" src="screen-results.jsx"></script>
+  <script type="text/babel" src="screen-unlock.jsx"></script>
+  <script type="text/babel" src="screen-preview.jsx"></script>
   <script type="text/babel" src="mobile-shared.jsx"></script>
   <script type="text/babel" src="m-screen-landing.jsx"></script>
   <script type="text/babel" src="m-screen-onboarding.jsx"></script>
   <script type="text/babel" src="m-screen-quiz.jsx"></script>
   <script type="text/babel" src="m-screen-results.jsx"></script>
+  <script type="text/babel" src="m-screen-unlock.jsx"></script>
+  <script type="text/babel" src="m-screen-preview.jsx"></script>
   <!-- Hidden until MVP scope expands (post-purchase paid layers + signed-in dashboard).
        Per 4P docs: launch = Candidacy Scan free diagnostic only.
   <script type="text/babel" src="screen-dashboard.jsx"></script>
@@ -59,6 +63,8 @@
       { id: 'onboarding', label: 'Onboarding',        Comp: window.OnboardingScreen, MComp: window.MOnboardingScreen, signedIn: false },
       { id: 'quiz',       label: 'Readiness check',   Comp: window.QuizScreen,       MComp: window.MQuizScreen,       signedIn: false },
       { id: 'results',    label: 'Results',           Comp: window.ResultsScreen,    MComp: window.MResultsScreen,    signedIn: false },
+      { id: 'unlock',     label: 'Preview-and-Unlock',Comp: window.UnlockScreen,     MComp: window.MUnlockScreen,     signedIn: false },
+      { id: 'preview',    label: 'Preview vs Full',   Comp: window.PreviewScreen,    MComp: window.MPreviewScreen,    signedIn: false },
     ];
 
     const MOBILE_BREAKPOINT = 768;

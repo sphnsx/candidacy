@@ -317,6 +317,19 @@ function ResultsScreen({ theme }) {
             <Btn variant="primary" theme={theme} onClick={() => go('landing')}>{t('Back to home', '返回首页')}</Btn>
             <Btn theme={theme} onClick={() => { reset(); go('quiz'); }}>{t('Retake check', '重新评估')}</Btn>
           </div>
+          {/* Paid-tier entrance — quieter than the free-Scan CTAs above. */}
+          <div style={{
+            marginTop: 22, paddingTop: 18,
+            borderTop: `1px solid ${theme.hairlineFaint}`,
+            fontSize: 12.5, color: theme.inkMuted, lineHeight: 1.55,
+          }}>
+            <span style={{ fontStyle: 'italic' }}>{t('Past diagnosis?', '已读完诊断？')}</span>{' '}
+            <a onClick={() => go('unlock')} style={{
+              color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer',
+            }}>
+              {t('See what unlock includes →', '查看解锁后包含什么 →')}
+            </a>
+          </div>
         </div>
       </div>
 
