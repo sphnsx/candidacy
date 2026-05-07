@@ -34,6 +34,7 @@ const M_UNL_T = {
   price_anchor: { en: 'Below the £766 GTV application fee. Far below the £2k+ vanity-evidence category.', zh: '低于 £766 的 GTV 申请费。远低于 £2k+ 的 vanity evidence 类目。' },
 
   cta:    { en: 'See what the Preview shows', zh: '查看预览包含什么' },
+  back:   { en: 'Back to my Scan',            zh: '回到我的体检' },
   refund: { en: 'Planned refund policy at launch', zh: '上线后的退款政策（计划）' },
   refund_body: {
     en: 'Pre-preview: full refund, no questions. Pre-unlock (7 days): full refund. Post-unlock (14 days): refund only if components are missing. After 14 days: statutory rights only (Consumer Rights Act 2015).',
@@ -128,9 +129,12 @@ function MUnlockScreen({ theme }) {
         <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: theme.inkMuted, textWrap: 'pretty' }}>{t('refund_body')}</p>
       </div>
 
-      <div style={{ padding: '12px 18px 32px' }}>
+      <div style={{ padding: '12px 18px 32px', display: 'grid', gap: 8 }}>
         <MBtn theme={theme} variant="primary" fullWidth onClick={() => go('preview')}>
           {t('cta')} →
+        </MBtn>
+        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('results')}>
+          {t('back')}
         </MBtn>
       </div>
 

@@ -238,11 +238,16 @@ function MLandingScreen({ theme }) {
       <div style={{ padding: '32px 18px 36px' }}>
         <MEyebrow theme={theme} color={A}>{t('end_eyebrow')}</MEyebrow>
         <MHeader theme={theme} size={24}>{t('end_title')}</MHeader>
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20, display: 'grid', gap: 10 }}>
           {hasProgress ? (
-            <MBtn theme={theme} variant="primary" fullWidth onClick={resumeCheck}>
-              {t('cta_resume')} →
-            </MBtn>
+            <>
+              <MBtn theme={theme} variant="primary" fullWidth onClick={resumeCheck}>
+                {t('cta_resume')} →
+              </MBtn>
+              <MBtn theme={theme} variant="ghost" fullWidth onClick={startFresh}>
+                {t('cta_restart')}
+              </MBtn>
+            </>
           ) : (
             <MBtn theme={theme} variant="primary" fullWidth onClick={startFresh}>
               {t('cta_scan')} →
