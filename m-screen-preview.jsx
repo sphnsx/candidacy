@@ -1,4 +1,4 @@
-/* global React, Bullet, useNav, useLang, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, MLock, PALETTE */
+/* global React, Bullet, StatusPill, useNav, useLang, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, MLock, PALETTE, mt */
 // Mobile Preview vs Full Candidacy. Same content as desktop, mobile layout.
 
 const M_PRV_T = {
@@ -14,7 +14,7 @@ const M_PRV_T = {
   },
   prv_h: { en: 'Candidacy Preview · included',     zh: 'Candidacy 预览 · 包含' },
   ful_h: { en: 'Full Candidacy · unlocks',         zh: 'Full Candidacy · 解锁后' },
-  cta:   { en: 'Get started — £349',                zh: '开始 —— £349' },
+  cta:   { en: 'Notify me when this launches',      zh: '上线时通知我' },
   cta_alt: { en: 'Back to my Scan',                  zh: '回到我的体检' },
   guarantee: {
     en: 'Honest analysis is the product. We do not predict endorsement, do not guarantee outcomes, and do not cooperate with vanity-evidence services.',
@@ -65,6 +65,9 @@ function MPreviewScreen({ theme }) {
       <MTopBar theme={theme} showBack onBack={() => go('unlock')} title={t('topbar')} />
 
       <div style={{ padding: '22px 18px 24px' }}>
+        <div style={{ marginBottom: 12 }}>
+          <StatusPill theme={theme} color={PALETTE.tan}>{mt('coming_soon', lang)}</StatusPill>
+        </div>
         <MEyebrow theme={theme} color={A}>{t('eyebrow')}</MEyebrow>
         <MHeader theme={theme} size={24}>
           {t('title')[0]}

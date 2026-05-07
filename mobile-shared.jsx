@@ -21,6 +21,8 @@ const M_STRINGS = {
   terms:      { en: 'Terms', zh: '条款' },
   changelog:  { en: 'Changelog', zh: '更新日志' },
   status:     { en: 'Beta · under iteration', zh: 'Beta · 持续迭代中' },
+  coming_soon:{ en: 'Coming soon · planned launch', zh: '即将推出 · 计划中' },
+  notify_cta: { en: 'Notify me when this launches', zh: '上线时通知我' },
 };
 function mt(key, lang) {
   const v = M_STRINGS[key];

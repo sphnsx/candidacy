@@ -179,6 +179,28 @@ function Rule({ theme, style }) {
   return <div style={{ height: 0, borderTop: `1px solid ${theme.hairlineFaint}`, ...style }} />;
 }
 
+// Small uppercase status pill — used to flag screens for unshipped product
+// states (e.g. "Coming soon · planned launch" on the paid-tier teasers).
+function StatusPill({ theme, color, children, style }) {
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 7,
+      padding: '4px 10px', borderRadius: 999,
+      background: 'transparent',
+      border: `1px solid ${theme.hairlineFaint}`,
+      ...style,
+    }}>
+      <Bullet color={color || PALETTE.tan} size={6} />
+      <span style={{
+        fontFamily: 'Geist, sans-serif',
+        fontSize: 10.5, fontWeight: 600,
+        letterSpacing: '0.08em', textTransform: 'uppercase',
+        color: theme.inkMuted,
+      }}>{children}</span>
+    </div>
+  );
+}
+
 // Frame
 function Frame({ theme, width = 1280, children }) {
   return (
@@ -463,7 +485,7 @@ function Status({ kind, theme }) {
 
 Object.assign(window, {
   PALETTE, THEMES,
-  Bullet, BulletItem, ColorHeader, Chip, Btn, Rule, Frame, TopNav, Footer, Status,
+  Bullet, BulletItem, ColorHeader, Chip, Btn, Rule, Frame, TopNav, Footer, Status, StatusPill,
   MMNode, MMHub, MMLine, MindMap,
   NavContext, useNav,
   LangContext, useLang, useT,

@@ -1,4 +1,4 @@
-/* global React, Bullet, useNav, useLang, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, PALETTE */
+/* global React, Bullet, StatusPill, useNav, useLang, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, PALETTE, mt */
 // Mobile Preview-and-Unlock teaser. Same funnel as desktop, mobile layout.
 // Pricing strictly per CANDIDACY_NOTES: £349 launch / £499 regular.
 
@@ -53,6 +53,9 @@ function MUnlockScreen({ theme }) {
       <MTopBar theme={theme} showBack onBack={() => go('results')} title={t('topbar')} />
 
       <div style={{ padding: '22px 18px 24px' }}>
+        <div style={{ marginBottom: 12 }}>
+          <StatusPill theme={theme} color={PALETTE.tan}>{mt('coming_soon', lang)}</StatusPill>
+        </div>
         <MEyebrow theme={theme} color={A}>{t('eyebrow')}</MEyebrow>
         <MHeader theme={theme} size={26}>
           {t('title')[0]}

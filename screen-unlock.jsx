@@ -1,4 +1,4 @@
-/* global React, Bullet, Btn, Frame, TopNav, Footer, useNav, useLang, PALETTE */
+/* global React, Bullet, Btn, Frame, TopNav, Footer, StatusPill, useNav, useLang, PALETTE */
 // Desktop Preview-and-Unlock teaser. Shown after the free Scan to explain
 // what £349 buys and how the funnel runs (purchase → preview → decide → full).
 // Pricing strictly per CANDIDACY_NOTES: £349 launch / £499 regular.
@@ -27,6 +27,7 @@ const D_UNL_T = {
   price_strike: { en: '£499 regular', zh: '常规价 £499' },
   cta: { en: 'See Preview vs. Full', zh: '查看 Preview vs. Full' },
   back: { en: 'Back to my Scan', zh: '回到我的体检' },
+  coming_soon: { en: 'Coming soon · planned launch', zh: '即将推出 · 计划中' },
   refund: { en: 'Refund policy', zh: '退款政策' },
   refund_b: {
     en: 'Pre-preview: full refund. Pre-unlock (7 d): full refund. Post-unlock (14 d): refund only if components are missing. After 14 d: statutory rights only.',
@@ -52,6 +53,9 @@ function UnlockScreen({ theme }) {
       <TopNav theme={theme} active="" />
 
       <div style={{ padding: '64px 56px 28px' }}>
+        <div style={{ marginBottom: 14 }}>
+          <StatusPill theme={theme} color={PALETTE.tan}>{t('coming_soon')}</StatusPill>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <Bullet color={A} size={10} />
           <span style={{ fontFamily: 'Geist', fontWeight: 500, fontSize: 13, letterSpacing: '0.04em', textTransform: 'uppercase', color: theme.inkMuted }}>

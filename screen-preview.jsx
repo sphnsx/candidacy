@@ -1,4 +1,4 @@
-/* global React, Bullet, Btn, Frame, TopNav, Footer, useNav, useLang */
+/* global React, Bullet, Btn, Frame, TopNav, Footer, StatusPill, useNav, useLang, PALETTE */
 // Desktop Preview vs Full Candidacy. Two-column comparison: what's in the
 // paid Preview vs what unlocks with Full Candidacy. Diagnosis vs prescription.
 
@@ -11,8 +11,9 @@ const D_PRV_T = {
   },
   prv_h: { en: 'Candidacy Preview · included',  zh: 'Candidacy 预览 · 包含' },
   ful_h: { en: 'Full Candidacy · unlocks',       zh: 'Full Candidacy · 解锁后' },
-  cta:   { en: 'Get started — £349',             zh: '开始 —— £349' },
+  cta:   { en: 'Notify me when this launches',   zh: '上线时通知我' },
   back:  { en: 'Back to Preview-and-Unlock',     zh: '回到 Preview-and-Unlock' },
+  coming_soon: { en: 'Coming soon · planned launch', zh: '即将推出 · 计划中' },
   guarantee: {
     en: 'Honest analysis is the product. We do not predict endorsement, do not guarantee outcomes, and do not cooperate with vanity-evidence services.',
     zh: '诚实分析本身就是产品。我们不预测 endorsement，不承诺结果，也不与 vanity evidence 服务合作。',
@@ -62,6 +63,9 @@ function PreviewScreen({ theme }) {
       <TopNav theme={theme} active="" />
 
       <div style={{ padding: '64px 56px 28px' }}>
+        <div style={{ marginBottom: 14 }}>
+          <StatusPill theme={theme} color={PALETTE.tan}>{t('coming_soon')}</StatusPill>
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
           <Bullet color={A} size={10} />
           <span style={{ fontFamily: 'Geist', fontWeight: 500, fontSize: 13, letterSpacing: '0.04em', textTransform: 'uppercase', color: theme.inkMuted }}>
