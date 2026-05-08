@@ -150,8 +150,11 @@ function MQuizScreen({ theme }) {
           <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.5, color: theme.inkMuted }}>{t('note_body')}</p>
         </div>
 
-        <div style={{ marginTop: 22, display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 8 }}>
-          <MBtn theme={theme} variant="ghost" onClick={prev}>
+        {/* Equal-width row, both with button shape — matches the desktop
+            quiz pattern (secondary outline + primary fill). Avoids the
+            ghost-vs-fill weight mismatch. */}
+        <div style={{ marginTop: 22, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          <MBtn theme={theme} onClick={prev}>
             ‹ {current === 0 ? t('back') : t('prev')}
           </MBtn>
           <MBtn theme={theme} variant="primary" onClick={next} style={{

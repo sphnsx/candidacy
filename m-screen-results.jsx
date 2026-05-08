@@ -38,6 +38,8 @@ const M_RES_T = {
   },
   unlock_cta:{ en: 'See what unlock includes', zh: '查看解锁后包含什么' },
   past_diag: { en: 'Past diagnosis?',           zh: '已读完诊断？' },
+  curious:   { en: 'Curious how the 8 dimensions map?', zh: '想看 8 个维度怎么展开？' },
+  profile_cta:{ en: 'See your profile across 8 dimensions →', zh: '查看你 profile 的 8 个维度 →' },
   retake:    { en: 'Retake the scan',           zh: '重新评估' },
   home:      { en: 'Back to home',              zh: '返回首页' },
   band_low:  { en: 'initial', zh: '初步' },
@@ -342,19 +344,30 @@ function MResultsScreen({ theme }) {
         <MBtn theme={theme} variant="primary" fullWidth onClick={() => go('landing')}>{t('home')}</MBtn>
         <MBtn theme={theme} variant="ghost" fullWidth onClick={() => { reset(); go('quiz'); }}>{t('retake')}</MBtn>
       </div>
-      {/* Paid-tier entrance — quieter, set off by a hairline. */}
+      {/* Quiet exits — profile map and paid-tier entrance, set off by a hairline. */}
       <div style={{ padding: '0 18px 28px' }}>
         <div style={{
           paddingTop: 16,
           borderTop: `1px solid ${theme.hairlineFaint}`,
           fontSize: 12, color: theme.inkMuted, lineHeight: 1.5,
+          display: 'grid', gap: 10,
         }}>
-          <span style={{ fontStyle: 'italic' }}>{t('past_diag')}</span>{' '}
-          <a onClick={() => go('unlock')} style={{
-            color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer',
-          }}>
-            {t('unlock_cta')} →
-          </a>
+          <div>
+            <span style={{ fontStyle: 'italic' }}>{t('curious')}</span>{' '}
+            <a onClick={() => go('profile')} style={{
+              color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer',
+            }}>
+              {t('profile_cta')}
+            </a>
+          </div>
+          <div>
+            <span style={{ fontStyle: 'italic' }}>{t('past_diag')}</span>{' '}
+            <a onClick={() => go('unlock')} style={{
+              color: theme.inkMuted, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer',
+            }}>
+              {t('unlock_cta')} →
+            </a>
+          </div>
         </div>
       </div>
 
