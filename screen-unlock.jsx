@@ -1,4 +1,4 @@
-/* global React, Bullet, Btn, Frame, TopNav, Footer, StatusPill, useNav, useLang, PALETTE */
+/* global React, Bullet, Btn, Frame, TopNav, Footer, StatusPill, useNav, useLang, useAnswers, QUESTIONS, PALETTE */
 // Desktop Preview-and-Unlock teaser. Shown after the free Scan to explain
 // what £349 buys and how the funnel runs (purchase → preview → decide → full).
 // Pricing strictly per CANDIDACY_NOTES: £349 launch / £499 regular.
@@ -33,6 +33,7 @@ const D_UNL_T = {
   price_strike: { en: '£499 regular', zh: '常规价 £499' },
   cta: { en: 'See Preview vs. Full', zh: '查看 Preview vs. Full' },
   back: { en: 'Back to my Scan', zh: '回到我的体检' },
+  back_home: { en: 'Back to home', zh: '返回首页' },
   coming_soon: { en: 'Coming soon · planned launch', zh: '即将推出 · 计划中' },
   refund: { en: 'Planned refund policy at launch', zh: '上线后的退款政策（计划）' },
   refund_b: {
@@ -45,7 +46,11 @@ function UnlockScreen({ theme }) {
   const A = theme.brand;
   const { go } = useNav();
   const { lang } = useLang();
+  const { step } = useAnswers();
   const t = (k) => { const v = D_UNL_T[k]; return v ? (v[lang] || v.en) : k; };
+  // Unlock can be reached from results (post-scan) or from upstream entry
+  // points pre-scan; route Back wherever there's actual state to return to.
+  const hasResults = step >= (QUESTIONS?.length || 0) - 1 && step > 0;
 
   const stages = [
     { t: t('s1_t'), m: t('s1_m'), b: t('s1_b'), c: PALETTE.mint },
@@ -122,7 +127,7 @@ function UnlockScreen({ theme }) {
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: theme.inkMuted, maxWidth: 520, textWrap: 'pretty' }}>{t('price_anchor')}</p>
           <div style={{ marginTop: 30, display: 'flex', gap: 10 }}>
             <Btn variant="primary" theme={theme} onClick={() => go('preview')}>{t('cta')} →</Btn>
-            <Btn theme={theme} onClick={() => go('results')}>{t('back')}</Btn>
+            <Btn theme={theme} onClick={() => go(hasResults ? 'results' : 'landing')}>{hasResults ? t('back') : t('back_home')}</Btn>
           </div>
         </div>
 

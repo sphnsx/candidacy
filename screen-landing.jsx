@@ -7,6 +7,12 @@ function LandingScreen({ theme }) {
   const { answers, step, reset } = useAnswers();
 
   const hasProgress = step > 0 || (Array.isArray(answers.fields) && answers.fields.length > 0);
+  // Resume copy splits on where the user actually is. step>0 means they're
+  // mid-quiz; fields-only means they bailed during onboarding. Honest copy +
+  // matching destination.
+  const resumeLabel = step > 0
+    ? t('Resume readiness check', '继续上次评估')
+    : t('Continue setup', '继续设置');
   const startFresh = () => { reset(); go('onboarding'); };
   const resumeCheck = () => go(step > 0 ? 'quiz' : 'onboarding');
 
@@ -69,7 +75,7 @@ function LandingScreen({ theme }) {
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           {hasProgress ? (
             <>
-              <Btn variant="primary" theme={theme} onClick={resumeCheck}>{t('Resume readiness check', '继续上次评估')}</Btn>
+              <Btn variant="primary" theme={theme} onClick={resumeCheck}>{resumeLabel}</Btn>
               <Btn theme={theme} onClick={startFresh}>{t('Start over', '重新开始')}</Btn>
             </>
           ) : (
@@ -132,7 +138,7 @@ function LandingScreen({ theme }) {
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {hasProgress ? (
               <>
-                <Btn variant="primary" theme={theme} onClick={resumeCheck}>{t('Resume readiness check', '继续上次评估')}</Btn>
+                <Btn variant="primary" theme={theme} onClick={resumeCheck}>{resumeLabel}</Btn>
                 <Btn theme={theme} onClick={startFresh}>{t('Start over', '重新开始')}</Btn>
               </>
             ) : (

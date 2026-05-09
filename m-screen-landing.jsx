@@ -15,6 +15,7 @@ const M_LANDING_T = {
   },
   cta_scan:    { en: 'Start the free Scan',     zh: '开始免费体检' },
   cta_resume:  { en: 'Resume readiness check',  zh: '继续上次评估' },
+  cta_continue:{ en: 'Continue setup',          zh: '继续设置' },
   cta_restart: { en: 'Start over',              zh: '重新开始' },
   trust1:      { en: 'No login. ~5–10 minutes.', zh: '无需登录。约 5 至 10 分钟。' },
   trust2:      { en: 'No outcome guarantees, ever.', zh: '不承诺 endorsement 结果。' },
@@ -64,7 +65,104 @@ const M_LANDING_T = {
   end_eyebrow: { en: 'Start with the Scan', zh: '从体检开始' },
   end_title:   { en: 'Five to ten minutes. No login. A diagnostic, not a verdict.',
                  zh: '5 至 10 分钟。无需登录。诊断，不是判决。' },
+
+  map_eyebrow: { en: 'Mapped across 8 dimensions', zh: '在 8 个维度上展开' },
+  map_hub:     { en: 'Your Candidacy profile',     zh: '你的 Candidacy profile' },
+  map_link:    { en: 'See your profile across 8 dimensions →', zh: '查看你 profile 的 8 个维度 →' },
 };
+
+// Compact teaser of the spine diagram — single-line labels, tighter rows.
+// The full version lives on the dedicated profile screen; this hero teaser
+// mirrors the desktop landing's radial mind-map in role, not in shape (a
+// radial layout doesn't fit a 339-px column).
+const M_LANDING_DIMS = [
+  { en: 'Evidence categories',  zh: '证据类别',          color: PALETTE.lilac  },
+  { en: 'Recommenders',         zh: '推荐人',            color: PALETTE.yellow },
+  { en: 'Opportunity types',    zh: '机会类型',          color: PALETTE.mint   },
+  { en: 'Timing & windows',     zh: '时机与窗口',        color: PALETTE.pink   },
+  { en: 'Excluded',             zh: '不计入',            color: '#A66068'      },
+  { en: 'Narrative & sequence', zh: '叙事与时序',        color: PALETTE.violet },
+  { en: 'Endorsing bodies',     zh: 'Endorsing body',    color: PALETTE.teal   },
+  { en: 'ACE criteria',         zh: 'ACE 标准',          color: PALETTE.tan    },
+];
+
+function MLandingSpineTeaser({ theme, lang, hubLabel }) {
+  const A = theme.brand;
+  const W = 339;
+  const ROW = 34;
+  const items = M_LANDING_DIMS;
+  const hubX = W / 2;
+  const hubY = 14;
+  // Hub label sits to the right of the dot, so the first row only needs to
+  // clear the dot itself plus its row label (which renders above the row).
+  const startY = hubY + 38;
+  const H = startY + (items.length - 1) * ROW + 18;
+  const trunkBottom = startY + (items.length - 1) * ROW + 4;
+  const ARC = 13;
+  const dotInset = 22;
+  const labelInset = 32;
+
+  return (
+    <div style={{ position: 'relative', width: W, height: H, margin: '0 auto' }}>
+      <svg width={W} height={H} style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        {/* Trunk starts just below the hub dot — label is alongside, not under. */}
+        <line x1={hubX} y1={hubY + 10} x2={hubX} y2={trunkBottom} stroke={theme.hairline} strokeWidth="0.9" />
+        <circle cx={hubX} cy={trunkBottom} r="1.6" fill={theme.hairline} />
+        {items.map((d, i) => {
+          const y = startY + i * ROW;
+          const isLeft = i % 2 === 0;
+          const sweep = isLeft ? 0 : 1;
+          const elbowX = isLeft ? hubX - ARC : hubX + ARC;
+          const dotX = isLeft ? dotInset : W - dotInset;
+          return (
+            <path key={i}
+              d={`M ${hubX} ${y - ARC} L ${elbowX} ${y} L ${dotX} ${y}`}
+              stroke={theme.hairline} strokeWidth="0.9" fill="none"
+              strokeLinecap="round" strokeLinejoin="round" />
+          );
+        })}
+      </svg>
+
+      <div style={{
+        position: 'absolute', left: hubX, top: hubY, transform: 'translate(-50%, -50%)',
+        width: 10, height: 10, borderRadius: '50%', background: A,
+        boxShadow: `0 0 0 4px ${A}1a`,
+      }} />
+      <div style={{
+        position: 'absolute', left: hubX + 10, top: hubY, transform: 'translateY(-50%)',
+        fontFamily: 'Geist', fontSize: 11, fontWeight: 500, color: theme.inkFaint,
+        letterSpacing: '-0.005em', whiteSpace: 'nowrap',
+      }}>{hubLabel}</div>
+
+      {items.map((d, i) => {
+        const label = lang === 'zh' ? d.zh : d.en;
+        const y = startY + i * ROW;
+        const isLeft = i % 2 === 0;
+        return (
+          <React.Fragment key={i}>
+            <div style={{
+              position: 'absolute', left: isLeft ? dotInset : W - dotInset, top: y,
+              transform: 'translate(-50%, -50%)',
+              width: 7, height: 7, borderRadius: '50%', background: d.color,
+              boxShadow: `0 0 0 2.5px ${d.color}1f`,
+            }} />
+            <div style={{
+              position: 'absolute',
+              [isLeft ? 'left' : 'right']: labelInset,
+              top: y - 8,
+              transform: 'translateY(-100%)',
+              textAlign: isLeft ? 'left' : 'right',
+              width: W / 2 - labelInset - 6,
+              fontFamily: 'Geist', fontWeight: 500, fontSize: 11.5,
+              color: theme.ink, letterSpacing: '-0.008em', lineHeight: 1.2,
+              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>{label}</div>
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
 
 function MLandingScreen({ theme }) {
   const A = theme.brand;
@@ -74,8 +172,14 @@ function MLandingScreen({ theme }) {
   const t = (k) => { const v = M_LANDING_T[k]; return v ? (v[lang] || v.en) : k; };
 
   const hasProgress = step > 0 || (Array.isArray(answers.fields) && answers.fields.length > 0);
+  // Resume copy splits on where the user actually is. step>0 means they're
+  // mid-quiz (route to quiz, "Resume readiness check"); fields-only means they
+  // bailed during onboarding (route to onboarding, "Continue setup"). Same
+  // button slot, honest copy.
+  const resumeKey   = step > 0 ? 'cta_resume' : 'cta_continue';
+  const resumeDest  = step > 0 ? 'quiz' : 'onboarding';
   const startFresh  = () => { reset(); go('onboarding'); };
-  const resumeCheck = () => go(step > 0 ? 'quiz' : 'onboarding');
+  const resumeCheck = () => go(resumeDest);
 
   const layers = [
     { id: 'scan',    color: PALETTE.mint,   title: t('l1_title'), meta: t('l1_meta'), body: t('l1_body'), free: true },
@@ -103,7 +207,7 @@ function MLandingScreen({ theme }) {
           {hasProgress ? (
             <>
               <MBtn theme={theme} variant="primary" fullWidth onClick={resumeCheck}>
-                {t('cta_resume')} →
+                {t(resumeKey)} →
               </MBtn>
               <MBtn theme={theme} variant="ghost" fullWidth onClick={startFresh}>
                 {t('cta_restart')}
@@ -125,6 +229,21 @@ function MLandingScreen({ theme }) {
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             <Bullet color={PALETTE.tan} size={7} />{t('trust2')}
           </span>
+        </div>
+      </div>
+
+      {/* 8-DIMENSIONS TEASER — mirrors the desktop landing's hero mind-map.
+          Vertical spine fits a 339-px column where a radial layout can't. */}
+      <div style={{ padding: '4px 18px 28px' }}>
+        <div style={{ marginBottom: 10 }}>
+          <MEyebrow theme={theme} color={A}>{t('map_eyebrow')}</MEyebrow>
+        </div>
+        <MLandingSpineTeaser theme={theme} lang={lang} hubLabel={t('map_hub')} />
+        <div style={{ marginTop: 12, textAlign: 'center' }}>
+          <a onClick={() => go('profile')} style={{
+            fontSize: 12.5, color: theme.inkMuted, textDecoration: 'underline',
+            textUnderlineOffset: 3, cursor: 'pointer',
+          }}>{t('map_link')}</a>
         </div>
       </div>
 
@@ -242,7 +361,7 @@ function MLandingScreen({ theme }) {
           {hasProgress ? (
             <>
               <MBtn theme={theme} variant="primary" fullWidth onClick={resumeCheck}>
-                {t('cta_resume')} →
+                {t(resumeKey)} →
               </MBtn>
               <MBtn theme={theme} variant="ghost" fullWidth onClick={startFresh}>
                 {t('cta_restart')}

@@ -1,4 +1,4 @@
-/* global React, Bullet, StatusPill, useNav, useLang, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, PALETTE, mt */
+/* global React, Bullet, StatusPill, useNav, useLang, useAnswers, QUESTIONS, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, PALETTE, mt */
 // Mobile Preview-and-Unlock teaser. Same funnel as desktop, mobile layout.
 // Pricing strictly per CANDIDACY_NOTES: £349 launch / £499 regular.
 
@@ -35,6 +35,7 @@ const M_UNL_T = {
 
   cta:    { en: 'See what the Preview shows', zh: '查看预览包含什么' },
   back:   { en: 'Back to my Scan',            zh: '回到我的体检' },
+  back_home: { en: 'Back to home',            zh: '返回首页' },
   refund: { en: 'Planned refund policy at launch', zh: '上线后的退款政策（计划）' },
   refund_body: {
     en: 'Pre-preview: full refund, no questions. Pre-unlock (7 days): full refund. Post-unlock (14 days): refund only if components are missing. After 14 days: statutory rights only (Consumer Rights Act 2015).',
@@ -46,7 +47,13 @@ function MUnlockScreen({ theme }) {
   const A = theme.brand;
   const { go } = useNav();
   const { lang } = useLang();
+  const { step } = useAnswers();
   const t = (k) => { const v = M_UNL_T[k]; return v ? (v[lang] || v.en) : k; };
+  // Unlock can be reached from results (post-scan) or from the profile teaser
+  // (pre-scan from landing). Back-route follows wherever there's actual state
+  // to return to.
+  const hasResults = step >= (QUESTIONS?.length || 0) - 1 && step > 0;
+  const backDest = hasResults ? 'results' : 'landing';
 
   const stages = [
     { t: t('s1_t'), m: t('s1_meta'), b: t('s1_b'), c: PALETTE.mint },
@@ -57,7 +64,7 @@ function MUnlockScreen({ theme }) {
 
   return (
     <MFrame theme={theme}>
-      <MTopBar theme={theme} showBack onBack={() => go('results')} title={t('topbar')} />
+      <MTopBar theme={theme} showBack onBack={() => go(backDest)} title={t('topbar')} />
 
       <div style={{ padding: '22px 18px 24px' }}>
         <div style={{ marginBottom: 12 }}>
@@ -133,8 +140,8 @@ function MUnlockScreen({ theme }) {
         <MBtn theme={theme} variant="primary" fullWidth onClick={() => go('preview')}>
           {t('cta')} →
         </MBtn>
-        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('results')}>
-          {t('back')}
+        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go(backDest)}>
+          {hasResults ? t('back') : t('back_home')}
         </MBtn>
       </div>
 

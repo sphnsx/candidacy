@@ -64,7 +64,10 @@ function MQuizScreen({ theme }) {
 
   return (
     <MFrame theme={theme}>
-      <MTopBar theme={theme} showBack onBack={prev} title={t('topbar')} />
+      {/* Top-bar arrow escapes one level (to onboarding); the inline Prev
+          button below walks Q-by-Q. Matches the up-a-level pattern used by
+          every other mobile screen. */}
+      <MTopBar theme={theme} showBack onBack={() => go('onboarding')} title={t('topbar')} />
 
       {/* Progress */}
       <div style={{ padding: '0 18px', marginTop: 12 }}>

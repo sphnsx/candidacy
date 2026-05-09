@@ -342,7 +342,7 @@ function MResultsScreen({ theme }) {
       {/* Bottom CTAs — free-Scan flow stays primary. */}
       <div style={{ padding: '20px 18px 12px', display: 'grid', gap: 8 }}>
         <MBtn theme={theme} variant="primary" fullWidth onClick={() => go('landing')}>{t('home')}</MBtn>
-        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => { reset(); go('quiz'); }}>{t('retake')}</MBtn>
+        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => { reset(); go('onboarding'); }}>{t('retake')}</MBtn>
       </div>
       {/* Quiet exits — profile map and paid-tier entrance, set off by a hairline. */}
       <div style={{ padding: '0 18px 28px' }}>

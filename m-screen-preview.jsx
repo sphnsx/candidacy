@@ -19,7 +19,7 @@ const M_PRV_T = {
   prv_h: { en: 'Candidacy Preview · included',     zh: 'Candidacy 预览 · 包含' },
   ful_h: { en: 'Full Candidacy · unlocks',         zh: 'Full Candidacy · 解锁后' },
   cta:   { en: 'Notify me when this launches',      zh: '上线时通知我' },
-  cta_alt: { en: 'Back to my Scan',                  zh: '回到我的体检' },
+  cta_alt: { en: 'Back to Unlock',                   zh: '返回 Unlock' },
   guarantee: {
     en: 'Honest analysis is the product. We do not predict endorsement, do not guarantee outcomes, and do not cooperate with vanity-evidence services.',
     zh: '诚实分析本身就是产品。我们不预测 endorsement，不承诺结果，也不与 vanity evidence 服务合作。',
@@ -147,7 +147,7 @@ function MPreviewScreen({ theme }) {
       {/* CTA — both ghost since the buy mechanism is not yet wired. */}
       <div style={{ padding: '8px 18px 32px', display: 'grid', gap: 8 }}>
         <MBtn theme={theme} fullWidth onClick={() => {}}>{t('cta')}</MBtn>
-        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('results')}>{t('cta_alt')}</MBtn>
+        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('unlock')}>{t('cta_alt')}</MBtn>
       </div>
 
       <MFooter theme={theme} />

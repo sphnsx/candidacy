@@ -315,7 +315,7 @@ function ResultsScreen({ theme }) {
 
           <div style={{ marginTop: 28, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <Btn variant="primary" theme={theme} onClick={() => go('landing')}>{t('Back to home', '返回首页')}</Btn>
-            <Btn theme={theme} onClick={() => { reset(); go('quiz'); }}>{t('Retake check', '重新评估')}</Btn>
+            <Btn theme={theme} onClick={() => { reset(); go('onboarding'); }}>{t('Retake check', '重新评估')}</Btn>
           </div>
           {/* Paid-tier entrance — quieter than the free-Scan CTAs above. */}
           <div style={{

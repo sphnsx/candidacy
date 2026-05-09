@@ -1,4 +1,4 @@
-/* global React, useNav, useLang, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, PALETTE */
+/* global React, useNav, useLang, useAnswers, QUESTIONS, MFrame, MTopBar, MFooter, MBtn, MEyebrow, MHeader, PALETTE */
 // Mobile profile map — vertical "spine" diagram of the 8 dimensions
 // Candidacy reads against the published criteria. Trunk down the centre,
 // each branch peels off as a quarter-arc elbow + horizontal hairline,
@@ -56,18 +56,18 @@ function VariantSpine({ theme, lang }) {
         <line x1={hubX} y1={hubY + 6} x2={hubX} y2={trunkBottom} stroke={theme.hairline} strokeWidth="0.9" />
         <circle cx={hubX} cy={trunkBottom} r="1.8" fill={theme.hairline} />
 
-        {/* Branches — quarter-arc elbow + horizontal run.
-            Architectural shape: vertical, bend, horizontal. Never overlaps. */}
+        {/* Branches — 45° diagonal elbow + horizontal run.
+            Architectural shape: vertical, 45° break, horizontal. Never overlaps. */}
         {items.map((d, i) => {
           const y = startY + i * ROW;
           const isLeft = i % 2 === 0;
-          const sweep = isLeft ? 0 : 1;
           const elbowX = isLeft ? hubX - ARC : hubX + ARC;
           const dotX = isLeft ? dotInset : W - dotInset;
           return (
             <path key={i}
-              d={`M ${hubX} ${y - ARC} A ${ARC} ${ARC} 0 0 ${sweep} ${elbowX} ${y} L ${dotX} ${y}`}
-              stroke={theme.hairline} strokeWidth="0.9" fill="none" strokeLinecap="round" />
+              d={`M ${hubX} ${y - ARC} L ${elbowX} ${y} L ${dotX} ${y}`}
+              stroke={theme.hairline} strokeWidth="0.9" fill="none"
+              strokeLinecap="round" strokeLinejoin="round" />
           );
         })}
       </svg>
@@ -123,11 +123,16 @@ function MProfileMapScreen({ theme }) {
   const A = theme.brand;
   const { go } = useNav();
   const { lang } = useLang();
+  const { step } = useAnswers();
   const t = (k) => { const v = M_PROF_T[k]; return v ? (v[lang] || v.en) : k; };
+  // Results-screen exit only makes sense once the Scan has been run far enough
+  // to land on it. Otherwise the route would dump the user on a results screen
+  // with no data behind it.
+  const hasResults = step >= (QUESTIONS?.length || 0) - 1 && step > 0;
 
   return (
     <MFrame theme={theme}>
-      <MTopBar theme={theme} showBack onBack={() => go('results')} title={t('topbar')} />
+      <MTopBar theme={theme} showBack onBack={() => go('landing')} title={t('topbar')} />
 
       <div style={{ padding: '20px 18px 12px' }}>
         <MEyebrow theme={theme} color={A}>{t('eyebrow')}</MEyebrow>
@@ -147,7 +152,9 @@ function MProfileMapScreen({ theme }) {
       </div>
       <div style={{ padding: '4px 18px 32px', display: 'grid', gap: 8 }}>
         <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('unlock')}>{t('cta')} →</MBtn>
-        <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('results')}>{t('back')}</MBtn>
+        {hasResults && (
+          <MBtn theme={theme} variant="ghost" fullWidth onClick={() => go('results')}>{t('back')}</MBtn>
+        )}
       </div>
 
       <MFooter theme={theme} />
