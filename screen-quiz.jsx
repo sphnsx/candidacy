@@ -1,4 +1,4 @@
-/* global React, Bullet, BulletItem, ColorHeader, Chip, Btn, Rule, Frame, TopNav, Footer, MMNode, MMHub, MMLine, MindMap, useNav, useT, useLang, useAnswers, QUESTIONS, SECTION_LABELS, calculateResult */
+/* global React, Bullet, BulletItem, ColorHeader, Chip, Btn, Rule, Frame, TopNav, Footer, MMNode, MMHub, MMLine, MindMap, PALETTE, useNav, useT, useLang, useAnswers, QUESTIONS, SECTION_LABELS, calculateResult */
 
 function QuizScreen({ theme }) {
   const A = theme.accent;
@@ -97,7 +97,46 @@ function QuizScreen({ theme }) {
           )}
 
           <div style={{ marginTop: 24, display: 'grid', gap: 8 }}>
-            {options.map((opt, i) => {
+            {question.type === 'text' ? (() => {
+              const text = typeof value === 'string' ? value : '';
+              const max = question.maxLength || 280;
+              const len = text.length;
+              const overLimit = len > max;
+              return (
+                <div>
+                  <textarea
+                    value={text}
+                    onChange={(e) => setAnswer(question.id, e.target.value)}
+                    rows={4}
+                    placeholder={lang === 'zh' ? '在这里写下你的一句话…' : 'Write your one-sentence case here…'}
+                    style={{
+                      width: '100%', maxWidth: 780,
+                      appearance: 'none',
+                      border: `1px solid ${text ? theme.brand : theme.hairlineFaint}`,
+                      borderRadius: 12,
+                      padding: '16px 18px',
+                      fontFamily: 'Geist, sans-serif',
+                      fontSize: 16,
+                      lineHeight: 1.55,
+                      color: theme.ink,
+                      background: theme.bg,
+                      resize: 'vertical',
+                      minHeight: 110,
+                      outline: 'none',
+                      letterSpacing: '-0.005em',
+                    }}
+                  />
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    marginTop: 8, fontFamily: 'Geist', fontSize: 12,
+                    color: overLimit ? PALETTE.mauve : theme.inkFaint,
+                  }}>
+                    <span>{t('One sentence is the target.', '目标:一句话。')}</span>
+                    <span>{len} / {max}</span>
+                  </div>
+                </div>
+              );
+            })() : options.map((opt, i) => {
               const display = opt.labels[lang] || opt.labels.en;
               const selected = question.type === 'multi'
                 ? Array.isArray(value) && value.includes(opt.id)

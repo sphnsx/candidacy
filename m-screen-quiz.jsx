@@ -100,7 +100,38 @@ function MQuizScreen({ theme }) {
         )}
 
         <div style={{ display: 'grid', gap: 8, marginTop: question.maxSelect ? 4 : 18 }}>
-          {options.map((opt, i) => {
+          {question.type === 'text' ? (() => {
+            const text = typeof value === 'string' ? value : '';
+            const max = question.maxLength || 280;
+            const len = text.length;
+            const overLimit = len > max;
+            return (
+              <div>
+                <textarea
+                  value={text}
+                  onChange={(e) => setAnswer(question.id, e.target.value)}
+                  rows={5}
+                  placeholder={lang === 'zh' ? '在这里写下你的一句话…' : 'Write your one-sentence case here…'}
+                  style={{
+                    width: '100%', appearance: 'none',
+                    border: `1.5px solid ${text ? A : theme.hairlineFaint}`,
+                    borderRadius: 12, padding: '14px',
+                    fontFamily: 'Geist, sans-serif', fontSize: 14.5, lineHeight: 1.55,
+                    color: theme.ink, background: theme.bg, resize: 'vertical',
+                    minHeight: 120, outline: 'none', letterSpacing: '-0.005em',
+                  }}
+                />
+                <div style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  marginTop: 6, fontFamily: 'Geist', fontSize: 11,
+                  color: overLimit ? PALETTE.mauve : theme.inkFaint,
+                }}>
+                  <span>{lang === 'zh' ? '目标:一句话。' : 'One sentence is the target.'}</span>
+                  <span>{len} / {max}</span>
+                </div>
+              </div>
+            );
+          })() : options.map((opt, i) => {
             const display = opt.labels[lang] || opt.labels.en;
             const isSel = question.type === 'multi'
               ? Array.isArray(value) && value.includes(opt.id)
