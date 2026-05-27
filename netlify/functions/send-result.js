@@ -6,7 +6,15 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 async function persistLead({ email, lang, result, answers }) {
-  if (!supabase) return;
+  // Returns {ok, reason?, error?} so the handler can surface failures into
+  // the internal-notification email — otherwise Supabase write failures
+  // (env-var misconfig, project paused, transient errors) are silent and
+  // user data is lost without anyone noticing.
+  if (!supabase) {
+    const msg = 'SUPABASE_URL or SUPABASE_SERVICE_KEY not configured in Netlify env';
+    console.error('supabase client unavailable —', msg);
+    return { ok: false, reason: 'no_client', error: msg };
+  }
   const routes = Array.isArray(answers && answers.fields) ? answers.fields : null;
   const { error } = await supabase.from('leads').insert({
     email,
@@ -19,7 +27,9 @@ async function persistLead({ email, lang, result, answers }) {
   });
   if (error) {
     console.error('supabase insert failed', error.message);
+    return { ok: false, reason: 'insert_failed', error: error.message };
   }
+  return { ok: true };
 }
 
 const COPY = {
@@ -204,7 +214,21 @@ exports.handler = async (event) => {
       </div>
     `;
 
-    await persistLead({ email, lang, result, answers });
+    const persistStatus = await persistLead({ email, lang, result, answers });
+
+    // If the Supabase write failed, prepend a loud banner to the internal
+    // notification email AND override its subject so the failure is
+    // impossible to miss. The user-facing email still goes out unchanged —
+    // the user shouldn't pay for our backend hiccup, but we must know.
+    const persistWarning = persistStatus.ok ? '' : `
+      <div style="background: #fff4f4; border: 1px solid #ffd2d2; border-left: 4px solid #d34a4a; padding: 14px 16px; border-radius: 8px; margin-bottom: 18px; font-family: Inter, Arial, sans-serif;">
+        <div style="color: #b03232; font-weight: 700; font-size: 15px; margin-bottom: 6px;">⚠ Supabase write failed — user data NOT persisted</div>
+        <div style="font-size: 13px; color: #6a3232; margin-bottom: 4px;"><strong>Reason:</strong> ${escapeHtml(persistStatus.reason)}</div>
+        <div style="font-size: 13px; color: #6a3232; margin-bottom: 8px;"><strong>Error:</strong> ${escapeHtml(persistStatus.error || '(none)')}</div>
+        <div style="font-size: 12px; color: #8a4a4a; line-height: 1.5;">The user received their result email but the row was NOT written to the <code>leads</code> table. Check: (a) Netlify env vars <code>SUPABASE_URL</code> and <code>SUPABASE_SERVICE_KEY</code>; (b) Supabase project pause state; (c) RLS / schema. The full intake is preserved below — copy it into Supabase manually if needed.</div>
+      </div>
+    `;
+    const leadSubject = persistStatus.ok ? copy.subjectLead(email) : `⚠ DB-WRITE-FAILED · ${copy.subjectLead(email)}`;
 
     await resend.emails.send({
       from,
@@ -217,9 +241,10 @@ exports.handler = async (event) => {
     await resend.emails.send({
       from,
       to: notify,
-      subject: copy.subjectLead(email),
+      subject: leadSubject,
       html: `
         <div style="font-family: Inter, Arial, sans-serif; line-height: 1.7; color: #162033;">
+          ${persistWarning}
           <h2>${escapeHtml(copy.lead.h2)}</h2>
           <p><strong>${escapeHtml(copy.lead.labels.email)}:</strong> ${escapeHtml(email)}</p>
           <p><strong>${escapeHtml(copy.lead.labels.lang)}:</strong> ${escapeHtml(lang || 'zh')}</p>

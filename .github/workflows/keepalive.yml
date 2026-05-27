@@ -1,0 +1,54 @@
+name: Supabase keepalive
+
+# Prevents Supabase free-tier auto-pause (triggered after 7 days of no DB
+# activity) by running a tiny authenticated read against the project on a
+# schedule. The read touches Postgres, which is what Supabase counts as
+# activity — unlike Supabase's own internal pg_cron, which does NOT.
+#
+# Setup (one-time): add two repository secrets under
+#   Settings → Secrets and variables → Actions → New repository secret
+#     SUPABASE_URL          e.g. https://mqvqqouomdoinkpzuewc.supabase.co
+#     SUPABASE_SERVICE_KEY  the service_role key (NOT the anon key — RLS
+#                           blocks anon reads on the leads table)
+#
+# Note: GitHub disables scheduled workflows on a repo after 60 days with no
+# commits. Any push re-enables them. The 60-day horizon is far longer than
+# the 7-day Supabase window, but if the repo goes fully dormant, push a
+# trivial commit to re-arm this.
+
+on:
+  schedule:
+    # 06:00 UTC every Monday and Thursday. Max gap between runs is ~4 days,
+    # comfortably under the 7-day pause window.
+    - cron: '0 6 * * 1,4'
+  workflow_dispatch: {}   # allow manual runs from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticated read against Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_KEY" ]; then
+            echo "::error::SUPABASE_URL and/or SUPABASE_SERVICE_KEY repo secrets are not set."
+            exit 1
+          fi
+
+          # Smallest possible real query: select one id from leads.
+          # HEAD-style count keeps the payload tiny while still hitting Postgres.
+          status=$(curl -s -o /tmp/body.txt -w "%{http_code}" --max-time 30 \
+            "${SUPABASE_URL%/}/rest/v1/leads?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_SERVICE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}")
+
+          echo "HTTP $status"
+          if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
+            echo "::error::Supabase keepalive query failed with HTTP $status"
+            cat /tmp/body.txt
+            exit 1
+          fi
+
+          echo "Supabase keepalive succeeded — project activity registered."
